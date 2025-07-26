@@ -15,7 +15,10 @@ export default async function signUp({
   username,
   birthdate,
   role,
-}: SignUpProps) {
+}: SignUpProps): Promise<
+  | { success: true }
+  | { success: false; error: { code: string; message: string } }
+> {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
@@ -27,14 +30,25 @@ export default async function signUp({
   });
 
   if (error) {
-    console.error("Erro ao cadastrar usuário:", error);
-    throw new Error("Erro ao cadastrar usuário");
+    return {
+      success: false,
+      error: {
+        code: error.code ?? "unexpected_error",
+        message: error.message,
+      },
+    };
   }
 
   const user = data.user;
 
   if (!user) {
-    throw new Error("Usuário não retornado após o cadastro");
+    return {
+      success: false,
+      error: {
+        code: "user_not_found",
+        message: "User not found after sign up",
+      },
+    };
   }
 
   // Criar usuário na tabela User
@@ -48,4 +62,6 @@ export default async function signUp({
       role,
     },
   });
+
+  return { success: true };
 }

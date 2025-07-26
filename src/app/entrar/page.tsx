@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { handleAuthError } from "@/lib/handle-auth-error";
 
 const loginSchema = z.object({
   email: z
@@ -52,13 +53,14 @@ export default function LoginPage() {
 
   const onSubmit = ({ email, password }: LoginForm) => {
     startTransition(async () => {
-      try {
-        await signIn({ email, password });
-        router.push("/dashboard");
-      } catch (error) {
-        console.error(error);
-        toast.error("Erro ao fazer login.");
+      const result = await signIn({ email, password });
+
+      if (!result.success) {
+        toast.error(handleAuthError(result.error.code));
+        return;
       }
+
+      router.push("/dashboard");
     });
   };
 

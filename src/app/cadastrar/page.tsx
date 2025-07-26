@@ -43,6 +43,7 @@ import signUp from "@/api/sign-up";
 import { UserRole } from "@prisma/client";
 import { ChooseYourJourney } from "@/components/choose-your-journey";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { handleAuthError } from "@/lib/handle-auth-error";
 
 const registerSchema = z
   .object({
@@ -117,13 +118,21 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
     const role = userRole as UserRole;
 
     startTransition(async () => {
-      try {
-        await signUp({ name, username, email, password, birthdate, role });
-        router.push("/dashboard");
-      } catch (error) {
-        console.error(error);
-        toast.error("Erro ao fazer cadastro");
+      const result = await signUp({
+        name,
+        username,
+        email,
+        password,
+        birthdate,
+        role,
+      });
+
+      if (!result.success) {
+        toast.error(handleAuthError(result.error.code));
+        return;
       }
+
+      router.push("/dashboard");
     });
   };
 

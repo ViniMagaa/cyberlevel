@@ -7,7 +7,13 @@ type SignInProps = {
   password: string;
 };
 
-export default async function signIn({ email, password }: SignInProps) {
+export default async function signIn({
+  email,
+  password,
+}: SignInProps): Promise<
+  | { success: true }
+  | { success: false; error: { code: string; message: string } }
+> {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -16,7 +22,14 @@ export default async function signIn({ email, password }: SignInProps) {
   });
 
   if (error) {
-    console.error("Erro ao entrar:", error);
-    throw new Error("Erro ao entrar", error);
+    return {
+      success: false,
+      error: {
+        code: error.code ?? "unexpected_error",
+        message: error.message,
+      },
+    };
   }
+
+  return { success: true };
 }
