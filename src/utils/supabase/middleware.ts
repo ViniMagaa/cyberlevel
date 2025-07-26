@@ -35,6 +35,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
+    !request.nextUrl.pathname.startsWith("/") &&
     !request.nextUrl.pathname.startsWith("/entrar") &&
     !request.nextUrl.pathname.startsWith("/cadastrar")
   ) {
@@ -49,7 +50,8 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname.startsWith("/cadastrar"))
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/dashboard";
+    url.search = "";
     return NextResponse.redirect(url);
   }
 
