@@ -7,6 +7,7 @@ import { RetroGrid } from "@/components/magicui/retro-grid";
 import { Button } from "@/components/ui/button";
 import { FileChartPie, LockKeyhole, Trophy } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -43,15 +44,19 @@ export default function Home() {
             </a>
           </li>
         </menu> */}
-        <a href="#start">
+        <div className="flex items-baseline gap-4">
           <Button
             size="lg"
             variant="outline"
             className="text-md hover:bg-primary-600 rounded-full px-3"
+            asChild
           >
-            Iniciar agora
+            <Link href="#start">Iniciar agora</Link>
           </Button>
-        </a>
+          <Button variant="link" className="px-0" asChild>
+            <Link href="/entrar">Entrar</Link>
+          </Button>
+        </div>
       </header>
 
       <section className="relative z-50 flex h-lvh justify-center overflow-hidden px-10">
