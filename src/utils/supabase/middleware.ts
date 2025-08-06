@@ -46,6 +46,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     user &&
+    user.role &&
     (request.nextUrl.pathname.startsWith("/entrar") ||
       request.nextUrl.pathname.startsWith("/cadastrar"))
   ) {
