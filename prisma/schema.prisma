@@ -18,8 +18,50 @@ model User {
   createdAt DateTime @default(now())
 }
 
+model Archetype {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  modules     Module[]
+}
+
+model Module {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  archetypeId String?
+  ageGroup    AgeGroup
+  archetype   Archetype? @relation(fields: [archetypeId], references: [id])
+  activities  Activity[]
+}
+
+model Activity {
+  id       String       @id @default(uuid())
+  moduleId String
+  type     ActivityType
+  title    String
+  content  Json // structure varies per activity type
+  module   Module       @relation(fields: [moduleId], references: [id])
+}
+
 enum UserRole {
   ADMIN
   RESPONSIBLE
   LEARNER
+}
+
+enum AgeGroup {
+  CHILD // <= 11 years old
+  TEEN // >= 17 years old
+}
+
+enum ActivityType {
+  FAKE_NEWS
+  POST_OR_NOT
+  QUIZ
+  THEMED_PASSWORD
+  DECISION_MAZE
+  FAKE_CHAT
+  MATCH_PAIRS
+  INFORMATIVE_TEXT
 }
