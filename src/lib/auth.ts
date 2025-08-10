@@ -6,10 +6,15 @@ export async function requireUserSession() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return null;
+  if (!user) return { user: null, role: null };
 
-  const data = await db.user.findUnique({ where: { id: user.id } });
-  if (!data) return null;
+  const data = await db.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
 
-  return data;
+  return {
+    user,
+    role: data?.role,
+  };
 }

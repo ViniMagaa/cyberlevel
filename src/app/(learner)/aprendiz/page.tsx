@@ -1,3 +1,3 @@
 export default async function Dashboard() {
-  return <h1>Admin</h1>;
+  return <h1>Aprendiz</h1>;
 }

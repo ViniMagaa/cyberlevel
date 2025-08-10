@@ -9,9 +9,9 @@ export default async function Dashboard() {
     case "ADMIN":
       return redirect("/admin");
     case "LEARNER":
-      return redirect("/learner");
+      return redirect("/aprendiz");
     case "RESPONSIBLE":
-      return redirect("/responsible");
+      return redirect("/responsavel");
     default:
       return redirect("/");
   }
