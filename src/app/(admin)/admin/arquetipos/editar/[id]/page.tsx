@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 
 type Params = { params: { id: string } };
 
-export default async function EditarArquetipoPage({ params }: Params) {
+export default async function EditArchetypePage({ params }: Params) {
   const { id } = await params;
   const archetype = await db.archetype.findUnique({
     where: { id },
