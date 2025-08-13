@@ -31,7 +31,7 @@ const items = [
   },
   {
     title: "Arquétipos",
-    url: "#",
+    url: "/admin/arquetipos",
     icon: Pencil,
   },
   {
