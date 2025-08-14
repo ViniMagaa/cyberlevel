@@ -1,11 +1,4 @@
-import {
-  Component,
-  Home,
-  NotebookPen,
-  Pencil,
-  Settings,
-  Users,
-} from "lucide-react";
+import { Component, Home, NotebookPen, Settings, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -32,16 +25,11 @@ const items = [
   {
     title: "Arquétipos",
     url: "/admin/arquetipos",
-    icon: Pencil,
-  },
-  {
-    title: "Módulos",
-    url: "#",
     icon: Component,
   },
   {
     title: "Atividades",
-    url: "#",
+    url: "/admin/atividades",
     icon: NotebookPen,
   },
   {

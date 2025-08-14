@@ -10,7 +10,7 @@ export async function createArchetype(archetype: Prisma.ArchetypeCreateInput) {
     await db.archetype.create({
       data: archetype,
     });
-    revalidatePath("/arquetipos");
+    revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
     console.error("Erro ao criar arquétipo:", message);
@@ -27,7 +27,7 @@ export async function updateArchetype(
       where: { id },
       data: archetype,
     });
-    revalidatePath("/arquetipos");
+    revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
     console.error("Erro ao atualizar arquétipo:", message);
@@ -40,7 +40,7 @@ export async function deleteArchetype(id: string) {
     await db.archetype.delete({
       where: { id },
     });
-    revalidatePath("/arquetipos");
+    revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
     console.error("Erro ao deletar arquétipo:", message);

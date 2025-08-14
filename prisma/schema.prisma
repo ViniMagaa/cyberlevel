@@ -29,6 +29,7 @@ model Module {
   id          String     @id @default(uuid())
   title       String
   description String
+  order       Int
   archetypeId String?
   ageGroup    AgeGroup
   archetype   Archetype? @relation(fields: [archetypeId], references: [id])
@@ -40,6 +41,7 @@ model Activity {
   moduleId String
   type     ActivityType
   title    String
+  order    Int
   content  Json // structure varies per activity type
   module   Module       @relation(fields: [moduleId], references: [id])
 }
