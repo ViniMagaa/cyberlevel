@@ -135,16 +135,20 @@ export function ArchetypeCard({ archetype }: ArchetypeCardProps) {
         <DialogContent>
           <DialogHeader className="space-y-3">
             <DialogTitle>{archetype.name}</DialogTitle>
-            <DialogDescription className="space-y-2">
-              <div>
-                <strong className="text-white">Módulos:</strong>{" "}
-                {archetype.modules.length}
+            <DialogDescription asChild>
+              <div className="space-y-2">
+                <div>
+                  <strong className="text-white">Módulos:</strong>{" "}
+                  {archetype.modules.length}
+                </div>
+                <div>
+                  <strong className="text-white">Atividades:</strong>{" "}
+                  {activitiesTotal}
+                </div>
+                <ScrollArea className="h-80">
+                  {archetype.description}
+                </ScrollArea>
               </div>
-              <div>
-                <strong className="text-white">Atividades:</strong>{" "}
-                {activitiesTotal}
-              </div>
-              <ScrollArea className="h-80">{archetype.description}</ScrollArea>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
