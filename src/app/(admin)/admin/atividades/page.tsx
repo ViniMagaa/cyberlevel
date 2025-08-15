@@ -34,9 +34,14 @@ export default async function Activities() {
     <div className="w-full space-y-6 p-4">
       <div className="flex w-full flex-wrap justify-between gap-2">
         <h1 className="text-4xl font-bold">Atividades por módulo</h1>
-        <Button type="button" asChild>
-          <Link href="/admin/modulos/criar">Criar módulo</Link>
-        </Button>
+        <div className="space-x-2">
+          <Button type="button" variant="outline" asChild>
+            <Link href="/admin/modulos/criar">Criar módulo</Link>
+          </Button>
+          <Button type="button" asChild>
+            <Link href="/admin/atividades/criar">Criar atividade</Link>
+          </Button>
+        </div>
       </div>
       <div>
         <h2 className="text-3xl font-semibold">Crianças</h2>

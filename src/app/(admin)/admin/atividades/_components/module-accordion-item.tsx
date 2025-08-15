@@ -22,7 +22,7 @@ import { Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteModule } from "../actions";
+import { deleteModule } from "../../modulos/actions";
 
 type ModuleAccordionItemProps = {
   module: Prisma.ModuleGetPayload<{

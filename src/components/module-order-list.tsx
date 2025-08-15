@@ -1,6 +1,6 @@
 "use client";
 
-import { updateModulesOrder } from "@/app/(admin)/admin/atividades/actions";
+import { updateModulesOrder } from "@/app/(admin)/admin/modulos/actions";
 import { Button } from "@/components/ui/button";
 import { Module } from "@prisma/client";
 import { ArrowDown, ArrowDownUp, ArrowUp, Loader2Icon } from "lucide-react";
@@ -14,8 +14,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Separator } from "./ui/separator";
 import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "./ui/separator";
 
 type ModuleOrderProps = {
   modules: Module[];

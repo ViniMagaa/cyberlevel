@@ -1,7 +1,9 @@
 "use client";
 
-import { updateArchetype } from "@/app/(admin)/admin/arquetipos/actions";
-import { createModule } from "@/app/(admin)/admin/atividades/actions";
+import {
+  createModule,
+  updateModule,
+} from "@/app/(admin)/admin/modulos/actions";
 import { cn } from "@/lib/utils";
 import { ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -91,7 +93,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
             : undefined,
         };
         if (module && module.id) {
-          await updateArchetype(module.id, data);
+          await updateModule(module.id, data);
           toast.success("Módulo atualizado");
         } else {
           await createModule(newModuleData);

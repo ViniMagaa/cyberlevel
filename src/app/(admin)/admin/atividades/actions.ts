@@ -1,56 +1,56 @@
 "use server";
 
-import { Module, Prisma } from "@prisma/client";
+import { Activity, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/prisma";
 import { formatPrismaError } from "@/lib/format-prisma-error";
 
-export async function createModule(module: Prisma.ModuleCreateInput) {
+export async function createActivity(activity: Prisma.ActivityCreateInput) {
   try {
-    await db.module.create({
-      data: module,
+    await db.activity.create({
+      data: activity,
     });
     revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao criar módulo:", message);
-    throw new Error(`Erro ao criar módulo: ${message}`);
+    console.error("Erro ao criar atividade:", message);
+    throw new Error(`Erro ao criar atividade: ${message}`);
   }
 }
 
-export async function updateModule(
+export async function updateActivity(
   id: string,
-  module: Prisma.ModuleUpdateInput,
+  activity: Prisma.ActivityUpdateInput,
 ) {
   try {
-    await db.module.update({
+    await db.activity.update({
       where: { id },
-      data: module,
+      data: activity,
     });
     revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao atualizar módulo:", message);
-    throw new Error(`Erro ao atualizar módulo: ${message}`);
+    console.error("Erro ao atualizar atividade:", message);
+    throw new Error(`Erro ao atualizar atividade: ${message}`);
   }
 }
 
-export async function deleteModule(id: string) {
+export async function deleteActivity(id: string) {
   try {
-    await db.module.delete({
+    await db.activity.delete({
       where: { id },
     });
     revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao deletar módulo:", message);
-    throw new Error(`Erro ao deletar módulo: ${message}`);
+    console.error("Erro ao deletar atividade:", message);
+    throw new Error(`Erro ao deletar atividade: ${message}`);
   }
 }
 
-export async function updateModulesOrder(modules: Module[]) {
-  const updates = modules.map((m) =>
-    db.module.update({
+export async function updateActivitiesOrder(activities: Activity[]) {
+  const updates = activities.map((m) =>
+    db.activity.update({
       where: { id: m.id },
       data: { order: m.order },
     }),
@@ -61,7 +61,7 @@ export async function updateModulesOrder(modules: Module[]) {
     revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao atualizar módulos:", message);
-    throw new Error(`Erro ao atualizar módulo: ${message}`);
+    console.error("Erro ao atualizar atividades:", message);
+    throw new Error(`Erro ao atualizar atividade: ${message}`);
   }
 }
