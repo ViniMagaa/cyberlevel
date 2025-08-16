@@ -1,9 +1,13 @@
 import { ArchetypeForm } from "@/components/archetype-form";
 import { db } from "@/lib/prisma";
 
-type Params = { params: { id: string } };
+type EditArchetypePageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default async function EditArchetypePage({ params }: Params) {
+export default async function EditArchetypePage({
+  params,
+}: EditArchetypePageProps) {
   const { id } = await params;
   const archetype = await db.archetype.findUnique({
     where: { id },

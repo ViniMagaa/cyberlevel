@@ -1,9 +1,11 @@
 import { ModuleForm } from "@/components/module-form";
 import { db } from "@/lib/prisma";
 
-type Params = { params: { id: string } };
+type EditModulePageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default async function EditModulePage({ params }: Params) {
+export default async function EditModulePage({ params }: EditModulePageProps) {
   const { id } = await params;
   const [moduleData, archetypes] = await Promise.all([
     db.module.findUnique({

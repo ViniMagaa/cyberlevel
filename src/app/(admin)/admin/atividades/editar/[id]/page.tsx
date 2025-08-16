@@ -1,9 +1,13 @@
 import { ActivityForm } from "@/components/activty-form";
 import { db } from "@/lib/prisma";
 
-type Params = { params: { id: string } };
+type EditActivityPageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default async function EditActivityPage({ params }: Params) {
+export default async function EditActivityPage({
+  params,
+}: EditActivityPageProps) {
   const { id } = await params;
   const [activityData, modules] = await Promise.all([
     db.activity.findUnique({
