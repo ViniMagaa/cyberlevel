@@ -7,8 +7,21 @@ import { formatPrismaError } from "@/lib/format-prisma-error";
 
 export async function createModule(module: Prisma.ModuleCreateInput) {
   try {
+    const lastOrder = await db.module.aggregate({
+      _max: { order: true },
+      where: {
+        ageGroup: module.ageGroup,
+        archetypeId: module.archetype?.connect?.id ?? undefined,
+      },
+    });
+
+    const newModuleData: Prisma.ModuleCreateInput = {
+      ...module,
+      order: (lastOrder._max.order ?? -1) + 1,
+    };
+
     await db.module.create({
-      data: module,
+      data: newModuleData,
     });
     revalidatePath("/");
   } catch (error) {

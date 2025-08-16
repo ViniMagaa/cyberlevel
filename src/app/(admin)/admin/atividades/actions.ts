@@ -10,8 +10,20 @@ import "server-only";
 
 export async function createActivity(activity: Prisma.ActivityCreateInput) {
   try {
+    const lastOrder = await db.activity.aggregate({
+      _max: { order: true },
+      where: {
+        moduleId: activity.module.connect?.id,
+      },
+    });
+
+    const newActivityData: Prisma.ActivityCreateInput = {
+      ...activity,
+      order: (lastOrder._max.order ?? -1) + 1,
+    };
+
     await db.activity.create({
-      data: activity,
+      data: newActivityData,
     });
     revalidatePath("/");
   } catch (error) {
