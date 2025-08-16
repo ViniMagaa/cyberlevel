@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { deleteModule } from "../../modulos/actions";
+import { ActivityCard } from "./activity-card";
 
 type ModuleAccordionItemProps = {
   module: Prisma.ModuleGetPayload<{
@@ -105,6 +106,12 @@ export function ModuleAccordionItem({ module }: ModuleAccordionItemProps) {
                 Nenhuma atividade criada.
               </p>
             )}
+            {module.activities.map((activity) => (
+              <ActivityCard
+                key={activity.id}
+                activity={{ ...activity, module }}
+              />
+            ))}
           </section>
         </div>
       </AccordionContent>
