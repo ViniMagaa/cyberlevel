@@ -1,5 +1,6 @@
 "use client";
 
+import { ActivityDialogDetails } from "@/components/activity-dialog-details";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,25 +14,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { TFakeNewsContent } from "@/utils/activity-schemas";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
-import { Eye, Pencil, Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { deleteActivity } from "../actions";
-import { FakeNewsDetails } from "./fake-news-details";
 
 type ActivityCardProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -69,31 +59,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
         </span>
       </CardHeader>
       <CardFooter className="flex items-center justify-end gap-1 px-2">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-neutral-700!"
-            >
-              <Eye />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="w-full max-w-7xl">
-            <DialogHeader>
-              <DialogTitle>{activity.title}</DialogTitle>
-              <DialogDescription>
-                {activityType[activity.type]}
-              </DialogDescription>
-            </DialogHeader>
-            <Separator />
-            {activity.type === "FAKE_NEWS" && (
-              <FakeNewsDetails
-                fakeNews={activity.content as unknown as TFakeNewsContent}
-              />
-            )}
-          </DialogContent>
-        </Dialog>
+        <ActivityDialogDetails activity={activity} />
 
         <Button variant="outline" size="icon" asChild>
           <Link href={`/admin/atividades/editar/${activity.id}`}>

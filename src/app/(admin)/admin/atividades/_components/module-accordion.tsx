@@ -1,8 +1,8 @@
+import { ModuleOrderList } from "@/components/module-order-list";
 import { Accordion } from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
 import { Prisma } from "@prisma/client";
 import { ModuleAccordionItem } from "./module-accordion-item";
-import { Card, CardContent } from "@/components/ui/card";
-import { ModuleOrderList } from "@/components/module-order-list";
 
 type ModuleAccordionProps = {
   modules: Prisma.ModuleGetPayload<{

@@ -24,6 +24,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { deleteModule } from "../../modulos/actions";
 import { ActivityCard } from "./activity-card";
+import { ActivityOrderList } from "@/components/activity-order-list";
 
 type ModuleAccordionItemProps = {
   module: Prisma.ModuleGetPayload<{
@@ -57,23 +58,23 @@ export function ModuleAccordionItem({ module }: ModuleAccordionItemProps) {
       value={`item-${module.id}`}
       className="relative"
     >
-      <AccordionTrigger className="text-lg font-semibold">
+      <AccordionTrigger className="items-center text-lg font-semibold">
         {module.title}
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-4">
-        <div className="absolute top-3 right-8 flex gap-4">
+        <div className="absolute top-3 right-8 flex gap-2">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
+            size="icon"
             onClick={() => router.push(`/admin/modulos/editar/${module.id}`)}
           >
-            <Pencil /> Editar
+            <Pencil />
           </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm" disabled={isPending}>
-                <Trash /> Excluir
+              <Button variant="destructive" size="icon" disabled={isPending}>
+                <Trash />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -99,7 +100,12 @@ export function ModuleAccordionItem({ module }: ModuleAccordionItemProps) {
           {module.description}
         </p>
         <div className="space-y-2">
-          <h4 className="font-medium">Atividades</h4>
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="font-medium">Atividades</h4>
+            {module.activities.length > 0 && (
+              <ActivityOrderList activities={module.activities} />
+            )}
+          </div>
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {module.activities.length === 0 && (
               <p className="text-muted-foreground text-sm">
