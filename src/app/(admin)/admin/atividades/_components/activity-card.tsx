@@ -22,7 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { TFakeNews } from "@/utils/activity-schemas";
+import { TFakeNewsContent } from "@/utils/activity-schemas";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { Eye, Pencil, Trash } from "lucide-react";
@@ -88,7 +88,9 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </DialogHeader>
             <Separator />
             {activity.type === "FAKE_NEWS" && (
-              <FakeNewsDetails fakeNews={activity.content as TFakeNews} />
+              <FakeNewsDetails
+                fakeNews={activity.content as unknown as TFakeNewsContent}
+              />
             )}
           </DialogContent>
         </Dialog>

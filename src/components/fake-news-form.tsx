@@ -1,10 +1,22 @@
-import { activitySchemas, TFakeNews } from "@/utils/activity-schemas";
+import { uploadActivityImage } from "@/app/(admin)/admin/atividades/actions";
+import { cn } from "@/lib/utils";
+import {
+  activitySchemas,
+  TFakeNewsContent,
+  TFakeNewsForm,
+} from "@/utils/activity-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { AspectRatio } from "./ui/aspect-ratio";
 import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Select,
   SelectContent,
@@ -15,43 +27,69 @@ import {
 import { Textarea } from "./ui/textarea";
 
 type FakeNewsFormProps = {
-  fakeNews?: z.output<typeof activitySchemas.FAKE_NEWS>;
-  onSubmit: (data: TFakeNews) => void;
+  fakeNews?: TFakeNewsContent;
+  onSubmit: (data: TFakeNewsContent) => void;
 };
 
 export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
-  const form = useForm<TFakeNews>({
+  const [isPending, startTransition] = useTransition();
+  const [preview, setPreview] = useState<string | undefined>(
+    fakeNews?.imageUrl,
+  );
+
+  const form = useForm<TFakeNewsForm>({
     resolver: zodResolver(activitySchemas.FAKE_NEWS),
-    defaultValues: fakeNews ?? {
-      title: "",
-      text: "",
-      imageUrl: "",
-      source: "",
-      isFake: undefined,
-      feedback: "",
+    defaultValues: {
+      title: fakeNews?.title ?? "",
+      subtitle: fakeNews?.subtitle ?? "",
+      author: fakeNews?.author ?? "",
+      publicationDate: fakeNews?.publicationDate
+        ? new Date(fakeNews.publicationDate)
+        : undefined,
+      text: fakeNews?.text ?? "",
+      image: undefined,
+      source: fakeNews?.source ?? "",
+      isFake:
+        typeof fakeNews?.isFake === "boolean"
+          ? fakeNews.isFake
+          : (undefined as unknown as boolean),
+      feedback: fakeNews?.feedback ?? "",
     },
   });
 
-  async function handleSubmit(data: TFakeNews) {
-    const isValid = await form.trigger();
+  async function handleSubmit(values: TFakeNewsForm) {
+    const ok = await form.trigger();
+    if (!ok) return;
 
-    if (!isValid) return;
+    startTransition(async () => {
+      let imageUrl = fakeNews?.imageUrl;
 
-    const fakeNewsData = {
-      title: data.title,
-      text: data.text,
-      imageUrl: data.imageUrl,
-      source: data.source,
-      isFake: data.isFake,
-      feedback: data.feedback,
-    };
-    onSubmit(fakeNewsData);
+      // Se o usuário selecionar um arquivo novo, faz o upload
+      if (values.image) {
+        imageUrl = await uploadActivityImage(values.image, "fake-news");
+      }
+
+      // Monta o payload que será salvo no JSON
+      const payload: TFakeNewsContent = {
+        title: values.title,
+        subtitle: values.subtitle,
+        author: values.author,
+        publicationDate: values.publicationDate,
+        text: values.text,
+        imageUrl, // <- URL pública do Supabase
+        source: values.source,
+        isFake: values.isFake,
+        feedback: values.feedback,
+      };
+
+      onSubmit(payload);
+    });
   }
 
   return (
     <Form {...form}>
       <form className="flex grow flex-col justify-between gap-4">
-        {/* Title */}
+        {/* Título */}
         <FormField
           control={form.control}
           name="title"
@@ -65,7 +103,74 @@ export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
           )}
         />
 
-        {/* Text */}
+        {/* Subtítulo (opcional) */}
+        <FormField
+          control={form.control}
+          name="subtitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Subtítulo (opcional)" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Autor (opcional) */}
+        <FormField
+          control={form.control}
+          name="author"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Autor (opcional)" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Data de publicação (opcional) */}
+        <FormField
+          control={form.control}
+          name="publicationDate"
+          render={({ field }) => (
+            <FormItem>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP", { locale: ptBR })
+                      ) : (
+                        <span>Data de publicação (opcional)</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    captionLayout="dropdown"
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Texto */}
         <FormField
           control={form.control}
           name="text"
@@ -83,44 +188,65 @@ export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
           )}
         />
 
-        {/* Image URL */}
+        {/* Imagem (arquivo) */}
         <FormField
           control={form.control}
-          name="imageUrl"
+          name="image"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="URL da imagem (opcional)" {...field} />
+                <Input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    field.onChange(file);
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setPreview(url);
+                    } else {
+                      setPreview(undefined);
+                    }
+                  }}
+                />
               </FormControl>
               <FormMessage />
+              {preview && (
+                <AspectRatio ratio={16 / 9}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={preview}
+                    alt="Pré-visualização"
+                    className="h-full w-full rounded-md object-cover"
+                  />
+                </AspectRatio>
+              )}
             </FormItem>
           )}
         />
 
-        {/* Source */}
+        {/* Fonte */}
         <FormField
           control={form.control}
           name="source"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Fonte da notícia" {...field} />
+                <Input placeholder="Fonte da notícia (URL)" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Is Fake */}
+        {/* É falsa? */}
         <FormField
           control={form.control}
           name="isFake"
           render={({ field }) => (
             <FormItem className="flex-auto">
               <Select
-                onValueChange={(value) => {
-                  form.setValue("isFake", value === "true" ? true : false);
-                }}
+                onValueChange={(value) => field.onChange(value === "true")}
                 defaultValue={
                   field.value === true
                     ? "true"
@@ -167,8 +293,10 @@ export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
             type="button"
             onClick={form.handleSubmit(handleSubmit)}
             variant="default"
+            disabled={isPending}
           >
             Salvar
+            {isPending && <Loader2Icon className="animate-spin" />}
           </Button>
         </div>
       </form>

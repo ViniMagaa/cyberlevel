@@ -5,7 +5,7 @@ import {
   updateActivity,
 } from "@/app/(admin)/admin/atividades/actions";
 import { cn } from "@/lib/utils";
-import { activitySchemas, TFakeNews } from "@/utils/activity-schemas";
+import { TFakeNewsContent } from "@/utils/activity-schemas";
 import { activityType, ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "@prisma/client";
@@ -51,7 +51,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { JsonArray, JsonObject } from "@prisma/client/runtime/library";
 
 export const activitySchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
@@ -86,9 +85,9 @@ type ActivityFormProps = {
 
 export function ActivityForm({ activity, modules }: ActivityFormProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [content, setContent] = useState<
-    string | number | true | JsonObject | JsonArray | undefined
-  >(activity?.content || undefined);
+  const [content, setContent] = useState<unknown | undefined>(
+    activity?.content || undefined,
+  );
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<ActivityFormSchema>({
@@ -129,12 +128,11 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
     });
   }
 
-  function handleSubmitActivity(data: TFakeNews) {
+  function handleSubmitActivity(data: TFakeNewsContent) {
     const type = watch("type");
-    let newContent: string = "";
+    let newContent = "";
     try {
       if (type === "FAKE_NEWS") {
-        activitySchemas.FAKE_NEWS.parse(data);
         newContent = JSON.stringify(data);
       }
     } catch (error) {
@@ -142,9 +140,9 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
       toast.error("Erro ao analisar dados da atividade");
       return;
     }
-    setIsOpen(false);
     setContent(data);
     setValue("content", newContent);
+    setIsOpen(false);
   }
 
   return (
@@ -319,7 +317,7 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
               {watch("type") === "FAKE_NEWS" && (
                 <FakeNewsForm
                   onSubmit={handleSubmitActivity}
-                  fakeNews={content as TFakeNews}
+                  fakeNews={content as unknown as TFakeNewsContent}
                 />
               )}
             </ScrollArea>
