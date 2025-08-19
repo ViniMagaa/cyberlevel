@@ -109,7 +109,7 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
         const newActivityData: Prisma.ActivityCreateInput = {
           type: data.type,
           title: data.title,
-          order: -1,
+          order: activity?.order ?? -1,
           content: JSON.parse(data.content),
           module: { connect: { id: data.moduleId } },
         };

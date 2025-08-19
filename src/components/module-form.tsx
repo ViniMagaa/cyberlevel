@@ -86,7 +86,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
         const newModuleData: Prisma.ModuleCreateInput = {
           title: data.title,
           description: data.description,
-          order: -1,
+          order: module?.order ?? -1,
           ageGroup: data.ageGroup,
           archetype: data.archetypeId
             ? { connect: { id: data.archetypeId } }
