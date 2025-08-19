@@ -1,6 +1,11 @@
 import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
 import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/post-or-not-details";
-import { TFakeNewsContent, TPostOrNotContent } from "@/utils/activity-types";
+import { QuizDetails } from "@/app/(admin)/admin/atividades/_components/quiz-details";
+import {
+  TFakeNewsContent,
+  TPostOrNotContent,
+  TQuizContent,
+} from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Activity } from "@prisma/client";
 import { Eye } from "lucide-react";
@@ -44,6 +49,9 @@ export function ActivityDialogDetails({
           <PostOrNotDetails
             postOrNot={activity.content as unknown as TPostOrNotContent}
           />
+        )}
+        {activity.type === "QUIZ" && (
+          <QuizDetails quiz={activity.content as unknown as TQuizContent} />
         )}
       </DialogContent>
     </Dialog>

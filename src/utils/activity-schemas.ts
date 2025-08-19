@@ -37,4 +37,26 @@ export const activitySchemas = {
     isSafe: z.boolean("Indique se a postagem é segura ou não"),
     justification: z.string().min(1, "Justificativa é obrigatória"),
   }),
+  [ActivityType.QUIZ]: z.object({
+    title: z.string().min(1, "Título do quiz é obrigatório"),
+    questions: z
+      .array(
+        z.object({
+          text: z.string().min(1, "O enunciado da pergunta é obrigatório"),
+          options: z
+            .array(
+              z.object({
+                text: z.string().min(1, "Alternativa não pode ser vazia"),
+              }),
+            )
+            .min(2, "Cada pergunta precisa de pelo menos 2 alternativas"),
+          correctIndex: z
+            .number()
+            .int()
+            .min(0, "O índice da alternativa correta deve ser válido"),
+          feedback: z.string().min(1, "Feedback é obrigatório"),
+        }),
+      )
+      .min(1, "O quiz deve ter pelo menos uma pergunta"),
+  }),
 };

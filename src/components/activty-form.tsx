@@ -5,7 +5,11 @@ import {
   updateActivity,
 } from "@/app/(admin)/admin/atividades/actions";
 import { cn } from "@/lib/utils";
-import { TFakeNewsContent, TPostOrNotContent } from "@/utils/activity-types";
+import {
+  TFakeNewsContent,
+  TPostOrNotContent,
+  TQuizContent,
+} from "@/utils/activity-types";
 import { activityType, ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "@prisma/client";
@@ -52,6 +56,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { PostOrNotForm } from "./post-or-not-form";
+import { QuizForm } from "./quiz-form";
 
 export const activitySchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
@@ -321,6 +326,12 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                 <PostOrNotForm
                   onSubmit={handleSubmitActivity}
                   postOrNot={content as unknown as TPostOrNotContent}
+                />
+              )}
+              {watch("type") === "QUIZ" && (
+                <QuizForm
+                  onSubmit={handleSubmitActivity}
+                  quiz={content as unknown as TQuizContent}
                 />
               )}
             </ScrollArea>
