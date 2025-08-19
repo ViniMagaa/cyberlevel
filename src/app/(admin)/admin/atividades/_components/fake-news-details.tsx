@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { TFakeNewsContent } from "@/utils/activity-schemas";
+import { TFakeNewsContent } from "@/utils/activity-types";
 import { format } from "date-fns";
 import { BadgeCheckIcon, BadgeX, Globe } from "lucide-react";
 import Image from "next/image";
@@ -60,7 +60,7 @@ export function FakeNewsDetails({ fakeNews }: FakeNewsDetailsProps) {
           </div>
           <Paragraphs text={fakeNews.text} />
           <Separator />
-          <div className="text-sm">
+          <div className="space-y-2 text-sm">
             <span className="font-semibold">Feedback ao acertar:</span>
             <Paragraphs text={fakeNews.feedback} />
           </div>

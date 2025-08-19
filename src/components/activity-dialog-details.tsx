@@ -1,4 +1,10 @@
+import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
+import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/post-or-not-details";
+import { TFakeNewsContent, TPostOrNotContent } from "@/utils/activity-types";
+import { activityType } from "@/utils/enums";
 import { Activity } from "@prisma/client";
+import { Eye } from "lucide-react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,12 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Eye } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { activityType } from "@/utils/enums";
-import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
-import { TFakeNewsContent } from "@/utils/activity-schemas";
 
 type ActivityDialogDetailsProps = {
   activity: Activity;
@@ -37,6 +38,11 @@ export function ActivityDialogDetails({
         {activity.type === "FAKE_NEWS" && (
           <FakeNewsDetails
             fakeNews={activity.content as unknown as TFakeNewsContent}
+          />
+        )}
+        {activity.type === "POST_OR_NOT" && (
+          <PostOrNotDetails
+            postOrNot={activity.content as unknown as TPostOrNotContent}
           />
         )}
       </DialogContent>

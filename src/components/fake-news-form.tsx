@@ -1,16 +1,14 @@
 import { uploadActivityImage } from "@/app/(admin)/admin/atividades/actions";
 import { cn } from "@/lib/utils";
-import {
-  activitySchemas,
-  TFakeNewsContent,
-  TFakeNewsForm,
-} from "@/utils/activity-schemas";
+import { activitySchemas } from "@/utils/activity-schemas";
+import { TFakeNewsContent } from "@/utils/activity-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import z from "zod";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
@@ -25,6 +23,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+
+export type TFakeNewsForm = z.infer<(typeof activitySchemas)["FAKE_NEWS"]>; // com File
 
 type FakeNewsFormProps = {
   fakeNews?: TFakeNewsContent;

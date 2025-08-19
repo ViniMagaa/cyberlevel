@@ -5,7 +5,7 @@ import {
   updateActivity,
 } from "@/app/(admin)/admin/atividades/actions";
 import { cn } from "@/lib/utils";
-import { TFakeNewsContent } from "@/utils/activity-schemas";
+import { TFakeNewsContent, TPostOrNotContent } from "@/utils/activity-types";
 import { activityType, ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "@prisma/client";
@@ -51,6 +51,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { PostOrNotForm } from "./post-or-not-form";
 
 export const activitySchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
@@ -128,20 +129,16 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
     });
   }
 
-  function handleSubmitActivity(data: TFakeNewsContent) {
-    const type = watch("type");
-    let newContent = "";
+  function handleSubmitActivity(data: unknown) {
     try {
-      if (type === "FAKE_NEWS") {
-        newContent = JSON.stringify(data);
-      }
+      const newContent = JSON.stringify(data);
+      setContent(data);
+      setValue("content", newContent);
     } catch (error) {
       console.error("Erro ao analisar dados da atividade", error);
       toast.error("Erro ao analisar dados da atividade");
       return;
     }
-    setContent(data);
-    setValue("content", newContent);
     setIsOpen(false);
   }
 
@@ -318,6 +315,12 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                 <FakeNewsForm
                   onSubmit={handleSubmitActivity}
                   fakeNews={content as unknown as TFakeNewsContent}
+                />
+              )}
+              {watch("type") === "POST_OR_NOT" && (
+                <PostOrNotForm
+                  onSubmit={handleSubmitActivity}
+                  postOrNot={content as unknown as TPostOrNotContent}
                 />
               )}
             </ScrollArea>
