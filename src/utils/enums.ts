@@ -11,7 +11,6 @@ export const activityType: Record<ActivityType, string> = {
   [ActivityType.POST_OR_NOT]: "Postar ou não postar",
   [ActivityType.QUIZ]: "Quiz",
   [ActivityType.THEMED_PASSWORD]: "Senha criativa",
-  [ActivityType.DECISION_MAZE]: "Labirinto de decisões",
   [ActivityType.FAKE_CHAT]: "Chat falso",
   [ActivityType.MATCH_PAIRS]: "Pares iguais",
   [ActivityType.INFORMATIVE_TEXT]: "Texto informativo",

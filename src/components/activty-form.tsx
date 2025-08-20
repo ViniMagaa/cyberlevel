@@ -13,7 +13,7 @@ import {
 } from "@/utils/activity-types";
 import { activityType, ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma } from "@prisma/client";
+import { ActivityType, Prisma } from "@prisma/client";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import {
   ArrowLeft,
@@ -66,21 +66,7 @@ export const activitySchema = z.object({
     error: "Selecione o público",
   }),
   moduleId: z.string().min(1, "O módulo é obrigatório"),
-  type: z.enum(
-    [
-      "FAKE_NEWS",
-      "POST_OR_NOT",
-      "QUIZ",
-      "THEMED_PASSWORD",
-      "DECISION_MAZE",
-      "FAKE_CHAT",
-      "MATCH_PAIRS",
-      "INFORMATIVE_TEXT",
-    ],
-    {
-      error: "Selecione o tipo de atividade",
-    },
-  ),
+  type: z.enum(ActivityType, "Selecione o tipo de atividade"),
   content: z.string().min(1, "O conteúdo da atividade é obrigatório"),
 });
 
