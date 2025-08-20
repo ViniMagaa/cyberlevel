@@ -9,6 +9,7 @@ import {
   TFakeNewsContent,
   TPostOrNotContent,
   TQuizContent,
+  TThemedPasswordContent,
 } from "@/utils/activity-types";
 import { activityType, ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +29,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { FakeNewsForm } from "./fake-news-form";
+import { PostOrNotForm } from "./post-or-not-form";
+import { QuizForm } from "./quiz-form";
+import { ThemedPasswordForm } from "./themed-password-form";
 import { Button } from "./ui/button";
 import {
   Command,
@@ -55,8 +59,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { PostOrNotForm } from "./post-or-not-form";
-import { QuizForm } from "./quiz-form";
 
 export const activitySchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
@@ -332,6 +334,12 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                 <QuizForm
                   onSubmit={handleSubmitActivity}
                   quiz={content as unknown as TQuizContent}
+                />
+              )}
+              {watch("type") === "THEMED_PASSWORD" && (
+                <ThemedPasswordForm
+                  onSubmit={handleSubmitActivity}
+                  themedPassword={content as unknown as TThemedPasswordContent}
                 />
               )}
             </ScrollArea>

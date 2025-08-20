@@ -1,10 +1,12 @@
 import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
 import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/post-or-not-details";
 import { QuizDetails } from "@/app/(admin)/admin/atividades/_components/quiz-details";
+import { ThemedPasswordDetails } from "@/app/(admin)/admin/atividades/_components/themed-password-details";
 import {
   TFakeNewsContent,
   TPostOrNotContent,
   TQuizContent,
+  TThemedPasswordContent,
 } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Activity } from "@prisma/client";
@@ -52,6 +54,13 @@ export function ActivityDialogDetails({
         )}
         {activity.type === "QUIZ" && (
           <QuizDetails quiz={activity.content as unknown as TQuizContent} />
+        )}
+        {activity.type === "THEMED_PASSWORD" && (
+          <ThemedPasswordDetails
+            themedPassword={
+              activity.content as unknown as TThemedPasswordContent
+            }
+          />
         )}
       </DialogContent>
     </Dialog>

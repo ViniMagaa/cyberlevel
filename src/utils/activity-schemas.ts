@@ -1,5 +1,6 @@
 import { ActivityType } from "@prisma/client";
 import { z } from "zod";
+import { ThemedPasswordRules, TThemedPasswordRules } from "./activity-types";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -58,5 +59,45 @@ export const activitySchemas = {
         }),
       )
       .min(1, "O quiz deve ter pelo menos uma pergunta"),
+  }),
+  [ActivityType.THEMED_PASSWORD]: z.object({
+    title: z.string().min(1, "Título da atividade é obrigatório"),
+    mission: z.string().min(1, "Missão é obrigatória"),
+    rules: z
+      .array(
+        z.object({
+          type: z.enum(ThemedPasswordRules, "Selecione um tipo"),
+          value: z.string().optional(),
+        }),
+      )
+      .min(1, "É necessário definir pelo menos uma regra")
+      .superRefine((rules, ctx) => {
+        const types = rules
+          .map((r) => r.type)
+          .filter(Boolean) as TThemedPasswordRules[];
+        if (new Set(types).size !== types.length) {
+          ctx.addIssue({
+            message: "Não é permitido repetir a mesma regra",
+            path: [],
+          });
+        }
+
+        const valueRequiredTypes: TThemedPasswordRules[] = [
+          ThemedPasswordRules.MIN_LENGTH,
+          ThemedPasswordRules.MAX_LENGTH,
+          ThemedPasswordRules.INCLUDE_WORD,
+          ThemedPasswordRules.EXCLUDE_WORD,
+        ];
+
+        rules.forEach((rule, index) => {
+          if (valueRequiredTypes.includes(rule.type) && !rule.value?.trim()) {
+            ctx.addIssue({
+              message: "Valor obrigatório",
+              path: [index, "value"],
+            });
+          }
+        });
+      }),
+    feedback: z.string().min(1, "Feedback é obrigatório"),
   }),
 };
