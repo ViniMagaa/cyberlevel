@@ -100,4 +100,25 @@ export const activitySchemas = {
       }),
     feedback: z.string().min(1, "Feedback é obrigatório"),
   }),
+  [ActivityType.FAKE_CHAT]: z.object({
+    title: z.string().min(1, "Título é obrigatório"),
+    messages: z
+      .array(
+        z.object({
+          characterMessage: z
+            .string()
+            .min(1, "Mensagem do personagem é obrigatória"),
+          options: z
+            .array(
+              z.object({
+                text: z.string().min(1, "Texto da opção é obrigatório"),
+                feedback: z.string().min(1, "Feedback é obrigatório"),
+                isSafe: z.boolean("Indique se é segura"),
+              }),
+            )
+            .min(1, "Deve ter pelo menos uma opção"),
+        }),
+      )
+      .min(1, "Deve ter pelo menos uma mensagem"),
+  }),
 };

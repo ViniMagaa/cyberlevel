@@ -6,6 +6,7 @@ import {
 } from "@/app/(admin)/admin/atividades/actions";
 import { cn } from "@/lib/utils";
 import {
+  TFakeChatContent,
   TFakeNewsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -28,6 +29,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { FakeChatForm } from "./fake-chat-form";
 import { FakeNewsForm } from "./fake-news-form";
 import { PostOrNotForm } from "./post-or-not-form";
 import { QuizForm } from "./quiz-form";
@@ -326,6 +328,12 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                 <ThemedPasswordForm
                   onSubmit={handleSubmitActivity}
                   themedPassword={content as unknown as TThemedPasswordContent}
+                />
+              )}
+              {watch("type") === "FAKE_CHAT" && (
+                <FakeChatForm
+                  onSubmit={handleSubmitActivity}
+                  fakeChat={content as unknown as TFakeChatContent}
                 />
               )}
             </ScrollArea>

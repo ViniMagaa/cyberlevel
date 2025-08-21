@@ -3,6 +3,7 @@ import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/pos
 import { QuizDetails } from "@/app/(admin)/admin/atividades/_components/quiz-details";
 import { ThemedPasswordDetails } from "@/app/(admin)/admin/atividades/_components/themed-password-details";
 import {
+  TFakeChatContent,
   TFakeNewsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -21,6 +22,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Separator } from "./ui/separator";
+import { FakeChatDetails } from "@/app/(admin)/admin/atividades/_components/fake-chat-details";
 
 type ActivityDialogDetailsProps = {
   activity: Activity;
@@ -60,6 +62,11 @@ export function ActivityDialogDetails({
             themedPassword={
               activity.content as unknown as TThemedPasswordContent
             }
+          />
+        )}
+        {activity.type === "FAKE_CHAT" && (
+          <FakeChatDetails
+            fakeChat={activity.content as unknown as TFakeChatContent}
           />
         )}
       </DialogContent>

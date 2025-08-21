@@ -1,3 +1,4 @@
+import { TFakeChatForm } from "@/components/fake-chat-form";
 import { TFakeNewsForm } from "@/components/fake-news-form";
 import { TPostOrNotForm } from "@/components/post-or-not-form";
 import { TQuizForm } from "@/components/quiz-form";
@@ -27,3 +28,5 @@ export const ThemedPasswordRules = {
 } as const;
 
 export type TThemedPasswordRules = keyof typeof ThemedPasswordRules;
+
+export type TFakeChatContent = TFakeChatForm;
