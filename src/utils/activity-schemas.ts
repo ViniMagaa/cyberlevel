@@ -121,4 +121,22 @@ export const activitySchemas = {
       )
       .min(1, "Deve ter pelo menos uma mensagem"),
   }),
+  [ActivityType.MATCH_PAIRS]: z.object({
+    title: z.string().min(1, "Título é obrigatório"),
+    concepts: z
+      .array(
+        z.object({
+          term: z.string().min(1, "O termo é obrigatório"),
+          definition: z.string().min(1, "A definição é obrigatória"),
+        }),
+      )
+      .min(2, "Cadastre pelo menos 2 conceitos para formar pares"),
+    timeLimit: z
+      .number("Informe o limite de tempo")
+      .min(1, "No mínimo 1 segundo"),
+    maxAttempts: z
+      .number("Informe a quantidade de tentativas")
+      .min(1, "No mínimo 1 tentativa"),
+    feedback: z.string().optional(),
+  }),
 };

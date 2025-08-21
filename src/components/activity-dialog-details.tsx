@@ -1,10 +1,13 @@
+import { FakeChatDetails } from "@/app/(admin)/admin/atividades/_components/fake-chat-details";
 import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
+import { MatchPairsDetails } from "@/app/(admin)/admin/atividades/_components/match-pairs-details";
 import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/post-or-not-details";
 import { QuizDetails } from "@/app/(admin)/admin/atividades/_components/quiz-details";
 import { ThemedPasswordDetails } from "@/app/(admin)/admin/atividades/_components/themed-password-details";
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TMatchPairsContent,
   TPostOrNotContent,
   TQuizContent,
   TThemedPasswordContent,
@@ -22,7 +25,6 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Separator } from "./ui/separator";
-import { FakeChatDetails } from "@/app/(admin)/admin/atividades/_components/fake-chat-details";
 
 type ActivityDialogDetailsProps = {
   activity: Activity;
@@ -67,6 +69,11 @@ export function ActivityDialogDetails({
         {activity.type === "FAKE_CHAT" && (
           <FakeChatDetails
             fakeChat={activity.content as unknown as TFakeChatContent}
+          />
+        )}
+        {activity.type === "MATCH_PAIRS" && (
+          <MatchPairsDetails
+            matchPairs={activity.content as unknown as TMatchPairsContent}
           />
         )}
       </DialogContent>
