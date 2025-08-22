@@ -139,4 +139,17 @@ export const activitySchemas = {
       .min(1, "No mínimo 1 tentativa"),
     feedback: z.string().optional(),
   }),
+  [ActivityType.INFORMATIVE_TEXT]: z.object({
+    title: z.string().min(1, "Título é obrigatório"),
+    description: z.string().optional(),
+    content: z.string().min(1, "O conteúdo é obrigatório"),
+    image: z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Apenas .jpg, .png e .webp são suportados",
+      )
+      .optional(),
+  }),
 };

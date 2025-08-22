@@ -1,5 +1,6 @@
 import { FakeChatDetails } from "@/app/(admin)/admin/atividades/_components/fake-chat-details";
 import { FakeNewsDetails } from "@/app/(admin)/admin/atividades/_components/fake-news-details";
+import { InformativeTextDetails } from "@/app/(admin)/admin/atividades/_components/informative-text-details";
 import { MatchPairsDetails } from "@/app/(admin)/admin/atividades/_components/match-pairs-details";
 import { PostOrNotDetails } from "@/app/(admin)/admin/atividades/_components/post-or-not-details";
 import { QuizDetails } from "@/app/(admin)/admin/atividades/_components/quiz-details";
@@ -7,6 +8,7 @@ import { ThemedPasswordDetails } from "@/app/(admin)/admin/atividades/_component
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TInformativeTextContent,
   TMatchPairsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -74,6 +76,13 @@ export function ActivityDialogDetails({
         {activity.type === "MATCH_PAIRS" && (
           <MatchPairsDetails
             matchPairs={activity.content as unknown as TMatchPairsContent}
+          />
+        )}
+        {activity.type === "INFORMATIVE_TEXT" && (
+          <InformativeTextDetails
+            informativeText={
+              activity.content as unknown as TInformativeTextContent
+            }
           />
         )}
       </DialogContent>

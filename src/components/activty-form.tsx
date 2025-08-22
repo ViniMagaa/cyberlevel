@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TInformativeTextContent,
   TMatchPairsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -32,6 +33,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { FakeChatForm } from "./fake-chat-form";
 import { FakeNewsForm } from "./fake-news-form";
+import { InformativeTextForm } from "./informative-text-form";
 import MatchPairsForm from "./match-pairs-form";
 import { PostOrNotForm } from "./post-or-not-form";
 import { QuizForm } from "./quiz-form";
@@ -342,6 +344,14 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                 <MatchPairsForm
                   onSubmit={handleSubmitActivity}
                   matchPairs={content as unknown as TMatchPairsContent}
+                />
+              )}
+              {watch("type") === "INFORMATIVE_TEXT" && (
+                <InformativeTextForm
+                  onSubmit={handleSubmitActivity}
+                  informativeText={
+                    content as unknown as TInformativeTextContent
+                  }
                 />
               )}
             </ScrollArea>

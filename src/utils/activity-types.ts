@@ -2,6 +2,7 @@ import { TFakeChatForm } from "@/components/fake-chat-form";
 import { TFakeNewsForm } from "@/components/fake-news-form";
 import { TMatchPairsForm } from "@/components/match-pairs-form";
 import { TPostOrNotForm } from "@/components/post-or-not-form";
+import { TInformativeTextForm } from "@/components/informative-text-form";
 import { TQuizForm } from "@/components/quiz-form";
 import { TThemedPasswordForm } from "@/components/themed-password-form";
 
@@ -33,3 +34,7 @@ export type TThemedPasswordRules = keyof typeof ThemedPasswordRules;
 export type TFakeChatContent = TFakeChatForm;
 
 export type TMatchPairsContent = TMatchPairsForm;
+
+export type TInformativeTextContent = Omit<TInformativeTextForm, "image"> & {
+  imageUrl?: string;
+};
