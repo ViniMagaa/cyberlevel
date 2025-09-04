@@ -41,7 +41,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
     startTransition(async () => {
       try {
         await deleteActivity(activity.id);
-        toast.success("Atividade excluído com sucesso");
+        toast.success("Atividade excluída com sucesso");
         router.refresh();
       } catch (error) {
         console.error(error);

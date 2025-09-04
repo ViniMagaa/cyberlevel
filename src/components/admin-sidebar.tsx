@@ -1,4 +1,11 @@
-import { Component, Home, NotebookPen, Settings, Users } from "lucide-react";
+import {
+  Component,
+  Home,
+  NotebookPen,
+  Settings,
+  Store,
+  Users,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -31,6 +38,11 @@ const items = [
     title: "Atividades",
     url: "/admin/atividades",
     icon: NotebookPen,
+  },
+  {
+    title: "Produtos",
+    url: "/admin/produtos",
+    icon: Store,
   },
   {
     title: "Configurações",
