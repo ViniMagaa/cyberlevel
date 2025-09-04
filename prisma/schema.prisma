@@ -8,9 +8,9 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// -------------------
+// ----------
 // User Model
-// -------------------
+// ----------
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -20,12 +20,16 @@ model User {
   role      UserRole
   createdAt DateTime @default(now())
 
-  purchases Purchase[]
+  // store relations
+  cart     ShoppingCart? @relation("ShoppingCartToUser")
+  orders   Order[]
+  Wishlist Wishlist?
+  Address  Address[]
 }
 
-// -------------------
+// -------------------------------------
 // Archetype, Module and Activity Models
-// -------------------
+// -------------------------------------
 model Archetype {
   id          String   @id @default(uuid())
   name        String
@@ -54,32 +58,123 @@ model Activity {
   module   Module       @relation(fields: [moduleId], references: [id])
 }
 
-// -------------------
+// ------------
 // Store Models
-// -------------------
+// ------------
 model Product {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
-  price       Int
-  active      Boolean @default(true)
+  price       Decimal
+  imageUrl    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  purchases Purchase[]
+  cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  orderItems    OrderItem[]
 }
 
-model Purchase {
-  id            String   @id @default(uuid())
-  responsibleId String
-  productId     String
-  date          DateTime @default(now())
+model ShoppingCart {
+  id        String   @id @default(uuid())
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  responsible User    @relation(fields: [responsibleId], references: [id])
-  product     Product @relation(fields: [productId], references: [id])
+  user User @relation(name: "ShoppingCartToUser", fields: [userId], references: [id])
+
+  items CartItem[]
+
+  @@unique([userId])
 }
 
-// -------------------
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+
+  cart    ShoppingCart @relation(fields: [cartId], references: [id])
+  product Product      @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId])
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  items WishlistItem[]
+
+  @@unique([userId])
+}
+
+model WishlistItem {
+  id         String   @id @default(uuid())
+  wishlistId String
+  productId  String
+  note       String?
+  addedAt    DateTime @default(now())
+
+  wishlist Wishlist @relation(fields: [wishlistId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+
+  @@unique([wishlistId, productId])
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  userId    String
+  addressId String?
+  status    OrderStatus @default(PENDING)
+  total     Decimal     @default(0)
+  createdAt DateTime    @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  address Address? @relation(fields: [addressId], references: [id])
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  productId   String
+  productName String
+  unitPrice   Decimal
+  quantity    Int      @default(1)
+  subtotal    Decimal
+  createdAt   DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+// -------
+// Address
+// -------
+model Address {
+  id         String  @id @default(uuid())
+  userId     String
+  street     String
+  number     String?
+  complement String?
+  city       String
+  state      String
+  zipCode    String
+
+  user   User    @relation(fields: [userId], references: [id])
+  orders Order[]
+}
+
+// -----
 // Enums
-// -------------------
+// -----
 enum UserRole {
   ADMIN
   RESPONSIBLE
@@ -99,4 +194,14 @@ enum ActivityType {
   FAKE_CHAT
   MATCH_PAIRS
   INFORMATIVE_TEXT
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
 }
