@@ -300,7 +300,7 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
               <Settings /> Configurar atividade
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="md:max-w-3xl">
             <DialogHeader>
               <DialogTitle>
                 Atividade do tipo {activityType[watch("type")]}
