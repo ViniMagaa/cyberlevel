@@ -8,6 +8,9 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// -------------------
+// User Model
+// -------------------
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -16,8 +19,13 @@ model User {
   birthdate DateTime
   role      UserRole
   createdAt DateTime @default(now())
+
+  purchases Purchase[]
 }
 
+// -------------------
+// Archetype, Module and Activity Models
+// -------------------
 model Archetype {
   id          String   @id @default(uuid())
   name        String
@@ -46,6 +54,32 @@ model Activity {
   module   Module       @relation(fields: [moduleId], references: [id])
 }
 
+// -------------------
+// Store Models
+// -------------------
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  price       Int
+  active      Boolean @default(true)
+
+  purchases Purchase[]
+}
+
+model Purchase {
+  id            String   @id @default(uuid())
+  responsibleId String
+  productId     String
+  date          DateTime @default(now())
+
+  responsible User    @relation(fields: [responsibleId], references: [id])
+  product     Product @relation(fields: [productId], references: [id])
+}
+
+// -------------------
+// Enums
+// -------------------
 enum UserRole {
   ADMIN
   RESPONSIBLE
