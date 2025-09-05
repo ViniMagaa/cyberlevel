@@ -1,12 +1,20 @@
-import { uploadActivityImage } from "@/app/(admin)/admin/atividades/actions";
-import { activitySchemas } from "@/utils/activity-schemas";
-import { TInformativeTextContent } from "@/utils/activity-types";
+"use client";
+
+import {
+  createArticle,
+  updateArticle,
+  uploadArticleImage,
+} from "@/app/(admin)/admin/artigos/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2Icon } from "lucide-react";
+import { Article, Prisma } from "@prisma/client";
+import { ArrowLeft, Loader2Icon } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { toast } from "sonner";
 import z from "zod";
 import { MarkdownExampleDialog } from "./markdown-example-dialog";
 import { AspectRatio } from "./ui/aspect-ratio";
@@ -21,65 +29,100 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
-export type TInformativeTextForm = z.infer<
-  (typeof activitySchemas)["INFORMATIVE_TEXT"]
->; // com File
+const MAX_FILE_SIZE = 1024 * 1024 * 5;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-type InformativeTextFormProps = {
-  informativeText?: TInformativeTextContent;
-  onSubmit: (data: TInformativeTextContent) => void;
+const articleSchema = z.object({
+  title: z.string().min(1, "Título é obrigatório"),
+  content: z.string().min(1, "O conteúdo é obrigatório"),
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Apenas .jpg, .png e .webp são suportados",
+    )
+    .optional(),
+  isPublished: z.boolean("Indique a visibilidade do artigo"),
+}); // com File
+
+type TArticleForm = z.infer<typeof articleSchema>;
+
+type ArticleFormProps = {
+  article?: Article;
+  userId: string;
 };
 
-export function InformativeTextForm({
-  informativeText,
-  onSubmit,
-}: InformativeTextFormProps) {
+export function ArticleForm({ article, userId }: ArticleFormProps) {
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState<string | undefined>(
-    informativeText?.imageUrl,
+    article?.imageUrl ?? undefined,
   );
 
-  const form = useForm<TInformativeTextForm>({
-    resolver: zodResolver(activitySchemas.INFORMATIVE_TEXT),
+  const form = useForm<TArticleForm>({
+    resolver: zodResolver(articleSchema),
     defaultValues: {
-      title: informativeText?.title ?? "",
-      description: informativeText?.description ?? "",
-      content: informativeText?.content ?? "",
+      title: article?.title ?? "",
+      content: article?.content ?? "",
       image: undefined,
+      isPublished:
+        typeof article?.isPublished === "boolean"
+          ? article.isPublished
+          : (undefined as unknown as boolean),
     },
   });
 
   const { watch } = form;
 
-  async function handleSubmit(values: TInformativeTextForm) {
-    const ok = await form.trigger();
-    if (!ok) return;
-
+  async function onSubmit(data: TArticleForm) {
     startTransition(async () => {
-      let imageUrl = informativeText?.imageUrl;
+      try {
+        let imageUrl = article?.imageUrl;
 
-      // Se o usuário selecionar um arquivo novo, faz o upload
-      if (values.image) {
-        imageUrl = await uploadActivityImage(values.image, "informative-text");
+        // Se o usuário selecionar um arquivo novo, faz o upload
+        if (data.image) {
+          imageUrl = await uploadArticleImage(data.image, "articles");
+        }
+
+        // Monta o payload que será salvo no JSON
+        const newArticleData: Prisma.ArticleCreateInput = {
+          title: data.title,
+          content: data.content,
+          imageUrl: imageUrl ?? undefined, // <- URL pública do Supabase
+          isPublished: data.isPublished,
+          author: { connect: { id: article?.authorId ?? userId } },
+        };
+
+        if (article && article.id) {
+          await updateArticle(article.id, newArticleData);
+          toast.success("Artigo atualizado");
+        } else {
+          await createArticle(newArticleData);
+          toast.success("Artigo criado");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Erro ao salvar artigo");
       }
-
-      // Monta o payload que será salvo no JSON
-      const payload: TInformativeTextContent = {
-        title: values.title,
-        description: values.description,
-        content: values.content,
-        imageUrl, // <- URL pública do Supabase
-      };
-
-      onSubmit(payload);
+      redirect("/admin/artigos");
     });
   }
 
   return (
     <Form {...form}>
-      <form className="flex grow flex-col justify-between gap-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex grow flex-col justify-between gap-4"
+      >
         {/* Título */}
         <FormField
           control={form.control}
@@ -87,25 +130,7 @@ export function InformativeTextForm({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Título do texto" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Descrição */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="Descrição (opcional)"
-                  className="max-h-40 resize-y"
-                  {...field}
-                />
+                <Input placeholder="Título do artigo" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -199,14 +224,51 @@ export function InformativeTextForm({
           }}
         />
 
-        <div className="flex justify-end">
+        {/* Está publicado? */}
+        <FormField
+          control={form.control}
+          name="isPublished"
+          render={({ field }) => (
+            <FormItem className="flex-auto">
+              <Select
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={
+                  field.value === true
+                    ? "true"
+                    : field.value === false
+                      ? "false"
+                      : undefined
+                }
+              >
+                <FormControl className="w-full">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a visibilidade" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="true">Público</SelectItem>
+                  <SelectItem value="false">Privado</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex flex-wrap justify-between gap-4">
+          <Button type="button" variant="link" className="px-0" asChild>
+            <Link href="/admin/artigos">
+              <ArrowLeft />
+              Voltar
+            </Link>
+          </Button>
           <Button
-            type="button"
-            onClick={form.handleSubmit(handleSubmit)}
+            type="submit"
             variant="default"
+            className="ml-auto disabled:opacity-50"
             disabled={isPending}
           >
-            Salvar
+            {article ? "Atualizar" : "Criar"}
             {isPending && <Loader2Icon className="animate-spin" />}
           </Button>
         </div>

@@ -25,6 +25,9 @@ model User {
   orders   Order[]
   Wishlist Wishlist?
   Address  Address[]
+
+  articles     Article[]
+  articleViews ArticleView[]
 }
 
 // -------------------------------------
@@ -56,6 +59,35 @@ model Activity {
   order    Int
   content  Json // structure varies per activity type
   module   Module       @relation(fields: [moduleId], references: [id])
+}
+
+// -------
+// Article
+// -------
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  imageUrl    String?
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isPublished Boolean  @default(false)
+
+  author User?         @relation(fields: [authorId], references: [id])
+  views  ArticleView[]
+}
+
+model ArticleView {
+  id        String   @id @default(uuid())
+  articleId String
+  userId    String
+  viewedAt  DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([articleId, userId])
 }
 
 // ------------
