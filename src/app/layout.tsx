@@ -3,6 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import Preloader from "@/components/preloader";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Preloader>{children}</Preloader>
           <Toaster position="top-center" />
         </ThemeProvider>
       </body>
