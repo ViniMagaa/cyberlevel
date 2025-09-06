@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
+import { UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function getUsers() {
@@ -15,6 +16,21 @@ export async function getUsers() {
       birthdate: true,
     },
   });
+}
+
+export async function updateUserRole(userId: string, role: UserRole) {
+  try {
+    await db.user.update({
+      where: { id: userId },
+      data: { role },
+    });
+
+    revalidatePath("/admin/usuarios");
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Erro ao atualizar função" };
+  }
 }
 
 export async function deleteUser(id: string) {
