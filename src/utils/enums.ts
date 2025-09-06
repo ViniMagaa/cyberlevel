@@ -1,4 +1,4 @@
-import { ActivityType, AgeGroup } from "@prisma/client";
+import { ActivityType, AgeGroup, UserRole } from "@prisma/client";
 import { ThemedPasswordRules, TThemedPasswordRules } from "./activity-types";
 
 export const ageGroup: Record<AgeGroup, string> = {
@@ -25,4 +25,10 @@ export const themedPasswordRuleType: Record<TThemedPasswordRules, string> = {
   [ThemedPasswordRules.SPECIAL_CHAR]: "Pelo menos um símbolo",
   [ThemedPasswordRules.INCLUDE_WORD]: "Deve conter palavra",
   [ThemedPasswordRules.EXCLUDE_WORD]: "Não pode conter palavra",
+};
+
+export const userRoles: Record<UserRole, string> = {
+  [UserRole.ADMIN]: "Admin",
+  [UserRole.LEARNER]: "Aprendiz",
+  [UserRole.RESPONSIBLE]: "Responsável",
 };
