@@ -10,7 +10,7 @@ export default function AdminLayout({
     <SidebarProvider>
       <ResponsibleSidebar />
       <main className="w-full">
-        <SidebarTrigger />
+        <SidebarTrigger className="absolute" />
         {children}
       </main>
     </SidebarProvider>

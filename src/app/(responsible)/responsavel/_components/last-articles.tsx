@@ -1,0 +1,38 @@
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/utils/supabase/server";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getPublishedArticles } from "../artigos/actions";
+import { ArticleCard } from "./article-card";
+
+export default async function LastArticles() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return redirect("/dashboard");
+
+  const articles = await getPublishedArticles(user.id, 2);
+
+  return (
+    <section className="space-y-4">
+      <h2 className="text-2xl">Últimos artigos</h2>
+      <div className="flex flex-col gap-4">
+        {articles.length > 0 ? (
+          articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))
+        ) : (
+          <p className="text-muted-foreground text-sm">
+            Nenhum artigo encontrado.
+          </p>
+        )}
+      </div>
+      <Button className="w-full rounded-full" asChild>
+        <Link href="/responsavel/artigos">Visualizar tudo</Link>
+      </Button>
+    </section>
+  );
+}

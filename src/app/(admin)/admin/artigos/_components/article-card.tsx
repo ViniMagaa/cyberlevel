@@ -14,7 +14,13 @@ import {
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -67,44 +73,42 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <Card className="gap-2">
+      <CardHeader className="flex items-start justify-between">
+        <CardTitle className="text-3xl font-bold">{article.title}</CardTitle>
+        {article.isPublished ? (
+          <Badge
+            variant="secondary"
+            className="bg-green-500 text-white dark:bg-green-600"
+          >
+            Público
+          </Badge>
+        ) : (
+          <Badge variant="destructive">Privado</Badge>
+        )}
+      </CardHeader>
       <CardContent className="flex flex-wrap items-end justify-between gap-2">
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h2 className="text-3xl font-bold">{article.title}</h2>
-            {article.isPublished ? (
-              <Badge
-                variant="secondary"
-                className="bg-green-500 text-white dark:bg-green-600"
-              >
-                Público
-              </Badge>
-            ) : (
-              <Badge variant="destructive">Privado</Badge>
-            )}
-          </div>
-          <div>
+          <p className="text-muted-foreground">
+            {article.author?.name ?? "Sem autor"}
+          </p>
+          <p className="text-muted-foreground">
+            Criado em {formatDate(article.createdAt)}
+          </p>
+          {!isSameSecond(article.createdAt, article.updatedAt) && (
             <p className="text-muted-foreground">
-              {article.author?.name ?? "Sem autor"}
+              Atualizado{" "}
+              {formatDistanceToNow(article.updatedAt, {
+                locale: ptBR,
+                addSuffix: true,
+              })}
             </p>
-            <p className="text-muted-foreground">
-              Criado em {formatDate(article.createdAt)}
+          )}
+          {(article.isPublished || article._count.views > 0) && (
+            <p className="text-muted-foreground font-bold">
+              {article._count.views}{" "}
+              {article._count.views === 1 ? "visualização" : "visualizações"}
             </p>
-            {!isSameSecond(article.createdAt, article.updatedAt) && (
-              <p className="text-muted-foreground">
-                Atualizado{" "}
-                {formatDistanceToNow(article.updatedAt, {
-                  locale: ptBR,
-                  addSuffix: true,
-                })}
-              </p>
-            )}
-            {(article.isPublished || article._count.views > 0) && (
-              <p className="text-muted-foreground font-bold">
-                {article._count.views}{" "}
-                {article._count.views === 1 ? "visualização" : "visualizações"}
-              </p>
-            )}
-          </div>
+          )}
         </div>
 
         <div className="ml-auto flex items-center justify-end gap-1">

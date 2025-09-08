@@ -43,9 +43,8 @@ export function SignOutButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" size="icon">
           <LogOut />
-          Sair
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
