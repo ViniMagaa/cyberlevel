@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { db } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import LastArticles from "./_components/last-articles";
+import LastArticles from "./artigos/_components/last-articles";
 
 export default async function Dashboard() {
   const supabase = await createClient();

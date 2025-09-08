@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getPublishedArticles } from "../artigos/actions";
+import { getPublishedArticles } from "../actions";
 import { ArticleCard } from "./article-card";
 
 export default async function LastArticles() {

@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { ArticleCard } from "../_components/article-card";
+import { ArticleCard } from "./_components/article-card";
 import { getPublishedArticles } from "./actions";
 
 export default async function Articles() {
