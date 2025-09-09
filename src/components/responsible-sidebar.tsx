@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function ResponsibleSidebar() {
   return (
@@ -30,40 +31,40 @@ export function ResponsibleSidebar() {
               {/* Início */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/responsavel">
+                  <Link href="/responsavel">
                     <Home />
                     <span>Início</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               {/* ARtigos */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/responsavel/artigos">
+                  <Link href="/responsavel/artigos">
                     <FileText />
                     <span>Artigos</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               {/* Estatísticas */}
               <SidebarMenuSubItem>
                 <SidebarMenuButton asChild>
-                  <a href="/responsavel/estatisticas">
+                  <Link href="/responsavel/estatisticas">
                     <ChartNoAxesCombined />
                     <span>Estatísticas</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuSubItem>
 
               {/* Loja */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/responsavel/loja">
+                  <Link href="/responsavel/loja">
                     <Store />
                     <span>Loja</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -75,10 +76,10 @@ export function ResponsibleSidebar() {
           {/* Configurações */}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <a href="/responsavel/configuracoes">
+              <Link href="/responsavel/configuracoes">
                 <Settings />
                 <span>Configurações</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

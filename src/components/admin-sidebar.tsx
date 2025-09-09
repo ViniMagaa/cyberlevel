@@ -27,6 +27,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function AdminSidebar() {
   return (
@@ -39,30 +40,30 @@ export function AdminSidebar() {
               {/* Início */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin">
+                  <Link href="/admin">
                     <Home />
                     <span>Início</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               {/* Usuários */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/usuarios">
+                  <Link href="/admin/usuarios">
                     <Users />
                     <span>Usuários</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               {/* Produtos */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/produtos">
+                  <Link href="/admin/produtos">
                     <Store />
                     <span>Produtos</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
@@ -79,30 +80,30 @@ export function AdminSidebar() {
                       {/* Arquétipos */}
                       <SidebarMenuSubItem>
                         <SidebarMenuButton asChild>
-                          <a href="/admin/arquetipos">
+                          <Link href="/admin/arquetipos">
                             <Component />
                             <span>Arquétipos</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
 
                       {/* Atividades */}
                       <SidebarMenuSubItem>
                         <SidebarMenuButton asChild>
-                          <a href="/admin/atividades">
+                          <Link href="/admin/atividades">
                             <NotebookPen />
                             <span>Atividades</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
 
                       {/* Artigos */}
                       <SidebarMenuSubItem>
                         <SidebarMenuButton asChild>
-                          <a href="/admin/artigos">
+                          <Link href="/admin/artigos">
                             <FileText />
                             <span>Artigos</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
@@ -118,10 +119,10 @@ export function AdminSidebar() {
           {/* Configurações */}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <a href="/admin/configuracoes">
+              <Link href="/admin/configuracoes">
                 <Settings />
                 <span>Configurações</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
