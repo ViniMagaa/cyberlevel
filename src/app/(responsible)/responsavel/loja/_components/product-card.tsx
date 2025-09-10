@@ -15,26 +15,50 @@ import { Product } from "@prisma/client";
 import { Check, Heart, Loader2Icon, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
-import { addToCart, removeFromCart } from "../actions";
+import {
+  addToCart,
+  addToWishlist,
+  removeFromCart,
+  removeFromWishlist,
+} from "../actions";
 
 type ProductCardProps = {
   userId: string;
   product: Omit<Product, "price"> & { price: number };
   isInCart?: boolean;
+  isInWishlist?: boolean;
 };
 
-export function ProductCard({ userId, product, isInCart }: ProductCardProps) {
-  const [isPending, startTransition] = useTransition();
+export function ProductCard({
+  userId,
+  product,
+  isInCart,
+  isInWishlist,
+}: ProductCardProps) {
+  const [isPendingCart, startCartTransition] = useTransition();
+  const [isPendingWishlist, startWishlistTransition] = useTransition();
 
   function handleAddToCart() {
-    startTransition(() => {
+    startCartTransition(() => {
       addToCart(userId, product.id);
     });
   }
 
-  function handleRemove() {
-    startTransition(() => {
+  function handleRemoveCart() {
+    startCartTransition(() => {
       removeFromCart(userId, product.id);
+    });
+  }
+
+  function handleAddToWishlist() {
+    startWishlistTransition(() => {
+      addToWishlist(userId, product.id);
+    });
+  }
+
+  function handleRemoveWishlist() {
+    startWishlistTransition(() => {
+      removeFromWishlist(userId, product.id);
     });
   }
 
@@ -60,19 +84,48 @@ export function ProductCard({ userId, product, isInCart }: ProductCardProps) {
         <p className="text-lg font-black">{formatCurrency(product.price)}</p>
       </CardContent>
       <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-        <Button variant="outline" size="icon" className="rounded-full">
-          <Heart />
-        </Button>
+        {isInWishlist ? (
+          <Button
+            variant="default"
+            size="icon"
+            className="group/wishlist-button rounded-full"
+            onClick={handleRemoveWishlist}
+            disabled={isPendingWishlist}
+          >
+            {isPendingWishlist ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <>
+                <Heart className="group-hover/wishlist-button:hidden" />
+                <X className="hidden group-hover/wishlist-button:block" />
+              </>
+            )}
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full"
+            onClick={handleAddToWishlist}
+            disabled={isPendingWishlist}
+          >
+            {isPendingWishlist ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <Heart />
+            )}
+          </Button>
+        )}
 
         {isInCart ? (
           <Button
             variant="default"
             size="icon"
             className="group/cart-button rounded-full"
-            onClick={handleRemove}
-            disabled={isPending}
+            onClick={handleRemoveCart}
+            disabled={isPendingCart}
           >
-            {isPending ? (
+            {isPendingCart ? (
               <Loader2Icon className="animate-spin" />
             ) : (
               <>
@@ -87,9 +140,9 @@ export function ProductCard({ userId, product, isInCart }: ProductCardProps) {
             size="icon"
             className="rounded-full"
             onClick={handleAddToCart}
-            disabled={isPending}
+            disabled={isPendingCart}
           >
-            {isPending ? (
+            {isPendingCart ? (
               <Loader2Icon className="animate-spin" />
             ) : (
               <ShoppingCart />

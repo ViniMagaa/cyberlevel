@@ -16,30 +16,50 @@ import {
   X,
 } from "lucide-react";
 import { useTransition } from "react";
-import { addToCart, removeFromCart } from "../actions";
+import {
+  addToCart,
+  addToWishlist,
+  removeFromCart,
+  removeFromWishlist,
+} from "../actions";
 
 type FeaturedProductProps = {
   userId: string;
   product: Omit<Product, "price"> & { price: number };
   isInCart?: boolean;
+  isInWishlist?: boolean;
 };
 
 export function FeaturedProduct({
   userId,
   product,
   isInCart,
+  isInWishlist,
 }: FeaturedProductProps) {
-  const [isPending, startTransition] = useTransition();
+  const [isPendingCart, startCartTransition] = useTransition();
+  const [isPendingWishlist, startWishlistTransition] = useTransition();
 
   function handleAddToCart() {
-    startTransition(() => {
+    startCartTransition(() => {
       addToCart(userId, product.id);
     });
   }
 
-  function handleRemove() {
-    startTransition(() => {
+  function handleRemoveCart() {
+    startCartTransition(() => {
       removeFromCart(userId, product.id);
+    });
+  }
+
+  function handleAddToWishlist() {
+    startWishlistTransition(() => {
+      addToWishlist(userId, product.id);
+    });
+  }
+
+  function handleRemoveWishlist() {
+    startWishlistTransition(() => {
+      removeFromWishlist(userId, product.id);
     });
   }
 
@@ -77,13 +97,38 @@ export function FeaturedProduct({
                   <Asterisk className="h-6 w-6" />
                   Produto em destaque
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="ml-auto rounded-full"
-                >
-                  <Heart />
-                </Button>
+                {isInWishlist ? (
+                  <Button
+                    variant="default"
+                    size="icon"
+                    className="group/wishlist-button ml-auto rounded-full"
+                    onClick={handleRemoveWishlist}
+                    disabled={isPendingWishlist}
+                  >
+                    {isPendingWishlist ? (
+                      <Loader2Icon className="animate-spin" />
+                    ) : (
+                      <>
+                        <Heart className="group-hover/wishlist-button:hidden" />
+                        <X className="hidden group-hover/wishlist-button:block" />
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="ml-auto rounded-full"
+                    onClick={handleAddToWishlist}
+                    disabled={isPendingWishlist}
+                  >
+                    {isPendingWishlist ? (
+                      <Loader2Icon className="animate-spin" />
+                    ) : (
+                      <Heart />
+                    )}
+                  </Button>
+                )}
               </div>
               <h2 className="text-5xl font-bold">{product.name}</h2>
               <div className="text-lg">
@@ -98,22 +143,22 @@ export function FeaturedProduct({
               <Button
                 variant="outline"
                 size="lg"
-                className="group rounded-full"
-                onClick={handleRemove}
-                disabled={isPending}
+                className="group/cart-button rounded-full"
+                onClick={handleRemoveCart}
+                disabled={isPendingCart}
               >
-                <span className="group-hover:hidden">
+                <span className="group-hover/cart-button:hidden">
                   Adicionado ao carrinho
                 </span>
-                <span className="hidden group-hover:block">
+                <span className="hidden group-hover/cart-button:block">
                   Remover do carrinho
                 </span>
-                {isPending ? (
+                {isPendingCart ? (
                   <Loader2Icon className="animate-spin" />
                 ) : (
                   <>
-                    <Check className="group-hover:hidden" />
-                    <X className="hidden group-hover:block" />
+                    <Check className="group-hover/cart-button:hidden" />
+                    <X className="hidden group-hover/cart-button:block" />
                   </>
                 )}
               </Button>
@@ -122,10 +167,10 @@ export function FeaturedProduct({
                 size="lg"
                 className="rounded-full"
                 onClick={handleAddToCart}
-                disabled={isPending}
+                disabled={isPendingCart}
               >
                 Adicionar ao carrinho
-                {isPending ? (
+                {isPendingCart ? (
                   <Loader2Icon className="animate-spin" />
                 ) : (
                   <ShoppingCart />

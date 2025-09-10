@@ -1,32 +1,27 @@
-import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { requireUserSession } from "@/lib/auth";
-import { Heart } from "lucide-react";
 import { CartDrawer } from "./_components/cart-drawer";
 import { FeaturedProduct } from "./_components/featured-product";
 import { ProductCard } from "./_components/product-card";
-import { getActiveProducts, getCart } from "./actions";
+import { WishlistDrawer } from "./_components/wishlist-drawer";
+import { getActiveProducts, getCart, getWishlist } from "./actions";
 
 export default async function StorePage() {
   const { user } = await requireUserSession();
 
   if (!user) return <div>Usuário não encontrado.</div>;
 
-  const [featuredProduct, ...products] = await getActiveProducts();
-
-  const cart = await getCart(user.id);
+  const [[featuredProduct, ...products], cart, wishlist] = await Promise.all([
+    getActiveProducts(),
+    getCart(user.id),
+    getWishlist(user.id),
+  ]);
 
   function isInCart(productId: string) {
     return !!cart?.items.some((item) => item.productId === productId);
+  }
+
+  function isInWishlist(productId: string) {
+    return !!wishlist?.items.some((item) => item.productId === productId);
   }
 
   return (
@@ -34,27 +29,37 @@ export default async function StorePage() {
       <div className="flex w-full flex-wrap justify-between">
         <h1 className="text-4xl font-bold">Loja</h1>
         <div className="space-x-4">
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button size="lg" variant="ghost">
-                <Heart /> Favoritos
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle className="text-4xl font-bold">
-                  Produtos favoritos
-                </DrawerTitle>
-                <DrawerDescription>Nenhum produto favoritado</DrawerDescription>
-              </DrawerHeader>
-              <DrawerFooter>
-                <Button>Limpar favoritos</Button>
-                <DrawerClose asChild>
-                  <Button variant="outline">Voltar</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <WishlistDrawer
+            userId={user.id}
+            cart={
+              cart
+                ? {
+                    ...cart,
+                    items: cart.items.map((item) => ({
+                      ...item,
+                      product: {
+                        ...item.product,
+                        price: Number(item.product.price),
+                      },
+                    })),
+                  }
+                : null
+            }
+            wishlist={
+              wishlist
+                ? {
+                    ...wishlist,
+                    items: wishlist.items.map((item) => ({
+                      ...item,
+                      product: {
+                        ...item.product,
+                        price: Number(item.product.price),
+                      },
+                    })),
+                  }
+                : null
+            }
+          />
 
           <CartDrawer
             userId={user.id}
@@ -85,6 +90,7 @@ export default async function StorePage() {
               price: Number(featuredProduct.price),
             }}
             isInCart={isInCart(featuredProduct.id)}
+            isInWishlist={isInWishlist(featuredProduct.id)}
           />
         </div>
         {products.length > 0 ? (
@@ -94,6 +100,7 @@ export default async function StorePage() {
               key={product.id}
               product={{ ...product, price: Number(product.price) }}
               isInCart={isInCart(product.id)}
+              isInWishlist={isInWishlist(product.id)}
             />
           ))
         ) : (

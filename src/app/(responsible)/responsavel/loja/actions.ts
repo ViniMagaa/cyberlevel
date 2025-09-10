@@ -112,8 +112,8 @@ export async function addToWishlist(
     return item;
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao adicionar item na wishlist:", message);
-    throw new Error(`Erro ao adicionar item na wishlist: ${message}`);
+    console.error("Erro ao adicionar item nos favoritos:", message);
+    throw new Error(`Erro ao adicionar item nos favoritos: ${message}`);
   }
 }
 
@@ -130,8 +130,25 @@ export async function removeFromWishlist(userId: string, productId: string) {
     return item;
   } catch (error) {
     const message = formatPrismaError(error);
-    console.error("Erro ao remover item da wishlist:", message);
-    throw new Error(`Erro ao remover item da wishlist: ${message}`);
+    console.error("Erro ao remover item dos favoritos:", message);
+    throw new Error(`Erro ao remover item dos favoritos: ${message}`);
+  }
+}
+
+export async function removeAllFromWishlist(userId: string) {
+  try {
+    const wishlist = await db.wishlist.findUnique({ where: { userId } });
+    if (!wishlist) return null;
+
+    await db.wishlistItem.deleteMany({
+      where: { wishlistId: wishlist.id },
+    });
+
+    revalidatePath("/responsavel/loja");
+  } catch (error) {
+    const message = formatPrismaError(error);
+    console.error("Erro ao remover todos os itens dos favoritos:", message);
+    throw new Error(`Erro ao remover todos os itens dos favoritos: ${message}`);
   }
 }
 
