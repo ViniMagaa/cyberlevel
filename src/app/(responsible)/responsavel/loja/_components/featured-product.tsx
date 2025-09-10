@@ -1,3 +1,5 @@
+"use client";
+
 import { MagicCard } from "@/components/magicui/magic-card";
 import { Paragraphs } from "@/components/paragraphs";
 import TiltedCard from "@/components/tilted-card";
@@ -5,13 +7,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/format-currency";
 import { Product } from "@prisma/client";
-import { Asterisk, Heart, ShoppingCart } from "lucide-react";
+import {
+  Asterisk,
+  Check,
+  Heart,
+  Loader2Icon,
+  ShoppingCart,
+  X,
+} from "lucide-react";
+import { useTransition } from "react";
+import { addToCart, removeFromCart } from "../actions";
 
 type FeaturedProductProps = {
+  userId: string;
   product: Omit<Product, "price"> & { price: number };
+  isInCart?: boolean;
 };
 
-export function FeaturedProduct({ product }: FeaturedProductProps) {
+export function FeaturedProduct({
+  userId,
+  product,
+  isInCart,
+}: FeaturedProductProps) {
+  const [isPending, startTransition] = useTransition();
+
+  function handleAddToCart() {
+    startTransition(() => {
+      addToCart(userId, product.id);
+    });
+  }
+
+  function handleRemove() {
+    startTransition(() => {
+      removeFromCart(userId, product.id);
+    });
+  }
+
   return (
     <Card className="relative border-0 p-0">
       <MagicCard
@@ -63,10 +94,44 @@ export function FeaturedProduct({ product }: FeaturedProductProps) {
               </p>
             </div>
 
-            <Button size="lg" className="rounded-full">
-              Adicionar ao carrinho
-              <ShoppingCart />
-            </Button>
+            {isInCart ? (
+              <Button
+                variant="outline"
+                size="lg"
+                className="group rounded-full"
+                onClick={handleRemove}
+                disabled={isPending}
+              >
+                <span className="group-hover:hidden">
+                  Adicionado ao carrinho
+                </span>
+                <span className="hidden group-hover:block">
+                  Remover do carrinho
+                </span>
+                {isPending ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  <>
+                    <Check className="group-hover:hidden" />
+                    <X className="hidden group-hover:block" />
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                className="rounded-full"
+                onClick={handleAddToCart}
+                disabled={isPending}
+              >
+                Adicionar ao carrinho
+                {isPending ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  <ShoppingCart />
+                )}
+              </Button>
+            )}
           </div>
         </CardContent>
       </MagicCard>

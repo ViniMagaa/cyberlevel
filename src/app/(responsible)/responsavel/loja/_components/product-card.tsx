@@ -12,14 +12,32 @@ import {
 } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/format-currency";
 import { Product } from "@prisma/client";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Check, Heart, Loader2Icon, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
+import { useTransition } from "react";
+import { addToCart, removeFromCart } from "../actions";
 
 type ProductCardProps = {
+  userId: string;
   product: Omit<Product, "price"> & { price: number };
+  isInCart?: boolean;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ userId, product, isInCart }: ProductCardProps) {
+  const [isPending, startTransition] = useTransition();
+
+  function handleAddToCart() {
+    startTransition(() => {
+      addToCart(userId, product.id);
+    });
+  }
+
+  function handleRemove() {
+    startTransition(() => {
+      removeFromCart(userId, product.id);
+    });
+  }
+
   return (
     <Card className="group pointer relative flex flex-col justify-end gap-2 overflow-hidden bg-neutral-950 pt-0 pb-4 transition-all hover:scale-[102%] hover:bg-neutral-900">
       <CardHeader className="p-0">
@@ -45,9 +63,39 @@ export function ProductCard({ product }: ProductCardProps) {
         <Button variant="outline" size="icon" className="rounded-full">
           <Heart />
         </Button>
-        <Button variant="outline" size="icon" className="rounded-full">
-          <ShoppingCart />
-        </Button>
+
+        {isInCart ? (
+          <Button
+            variant="default"
+            size="icon"
+            className="group/cart-button rounded-full"
+            onClick={handleRemove}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <>
+                <Check className="group-hover/cart-button:hidden" />
+                <X className="hidden group-hover/cart-button:block" />
+              </>
+            )}
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full"
+            onClick={handleAddToCart}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <ShoppingCart />
+            )}
+          </Button>
+        )}
       </div>
     </Card>
   );
