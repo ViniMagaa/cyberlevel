@@ -15,11 +15,11 @@ export default async function Articles() {
   const articles = await getPublishedArticles(user.id);
 
   return (
-    <div className="w-full space-y-4 p-4">
+    <div className="w-full space-y-6 p-6">
       <div className="flex w-full flex-wrap justify-between gap-4">
         <h1 className="text-4xl font-bold">Artigos</h1>
       </div>
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {articles.length > 0 ? (
           articles.map((article) => (
             <ArticleCard key={article.id} article={article} />

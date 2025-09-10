@@ -19,7 +19,7 @@ export default async function LastArticles() {
   return (
     <section className="space-y-4">
       <h2 className="text-2xl">Últimos artigos</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         {articles.length > 0 ? (
           articles.map((article) => (
             <ArticleCard key={article.id} article={article} />

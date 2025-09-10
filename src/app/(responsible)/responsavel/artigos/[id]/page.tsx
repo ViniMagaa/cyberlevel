@@ -31,34 +31,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const articleView = article.views[0] ?? null;
 
   return (
-    <div className="w-full space-y-4 p-4">
-      <div className="flex items-center justify-between gap-2">
+    <div className="w-full space-y-6 p-6">
+      <div className="space-y-4">
         <div className="flex items-center gap-2">
           <BackButton size="icon" />
           <h1 className="text-3xl font-bold">{article.title}</h1>
         </div>
-        {!articleView ? (
-          <Badge
-            variant="secondary"
-            className="bg-primary-600 rounded-full text-white"
-          >
-            Novo
-          </Badge>
-        ) : (
-          <Badge variant="secondary" className="rounded-full">
-            Visto{" "}
-            {articleView.viewedAt &&
-              formatDistanceToNow(articleView.viewedAt, {
-                locale: ptBR,
-                addSuffix: true,
-              })}
-          </Badge>
-        )}
+
+        <div className="relative">
+          <Separator />
+          <div className="absolute -top-3 right-0">
+            {!articleView ? (
+              <Badge
+                variant="secondary"
+                className="bg-primary-600 rounded-full text-white"
+              >
+                Não lido
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="rounded-full">
+                Visto{" "}
+                {articleView.viewedAt &&
+                  formatDistanceToNow(articleView.viewedAt, {
+                    locale: ptBR,
+                    addSuffix: true,
+                  })}
+              </Badge>
+            )}
+          </div>
+        </div>
       </div>
 
-      <Separator />
-
-      <div className="m-auto max-w-4xl space-y-4">
+      <div className="mx-auto max-w-4xl space-y-4">
         {article.imageUrl && (
           <AspectRatio ratio={16 / 9}>
             <Image
@@ -102,14 +106,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             {article.content}
           </Markdown>
         </div>
+      </div>
 
-        <div className="flex gap-2">
-          <BackButton size="default" />
+      <div className="flex gap-2">
+        <BackButton size="default" />
 
-          <Button className="rounded-full" asChild>
-            <Link href="/responsavel/artigos">Visualizar mais artigos</Link>
-          </Button>
-        </div>
+        <Button className="rounded-full" asChild>
+          <Link href="/responsavel/artigos">Visualizar mais artigos</Link>
+        </Button>
       </div>
 
       <ArticleViewTracker articleId={article.id} userId={user.id} />
