@@ -29,55 +29,9 @@ export default async function StorePage() {
       <div className="flex w-full flex-wrap justify-between">
         <h1 className="text-4xl font-bold">Loja</h1>
         <div className="space-x-4">
-          <WishlistDrawer
-            userId={user.id}
-            cart={
-              cart
-                ? {
-                    ...cart,
-                    items: cart.items.map((item) => ({
-                      ...item,
-                      product: {
-                        ...item.product,
-                        price: Number(item.product.price),
-                      },
-                    })),
-                  }
-                : null
-            }
-            wishlist={
-              wishlist
-                ? {
-                    ...wishlist,
-                    items: wishlist.items.map((item) => ({
-                      ...item,
-                      product: {
-                        ...item.product,
-                        price: Number(item.product.price),
-                      },
-                    })),
-                  }
-                : null
-            }
-          />
+          <WishlistDrawer userId={user.id} cart={cart} wishlist={wishlist} />
 
-          <CartDrawer
-            userId={user.id}
-            cart={
-              cart
-                ? {
-                    ...cart,
-                    items: cart.items.map((item) => ({
-                      ...item,
-                      product: {
-                        ...item.product,
-                        price: Number(item.product.price),
-                      },
-                    })),
-                  }
-                : null
-            }
-          />
+          <CartDrawer userId={user.id} cart={cart} />
         </div>
       </div>
 
@@ -85,10 +39,7 @@ export default async function StorePage() {
         <div className="sm:col-span-2 lg:col-span-3 xl:col-span-3">
           <FeaturedProduct
             userId={user.id}
-            product={{
-              ...featuredProduct,
-              price: Number(featuredProduct.price),
-            }}
+            product={featuredProduct}
             isInCart={isInCart(featuredProduct.id)}
             isInWishlist={isInWishlist(featuredProduct.id)}
           />
@@ -98,7 +49,7 @@ export default async function StorePage() {
             <ProductCard
               userId={user.id}
               key={product.id}
-              product={{ ...product, price: Number(product.price) }}
+              product={product}
               isInCart={isInCart(product.id)}
               isInWishlist={isInWishlist(product.id)}
             />

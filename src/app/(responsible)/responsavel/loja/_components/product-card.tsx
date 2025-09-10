@@ -24,7 +24,7 @@ import {
 
 type ProductCardProps = {
   userId: string;
-  product: Omit<Product, "price"> & { price: number };
+  product: Product;
   isInCart?: boolean;
   isInWishlist?: boolean;
 };
@@ -81,7 +81,9 @@ export function ProductCard({
         <CardDescription>
           <Paragraphs text={product.description} />
         </CardDescription>
-        <p className="text-lg font-black">{formatCurrency(product.price)}</p>
+        <p className="text-lg font-black">
+          {formatCurrency(Number(product.price))}
+        </p>
       </CardContent>
       <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
         {isInWishlist ? (

@@ -2,12 +2,11 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { ProductCard } from "./_components/product-card";
+import { getProducts } from "./actions";
 
 export default async function Products() {
   const [products, orders] = await Promise.all([
-    db.product.findMany({
-      orderBy: { name: "asc" },
-    }),
+    getProducts(),
     db.order.findMany({
       include: {
         address: true,
@@ -28,10 +27,7 @@ export default async function Products() {
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.length > 0 ? (
           products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={{ ...product, price: Number(product.price) }}
-            />
+            <ProductCard key={product.id} product={product} />
           ))
         ) : (
           <p className="text-muted-foreground text-sm">

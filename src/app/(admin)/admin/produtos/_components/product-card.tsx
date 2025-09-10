@@ -12,6 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,21 +23,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatCurrency } from "@/utils/format-currency";
+import { formatDate } from "@/utils/format-date";
 import { Product } from "@prisma/client";
 import { BadgeCheckIcon, BadgeX, Pencil, Trash } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { deleteProduct } from "../actions";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/utils/format-currency";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
-import { formatDate } from "@/utils/format-date";
 
 type ProductCardProps = {
-  product: Omit<Product, "price"> & { price: number };
+  product: Product;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -74,7 +74,9 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <p className="text-lg font-black">{formatCurrency(product.price)}</p>
+        <p className="text-lg font-black">
+          {formatCurrency(Number(product.price))}
+        </p>
         {product.active ? (
           <Badge
             variant="secondary"

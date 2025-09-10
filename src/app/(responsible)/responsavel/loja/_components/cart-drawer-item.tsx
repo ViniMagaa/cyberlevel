@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/format-currency";
-import { CartItem, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
@@ -18,7 +18,9 @@ import { addToCart, removeFromCart } from "../actions";
 
 type CartDrawerItemProps = {
   userId: string;
-  cartItem: CartItem & { product: Omit<Product, "price"> & { price: number } };
+  cartItem: Prisma.CartItemGetPayload<{
+    include: { product: true };
+  }>;
 };
 
 export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
@@ -96,7 +98,7 @@ export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
           </div>
 
           <p className="text-lg font-bold">
-            {formatCurrency(cartItem.product.price * cartItem.quantity)}
+            {formatCurrency(Number(cartItem.product.price) * cartItem.quantity)}
           </p>
 
           <Button

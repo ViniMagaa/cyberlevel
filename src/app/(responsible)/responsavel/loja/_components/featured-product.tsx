@@ -25,7 +25,7 @@ import {
 
 type FeaturedProductProps = {
   userId: string;
-  product: Omit<Product, "price"> & { price: number };
+  product: Product;
   isInCart?: boolean;
   isInWishlist?: boolean;
 };
@@ -135,7 +135,7 @@ export function FeaturedProduct({
                 <Paragraphs text={product.description} />
               </div>
               <p className="text-3xl font-black">
-                {formatCurrency(product.price)}
+                {formatCurrency(Number(product.price))}
               </p>
             </div>
 

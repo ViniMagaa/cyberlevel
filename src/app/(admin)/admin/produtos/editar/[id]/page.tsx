@@ -1,5 +1,5 @@
 import { ProductForm } from "@/components/product-form";
-import { db } from "@/lib/prisma";
+import { getProductById } from "../../actions";
 
 type EditProductPageProps = {
   params: Promise<{ id: string }>;
@@ -9,13 +9,9 @@ export default async function EditProductPage({
   params,
 }: EditProductPageProps) {
   const { id } = await params;
-  const productData = await db.product.findUnique({
-    where: { id },
-  });
+  const product = await getProductById(id);
 
-  if (!productData) return <p>Produto não encontrado</p>;
-
-  const product = { ...productData, price: Number(productData.price) };
+  if (!product) return <p>Produto não encontrado</p>;
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 p-4">

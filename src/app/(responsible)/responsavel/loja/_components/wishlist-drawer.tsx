@@ -12,13 +12,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  CartItem,
-  Product,
-  ShoppingCart,
-  Wishlist,
-  WishlistItem,
-} from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Heart, Loader2Icon } from "lucide-react";
 import { useTransition } from "react";
 import { removeAllFromWishlist } from "../actions";
@@ -26,20 +20,16 @@ import { ProductCard } from "./product-card";
 
 type WishlistDrawerProps = {
   userId: string;
-  wishlist:
-    | (Wishlist & {
-        items: (WishlistItem & {
-          product: Omit<Product, "price"> & { price: number };
-        })[];
-      })
-    | null;
-  cart:
-    | (ShoppingCart & {
-        items: (CartItem & {
-          product: Omit<Product, "price"> & { price: number };
-        })[];
-      })
-    | null;
+  wishlist: Prisma.WishlistGetPayload<{
+    include: {
+      items: { include: { product: true } };
+    };
+  }> | null;
+  cart: Prisma.ShoppingCartGetPayload<{
+    include: {
+      items: { include: { product: true } };
+    };
+  }> | null;
 };
 
 export function WishlistDrawer({

@@ -13,19 +13,17 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format-currency";
-import { CartItem, Product, ShoppingCart } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ShoppingCart as IShoppingCart } from "lucide-react";
 import { CartDrawerItem } from "./cart-drawer-item";
 
 type CartDrawerProps = {
   userId: string;
-  cart:
-    | (ShoppingCart & {
-        items: (CartItem & {
-          product: Omit<Product, "price"> & { price: number };
-        })[];
-      })
-    | null;
+  cart: Prisma.ShoppingCartGetPayload<{
+    include: {
+      items: { include: { product: true } };
+    };
+  }> | null;
 };
 
 export function CartDrawer({ userId, cart }: CartDrawerProps) {
@@ -33,7 +31,7 @@ export function CartDrawer({ userId, cart }: CartDrawerProps) {
 
   const cartTotal =
     cart?.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
+      (total, item) => total + Number(item.product.price) * item.quantity,
       0,
     ) || 0;
 

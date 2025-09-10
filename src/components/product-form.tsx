@@ -55,7 +55,7 @@ type TProductContent = Omit<TProductFormSchema, "image"> & {
 };
 
 type ProductFormProps = {
-  product?: Omit<Product, "price"> & { price: number };
+  product?: Product;
 };
 
 export function ProductForm({ product }: ProductFormProps) {

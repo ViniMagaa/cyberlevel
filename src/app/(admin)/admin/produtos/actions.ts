@@ -5,8 +5,37 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/prisma";
 import { formatPrismaError } from "@/lib/format-prisma-error";
 import { supabaseAdmin } from "@/utils/supabase/supabase-admin";
+import { decimalToNumber } from "@/lib/prisma-helpers";
 
 const BUCKET = "products";
+
+export async function getProductById(id: string) {
+  try {
+    const product = await db.product.findUnique({
+      where: { id },
+    });
+
+    return decimalToNumber(product);
+  } catch (error) {
+    const message = formatPrismaError(error);
+    console.error("Erro ao buscar produto:", message);
+    throw new Error(`Erro ao buscar produto: ${message}`);
+  }
+}
+
+export async function getProducts() {
+  try {
+    const products = await db.product.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    return decimalToNumber(products);
+  } catch (error) {
+    const message = formatPrismaError(error);
+    console.error("Erro ao buscar produtos:", message);
+    throw new Error(`Erro ao buscar produtos: ${message}`);
+  }
+}
 
 export async function createProduct(product: Prisma.ProductCreateInput) {
   try {
