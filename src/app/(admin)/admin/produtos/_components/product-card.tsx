@@ -80,13 +80,13 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.active ? (
           <Badge
             variant="secondary"
-            className="bg-green-500 text-white dark:bg-green-600"
+            className="bg-primary-600 rounded-full text-white"
           >
             <BadgeCheckIcon />
             Disponível
           </Badge>
         ) : (
-          <Badge variant="destructive">
+          <Badge variant="destructive" className="rounded-full">
             <BadgeX /> Indisponível
           </Badge>
         )}

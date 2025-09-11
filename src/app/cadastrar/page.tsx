@@ -339,7 +339,7 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
                   <Button
                     type="submit"
                     variant="default"
-                    className="rounded-full disabled:opacity-50"
+                    className="disabled:opacity-50"
                     disabled={isPending}
                   >
                     Cadastrar

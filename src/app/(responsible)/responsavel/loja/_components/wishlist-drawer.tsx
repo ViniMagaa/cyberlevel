@@ -90,15 +90,9 @@ export function WishlistDrawer({
           <div className="m-auto flex w-full max-w-2xl flex-col justify-center space-y-2">
             <div className="flex w-full gap-4 *:flex-1">
               <DrawerClose asChild>
-                <Button variant="outline" className="rounded-full">
-                  Voltar
-                </Button>
+                <Button variant="outline">Voltar</Button>
               </DrawerClose>
-              <Button
-                className="rounded-full"
-                onClick={handleRemoveAll}
-                disabled={isPending}
-              >
+              <Button onClick={handleRemoveAll} disabled={isPending}>
                 Limpar favoritos
                 {isPending && <Loader2Icon className="animate-spin" />}
               </Button>

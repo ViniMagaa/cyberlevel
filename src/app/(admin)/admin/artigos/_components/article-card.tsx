@@ -78,12 +78,14 @@ export function ArticleCard({ article }: ArticleCardProps) {
         {article.isPublished ? (
           <Badge
             variant="secondary"
-            className="bg-green-500 text-white dark:bg-green-600"
+            className="bg-primary-600 rounded-full text-white"
           >
             Público
           </Badge>
         ) : (
-          <Badge variant="destructive">Privado</Badge>
+          <Badge variant="destructive" className="rounded-full">
+            Privado
+          </Badge>
         )}
       </CardHeader>
       <CardContent className="flex flex-wrap items-end justify-between gap-2">

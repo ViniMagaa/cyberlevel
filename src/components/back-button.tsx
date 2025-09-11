@@ -12,12 +12,7 @@ export function BackButton({ size }: BackButtonProps) {
   const router = useRouter();
 
   return (
-    <Button
-      variant="ghost"
-      className="rounded-full"
-      size={size}
-      onClick={() => router.back()}
-    >
+    <Button variant="ghost" size={size} onClick={() => router.back()}>
       <ArrowLeft />
       {size === "default" && "Voltar"}
     </Button>

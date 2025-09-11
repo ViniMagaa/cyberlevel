@@ -30,7 +30,7 @@ export default async function LastArticles() {
           </p>
         )}
       </div>
-      <Button className="w-full rounded-full" asChild>
+      <Button className="w-full" asChild>
         <Link href="/responsavel/artigos">Visualizar tudo</Link>
       </Button>
     </section>

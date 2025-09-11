@@ -48,7 +48,7 @@ export default function Home() {
           <Button
             size="lg"
             variant="outline"
-            className="text-md hover:bg-primary-600 rounded-full px-3"
+            className="text-md hover:bg-primary-600 px-3"
             asChild
           >
             <Link href="#start">Iniciar agora</Link>

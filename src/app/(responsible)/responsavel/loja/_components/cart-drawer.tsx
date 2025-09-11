@@ -71,11 +71,9 @@ export function CartDrawer({ userId, cart }: CartDrawerProps) {
             </p>
             <div className="flex w-full gap-4 *:flex-1">
               <DrawerClose asChild>
-                <Button variant="outline" className="rounded-full">
-                  Voltar
-                </Button>
+                <Button variant="outline">Voltar</Button>
               </DrawerClose>
-              <Button className="rounded-full">Fazer pedido</Button>
+              <Button>Fazer pedido</Button>
             </div>
           </div>
         </DrawerFooter>

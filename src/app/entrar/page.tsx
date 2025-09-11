@@ -125,7 +125,7 @@ export default function LoginPage() {
                   <Button
                     type="submit"
                     variant="default"
-                    className="ml-auto rounded-full disabled:opacity-50"
+                    className="ml-auto disabled:opacity-50"
                     disabled={isPending}
                   >
                     Entrar

@@ -27,7 +27,7 @@ export function QuizDetails({ quiz }: QuizDetailsProps) {
                       <div className="flex items-center gap-2">
                         {option.text}
                         {question.correctIndex === oIndex ? (
-                          <div className="rounded-full bg-green-500 p-1 text-white dark:bg-green-600">
+                          <div className="bg-primary-600 rounded-full p-1 text-white">
                             <CheckIcon size={14} />
                           </div>
                         ) : (

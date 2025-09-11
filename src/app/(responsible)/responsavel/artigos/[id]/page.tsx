@@ -111,7 +111,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className="flex gap-2">
         <BackButton size="default" />
 
-        <Button className="rounded-full" asChild>
+        <Button asChild>
           <Link href="/responsavel/artigos">Visualizar mais artigos</Link>
         </Button>
       </div>

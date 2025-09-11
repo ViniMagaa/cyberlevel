@@ -17,13 +17,13 @@ export function PostOrNotDetails({ postOrNot }: PostOrNotDetailsProps) {
       {postOrNot.isSafe ? (
         <Badge
           variant="secondary"
-          className="bg-green-500 text-white dark:bg-green-600"
+          className="bg-primary-600 rounded-full text-white"
         >
           <BadgeCheckIcon />
           Publicação segura
         </Badge>
       ) : (
-        <Badge variant="destructive">
+        <Badge variant="destructive" className="rounded-full">
           <BadgeX /> Publicação insegura
         </Badge>
       )}

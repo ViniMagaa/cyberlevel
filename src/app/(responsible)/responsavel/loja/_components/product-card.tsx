@@ -90,7 +90,7 @@ export function ProductCard({
           <Button
             variant="default"
             size="icon"
-            className="group/wishlist-button rounded-full"
+            className="group/wishlist-button"
             onClick={handleRemoveWishlist}
             disabled={isPendingWishlist}
           >
@@ -107,7 +107,6 @@ export function ProductCard({
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full"
             onClick={handleAddToWishlist}
             disabled={isPendingWishlist}
           >
@@ -123,7 +122,7 @@ export function ProductCard({
           <Button
             variant="default"
             size="icon"
-            className="group/cart-button rounded-full"
+            className="group/cart-button"
             onClick={handleRemoveCart}
             disabled={isPendingCart}
           >
@@ -140,7 +139,6 @@ export function ProductCard({
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full"
             onClick={handleAddToCart}
             disabled={isPendingCart}
           >

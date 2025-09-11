@@ -101,7 +101,7 @@ export function FeaturedProduct({
                   <Button
                     variant="default"
                     size="icon"
-                    className="group/wishlist-button ml-auto rounded-full"
+                    className="group/wishlist-button ml-auto"
                     onClick={handleRemoveWishlist}
                     disabled={isPendingWishlist}
                   >
@@ -118,7 +118,7 @@ export function FeaturedProduct({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="ml-auto rounded-full"
+                    className="ml-auto"
                     onClick={handleAddToWishlist}
                     disabled={isPendingWishlist}
                   >
@@ -143,7 +143,7 @@ export function FeaturedProduct({
               <Button
                 variant="outline"
                 size="lg"
-                className="group/cart-button rounded-full"
+                className="group/cart-button"
                 onClick={handleRemoveCart}
                 disabled={isPendingCart}
               >
@@ -165,7 +165,6 @@ export function FeaturedProduct({
             ) : (
               <Button
                 size="lg"
-                className="rounded-full"
                 onClick={handleAddToCart}
                 disabled={isPendingCart}
               >

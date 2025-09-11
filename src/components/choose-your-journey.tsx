@@ -58,7 +58,7 @@ export function ChooseYourJourney() {
                   você entende, acompanha e cuida, sem complicação.
                 </p>
                 <Button
-                  className="hover ml-auto rounded-full text-lg"
+                  className="hover ml-auto text-lg"
                   size="lg"
                   variant="outline"
                   asChild
@@ -91,7 +91,7 @@ export function ChooseYourJourney() {
                   complicação.
                 </p>
                 <Button
-                  className="ml-auto rounded-full text-lg"
+                  className="ml-auto text-lg"
                   size="lg"
                   variant="outline"
                   asChild

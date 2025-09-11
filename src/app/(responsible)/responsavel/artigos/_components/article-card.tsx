@@ -55,7 +55,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
           variant="secondary"
           className={cn(
             !articleView && "bg-primary-600 hover:bg-primary-700!",
-            "absolute right-6 bottom-6 z-60 rounded-full font-bold text-white",
+            "absolute right-6 bottom-6 z-60 font-bold text-white",
           )}
           asChild
         >

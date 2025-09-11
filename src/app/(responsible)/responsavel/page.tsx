@@ -124,7 +124,7 @@ export default async function Dashboard() {
               <CarouselNext />
             </Carousel>
 
-            <Button className="w-full rounded-full" asChild>
+            <Button className="w-full" asChild>
               <Link href="/responsavel/loja">Ir para loja</Link>
             </Button>
           </CardContent>
