@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import signIn from "@/api/sign-in";
-import { VelocityScroll } from "@/components/magicui/scroll-based-velocity";
+import { Particles } from "@/components/magicui/particles";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { handleAuthError } from "@/lib/handle-auth-error";
+import { MagicCard } from "@/components/magicui/magic-card";
 
 const loginSchema = z.object({
   email: z
@@ -66,76 +67,91 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <VelocityScroll
-        defaultVelocity={0.2}
-        numRows={8}
-        className="fixed top-0 left-0 -z-10 h-full w-full"
-      >
-        <span className="font-black-future text-[10rem]/32 font-thin opacity-50 select-none">
-          CyberLevel
-        </span>
-      </VelocityScroll>
+      <Particles
+        className="absolute inset-0 -z-50"
+        quantity={200}
+        ease={80}
+        color="#ffffff"
+        refresh
+      />
       <div className="pointer-events-none absolute inset-y-0 left-0 -z-10 h-lvh w-1/3 bg-gradient-to-r from-black" />
       <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-lvh w-1/3 bg-gradient-to-l from-black" />
 
       <div className="absolute top-1/2 left-1/2 w-full max-w-sm -translate-1/2 p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl font-extrabold">
-              Entre na plataforma
-            </CardTitle>
-            <CardDescription>
-              Preencha os campos abaixo para entrar
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex grow flex-col justify-between gap-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="E-mail" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input type="password" placeholder="Senha" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-wrap justify-between gap-4">
-                  <Button type="button" variant="link" className="px-0" asChild>
-                    <Link href="/cadastrar">Não possui uma conta?</Link>
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="default"
-                    className="ml-auto disabled:opacity-50"
-                    disabled={isPending}
-                  >
-                    Entrar
-                    {!isPending && <ArrowRight />}
-                    {isPending && <Loader2Icon className="animate-spin" />}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
+        <Card className="h-full w-full max-w-[350px] border-none p-0 shadow-none">
+          <MagicCard
+            gradientColor="#2db780"
+            gradientFrom="#2db780"
+            gradientTo="#1a8f6b"
+            className="p-6"
+            gradientOpacity={0.25}
+          >
+            <CardHeader className="mb-4 p-0">
+              <CardTitle className="text-3xl font-extrabold">
+                Bem vindo de volta
+              </CardTitle>
+              <CardDescription>
+                Preencha os campos abaixo para entrar
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex p-0">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="flex grow flex-col justify-between gap-4"
+                >
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="E-mail" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="Senha"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-wrap justify-between gap-4">
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="px-0"
+                      asChild
+                    >
+                      <Link href="/cadastrar">Não possui uma conta?</Link>
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="default"
+                      className="ml-auto disabled:opacity-50"
+                      disabled={isPending}
+                    >
+                      Entrar
+                      {!isPending && <ArrowRight />}
+                      {isPending && <Loader2Icon className="animate-spin" />}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </CardContent>
+          </MagicCard>
         </Card>
       </div>
     </div>
