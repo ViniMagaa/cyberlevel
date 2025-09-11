@@ -55,7 +55,7 @@ export function ChooseYourJourney() {
                   variant="outline"
                   asChild
                 >
-                  <Link href="/cadastrar?role=responsible">
+                  <Link href="/cadastrar/responsavel">
                     Prosseguir <ArrowRight />
                   </Link>
                 </Button>
@@ -88,7 +88,7 @@ export function ChooseYourJourney() {
                   variant="outline"
                   asChild
                 >
-                  <Link href="/cadastrar?role=learner">
+                  <Link href="/cadastrar/aprendiz">
                     Prosseguir <ArrowRight />
                   </Link>
                 </Button>
