@@ -1,3 +1,4 @@
+import { updatePassword } from "@/api/user-settings";
 import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
 import {
@@ -23,7 +24,6 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updatePassword } from "../actions";
 
 const changePasswordFormSchema = z
   .object({

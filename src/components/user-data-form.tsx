@@ -1,3 +1,4 @@
+import { updateUserData } from "@/api/user-settings";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CardDescription } from "@/components/ui/card";
@@ -32,7 +33,6 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updateUserData } from "../actions";
 
 const userDataFormSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -72,24 +72,34 @@ export default function UserDataForm({ user }: UserDataFormProps) {
       email: user.email,
       birthdate: user.birthdate,
     },
+    resetOptions: { keepDefaultValues: true },
   });
 
   function onSubmit(data: TUserDataForm) {
     startTransition(async () => {
-      try {
-        await updateUserData(user.id, data);
+      const { success, error } = await updateUserData(user.id, data);
+
+      if (success) {
         toast.success("Dados atualizados");
+        router.refresh();
         setIsOpen(false);
-      } catch (error) {
-        console.error(error);
-        toast.error("Erro ao atualizar dados");
+        return;
       }
-      router.refresh();
+
+      if (error) {
+        toast.error(error);
+      }
     });
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) form.reset();
+      }}
+    >
       <DialogTrigger asChild>
         <Button>
           <Pencil />

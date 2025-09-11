@@ -16,9 +16,9 @@ import { User } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteUser } from "../actions";
-import UserDataForm from "./user-data-form";
 import ChangePasswordForm from "./chage-password-form";
+import UserDataForm from "./user-data-form";
+import { deleteUser } from "@/api/user-settings";
 
 type SettingsActionsProps = {
   user: User;

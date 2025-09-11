@@ -1,5 +1,6 @@
 "use server";
 
+import { handleAuthError } from "@/lib/handle-auth-error";
 import { db } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { Prisma } from "@prisma/client";
@@ -21,10 +22,10 @@ export async function updateUserData(
       data: { ...data },
     });
 
-    revalidatePath("/admin/usuarios");
+    revalidatePath("/");
     return { success: true };
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return { success: false, error: "Erro ao atualizar dados" };
   }
 }
@@ -45,9 +46,12 @@ export async function updatePassword(
   });
 
   if (signInError) {
+    const message = signInError.code
+      ? handleAuthError(signInError.code)
+      : "Erro ao verificar a senha atual";
     return {
       success: false,
-      message: "Senha atual incorreta.",
+      message,
     };
   }
 
@@ -56,9 +60,13 @@ export async function updatePassword(
   });
 
   if (updateError) {
+    const message = updateError.code
+      ? handleAuthError(updateError.code)
+      : "Erro ao atualizar a senha";
+
     return {
       success: false,
-      message: updateError.message,
+      message,
     };
   }
 
