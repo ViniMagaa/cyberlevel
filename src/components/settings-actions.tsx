@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteUser } from "@/api/user-settings";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +19,6 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import ChangePasswordForm from "./chage-password-form";
 import UserDataForm from "./user-data-form";
-import { deleteUser } from "@/api/user-settings";
 
 type SettingsActionsProps = {
   user: User;
@@ -40,7 +40,7 @@ export function SettingsActions({ user }: SettingsActionsProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex w-full flex-wrap gap-2 *:grow">
       <UserDataForm user={user} />
 
       <ChangePasswordForm user={user} />
