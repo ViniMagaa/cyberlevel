@@ -16,6 +16,7 @@ import { formatCurrency } from "@/utils/format-currency";
 import { Prisma } from "@prisma/client";
 import { ShoppingCart as IShoppingCart } from "lucide-react";
 import { CartDrawerItem } from "./cart-drawer-item";
+import { toast } from "sonner";
 
 type CartDrawerProps = {
   userId: string;
@@ -34,6 +35,18 @@ export function CartDrawer({ userId, cart }: CartDrawerProps) {
       (total, item) => total + Number(item.product.price) * item.quantity,
       0,
     ) || 0;
+
+  function handleOrder() {
+    if (!cart || (cart?.items.length || 0) <= 0) {
+      toast.error("Não há nenhum item em seu carrinho");
+      return;
+    }
+
+    if (cart.items.some((item) => !item.product.active)) {
+      toast.error("Remova os produtos indisponíveis de seu carrinho");
+      return;
+    }
+  }
 
   return (
     <Drawer>
@@ -73,7 +86,7 @@ export function CartDrawer({ userId, cart }: CartDrawerProps) {
               <DrawerClose asChild>
                 <Button variant="outline">Voltar</Button>
               </DrawerClose>
-              <Button>Fazer pedido</Button>
+              <Button onClick={handleOrder}>Fazer pedido</Button>
             </div>
           </div>
         </DrawerFooter>

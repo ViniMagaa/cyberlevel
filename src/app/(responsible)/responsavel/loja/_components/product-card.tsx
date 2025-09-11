@@ -21,6 +21,8 @@ import {
   removeFromCart,
   removeFromWishlist,
 } from "../actions";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type ProductCardProps = {
   userId: string;
@@ -37,6 +39,8 @@ export function ProductCard({
 }: ProductCardProps) {
   const [isPendingCart, startCartTransition] = useTransition();
   const [isPendingWishlist, startWishlistTransition] = useTransition();
+
+  const isProductActive = product.active;
 
   function handleAddToCart() {
     startCartTransition(() => {
@@ -64,7 +68,14 @@ export function ProductCard({
 
   return (
     <Card className="group pointer relative flex flex-col justify-end gap-2 overflow-hidden bg-neutral-950 pt-0 pb-4 transition-all hover:scale-[102%] hover:bg-neutral-900">
-      <CardHeader className="p-0">
+      {!isProductActive && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
+          <Badge variant="destructive" className="rounded-full">
+            Produto indisponível
+          </Badge>
+        </div>
+      )}
+      <CardHeader className={cn("p-0", !isProductActive && "opacity-50")}>
         {product.imageUrl && (
           <AspectRatio ratio={1 / 1}>
             <Image
@@ -76,7 +87,9 @@ export function ProductCard({
           </AspectRatio>
         )}
       </CardHeader>
-      <CardContent className="h-full px-4">
+      <CardContent
+        className={cn("h-full px-4", !isProductActive && "opacity-50")}
+      >
         <CardTitle className="text-2xl font-bold">{product.name}</CardTitle>
         <CardDescription>
           <Paragraphs text={product.description} />
@@ -140,7 +153,7 @@ export function ProductCard({
             variant="outline"
             size="icon"
             onClick={handleAddToCart}
-            disabled={isPendingCart}
+            disabled={isPendingCart || !isProductActive}
           >
             {isPendingCart ? (
               <Loader2Icon className="animate-spin" />

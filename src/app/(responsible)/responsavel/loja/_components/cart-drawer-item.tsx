@@ -15,6 +15,7 @@ import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
 import { addToCart, removeFromCart } from "../actions";
+import { Badge } from "@/components/ui/badge";
 
 type CartDrawerItemProps = {
   userId: string;
@@ -25,6 +26,8 @@ type CartDrawerItemProps = {
 
 export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
   const [isPending, startTransition] = useTransition();
+
+  const isProductActive = cartItem.product.active;
 
   function handleIncrease() {
     startTransition(() => {
@@ -50,6 +53,13 @@ export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
 
   return (
     <Card className="relative bg-neutral-950 p-2">
+      {!isProductActive && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
+          <Badge variant="destructive" className="rounded-full">
+            Produto indisponível
+          </Badge>
+        </div>
+      )}
       <CardContent className="flex flex-col gap-4 p-2 sm:grid sm:grid-cols-5 sm:place-items-center">
         <div className="col-span-2 flex w-full flex-wrap items-center gap-4">
           <div className="w-32">
@@ -104,7 +114,7 @@ export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="text-destructive absolute top-2 right-2 sm:static"
+            className="text-destructive absolute top-2 right-2 z-10 sm:static"
             disabled={isPending}
             onClick={handleRemove}
           >
