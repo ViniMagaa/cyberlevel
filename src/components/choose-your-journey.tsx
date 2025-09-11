@@ -11,20 +11,12 @@ export function ChooseYourJourney() {
       id="start"
       className="border-t- relative grid min-h-lvh w-full place-items-center overflow-hidden border-t"
     >
-      <div className="absolute top-0 -z-10 h-[1px] w-full overflow-hidden bg-neutral-700">
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 rounded-[inherit]"
-          style={{
-            background:
-              "radial-gradient(800px circle at 50% -50%, #2db780, #1a8f6b, transparent 80%)",
-          }}
-        />
-      </div>
+      <div className="bg-primary-500 absolute top-0 -z-10 h-[1px] w-full overflow-hidden" />
       <div
-        className="pointer-events-none absolute inset-0 -z-20 animate-pulse rounded-[inherit] opacity-70"
+        className="pointer-events-none absolute inset-0 -z-20 animate-[pulse_5s_ease-in-out_infinite] rounded-[inherit] opacity-20"
         style={{
           background:
-            "radial-gradient(800px circle at 50% -50%, #2db780, #1a8f6b, transparent 80%)",
+            "linear-gradient(to bottom, #2db78099 5%, #1a8f6b55, transparent 40%)",
         }}
       />
       <Particles

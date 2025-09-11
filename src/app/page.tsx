@@ -4,6 +4,7 @@ import { ChooseYourJourney } from "@/components/choose-your-journey";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import { Particles } from "@/components/magicui/particles";
 import { RetroGrid } from "@/components/magicui/retro-grid";
+import Threads from "@/components/threads";
 import { Button } from "@/components/ui/button";
 import { FileChartPie, LockKeyhole, Trophy } from "lucide-react";
 import Image from "next/image";
@@ -11,84 +12,47 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
-      <header className="flex items-center justify-between border-b-[1px] border-neutral-700 px-5 py-5 md:px-10">
-        <p className="text-lg font-bold">CyberLevel</p>
-        {/* <button className="flex flex-col gap-2 sm:hidden">
-          <div className="h-px w-8 bg-neutral-300" />
-          <div className="h-px w-8 bg-neutral-300" />
-          <div className="h-px w-8 bg-neutral-300" />
-        </button>
-        <menu
-          id="menu"
-          className="fixed top-0 right-full z-10 flex h-full w-full flex-col items-end gap-10 bg-linear-to-br from-neutral-700 to-neutral-900 p-10 text-4xl transition-[right] sm:static sm:h-auto sm:w-auto sm:flex-auto sm:flex-row sm:gap-6 sm:bg-none sm:p-0 sm:text-base md:justify-center"
-        >
-          <li>
-            <a href="#" className="hover:text-primary-300 transition">
-              Início
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-primary-300 transition">
-              Sobre
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-primary-300 transition">
-              Contato
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-primary-300 transition">
-              FAQ
-            </a>
-          </li>
-        </menu> */}
-        <div className="flex items-baseline gap-4">
-          <Button
-            size="lg"
-            variant="outline"
-            className="text-md hover:bg-primary-600 px-3"
-            asChild
-          >
-            <Link href="#start">Iniciar agora</Link>
-          </Button>
-          <Button variant="link" className="px-0" asChild>
-            <Link href="/entrar">Entrar</Link>
-          </Button>
+    <div className="relative overflow-hidden">
+      <Particles
+        className="absolute inset-0 -z-50"
+        quantity={1000}
+        ease={80}
+        color="#ffffff"
+        refresh
+      />
+      <header className="relative h-screen">
+        <div className="flex items-center justify-between border-b-[1px] border-neutral-700 px-5 py-5 md:px-10">
+          <p className="text-lg font-bold">Logo</p>
+          <div className="flex items-baseline gap-4">
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-md hover:bg-primary-600 px-3"
+              asChild
+            >
+              <Link href="#start">Iniciar agora</Link>
+            </Button>
+            <Button variant="link" className="px-0" asChild>
+              <Link href="/entrar">Entrar</Link>
+            </Button>
+          </div>
         </div>
-      </header>
 
-      <section className="relative z-50 flex h-lvh justify-center overflow-hidden px-10">
-        <Image
-          alt="CyberLevel"
-          src="/images/light-tunnel.png"
-          width={800}
-          height={800}
-          className="animate-height-width absolute -top-10 -z-10 max-w-[800px] opacity-30 mix-blend-lighten select-none"
-        />
-        <div className="absolute top-1/3 left-1/2 flex -translate-1/2 flex-col items-center gap-1 md:top-2/5">
-          <h1 className="font-black-future text-5xl font-thin drop-shadow-xl/75 select-none sm:text-8xl md:text-9xl lg:text-[10rem]/32">
+        <div className="absolute top-1/2 left-1/2 -translate-1/2 space-y-4 text-center md:top-1/2">
+          <h1 className="font-mars text-3xl font-bold select-none sm:text-4xl md:text-5xl lg:text-[6rem]/20">
             CyberLevel
           </h1>
-          <div className="animate-grow-width h-px w-full bg-neutral-300" />
-          <p className="max-w-180 text-center text-xs font-light tracking-wider drop-shadow-xl/300 md:text-xl">
+
+          <p className="text-muted-foreground mx-auto max-w-180 text-center text-xs font-extralight tracking-wider select-none md:text-xl">
             Protegemos, educamos e preparamos jovens para o mundo digital.
             Conhecimento vira escudo, diversão vira aprendizado.
           </p>
         </div>
-        <Particles
-          className="absolute inset-0 -z-20"
-          quantity={50}
-          ease={80}
-          color="#ffffff"
-          refresh
-        />
-      </section>
+      </header>
 
-      <div className="overflow-none relative">
-        <section className="relative min-h-[80lvh]">
-          <div className="absolute top-1/4 left-1/2 flex w-full -translate-1/2 flex-col items-center gap-4 px-4">
+      <div className="relative">
+        <section className="relative min-h-screen">
+          <div className="absolute top-1/2 left-1/2 flex w-full -translate-1/2 flex-col items-center gap-4 px-4">
             <h2 className="text-center text-3xl md:text-5xl">
               Por que utilizar o{" "}
               <span className="text-primary-500 font-extrabold">
@@ -96,7 +60,7 @@ export default function Home() {
               </span>
               ?
             </h2>
-            <p className="max-w-4xl text-center font-light text-neutral-300 drop-shadow-xl/50 md:text-xl">
+            <p className="text-muted-foreground max-w-4xl text-center font-light md:text-xl">
               Criamos experiências que combinam pedagogia moderna com narrativas
               encantadoras e visuais instigantes. Cada módulo ensina sobre
               segurança online, privacidade, cidadania digital e muito mais,
@@ -105,32 +69,26 @@ export default function Home() {
           </div>
         </section>
 
-        <Image
-          alt="CyberLevel"
-          src="/images/waves.png"
-          width={800}
-          height={490}
-          className="absolute bottom-10 -z-10 w-full blur-xs select-none"
-        />
+        <div className="absolute -bottom-1/3 w-full overflow-hidden">
+          <div className="relative h-[600px] w-full">
+            <Threads
+              color={[45 / 255, 180 / 255, 135 / 255]}
+              amplitude={2}
+              distance={0}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="overflow-none relative">
-        <Image
-          alt="CyberLevel"
-          src="/images/waves.png"
-          width={800}
-          height={490}
-          className="absolute -top-30 -z-10 w-full rotate-x-180 blur-xs select-none"
-        />
-
-        <section className="grid min-h-[80lvh] w-full place-items-center">
+      <div className="relative">
+        <section className="grid min-h-screen w-full place-items-start">
           <div className="m-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-4 md:flex-row md:pl-10">
             <div className="pt-6">
               <span className="text-md md:text-xl">Se divirta jogando</span>
               <h2 className="text-2xl font-bold md:text-4xl">
                 Aprender com o CyberLevel é divertido{" "}
               </h2>
-              <p className="text-md max-w-2xl pt-10 font-light text-neutral-300 lg:text-2xl">
+              <p className="text-md text-muted-foreground max-w-2xl pt-10 font-light lg:text-2xl">
                 Aqui, conhecimento é superpoder. Com missões curtas e jogos
                 imersivos, os pequenos agentes do mundo digital aprendem a se
                 proteger e navegar com sabedoria pela internet. Cada lição é um
@@ -148,7 +106,7 @@ export default function Home() {
         </section>
       </div>
 
-      <section className="relative flex min-h-[80lvh] flex-col items-center justify-center gap-16 px-4 py-12">
+      <section className="relative flex min-h-screen flex-col items-center justify-center gap-16 px-4 py-12">
         <h2 className="text-center text-3xl font-bold md:text-5xl">
           Por que usar o CyberLevel?
         </h2>
@@ -170,7 +128,7 @@ export default function Home() {
               <h3 className="text-md font-semibold md:text-2xl">
                 Aprendizado gamificado
               </h3>
-              <p className="md:text-md max-w-sm text-center font-light text-neutral-300 drop-shadow-xl/50">
+              <p className="md:text-md text-muted-foreground max-w-sm text-center font-light">
                 Crianças e adolescentes aprendem sobre segurança digital de
                 forma interativa e divertida.
               </p>
@@ -191,7 +149,7 @@ export default function Home() {
               <h3 className="text-md font-semibold md:text-2xl">
                 Monitoramento inteligente
               </h3>
-              <p className="md:text-md max-w-sm text-center font-light text-neutral-300 drop-shadow-xl/50">
+              <p className="md:text-md text-muted-foreground max-w-sm text-center font-light">
                 Responsáveis acompanham relatórios claros e personalizados do
                 progresso dos aprendizes.
               </p>
@@ -212,7 +170,7 @@ export default function Home() {
               <h3 className="text-md font-semibold md:text-2xl">
                 Ambiente seguro
               </h3>
-              <p className="md:text-md max-w-sm text-center font-light text-neutral-300 drop-shadow-xl/50">
+              <p className="md:text-md text-muted-foreground max-w-sm text-center font-light">
                 A plataforma é pensada para proteger, orientar e desenvolver a
                 consciência digital dos jovens.
               </p>
@@ -236,7 +194,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold md:text-4xl">
               Motivação que não acaba!{" "}
             </h2>
-            <p className="text-md max-w-2xl pt-10 font-light text-neutral-300 lg:text-2xl">
+            <p className="text-md text-muted-foreground max-w-2xl pt-10 font-light lg:text-2xl">
               Nossa plataforma tem combina tudo no melhor sentido: avatares
               recompensas e desafios com heróis e vilões do mundo virtual.
               Aprender nunca foi tão emocionante.
@@ -245,12 +203,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative min-h-[80lvh]">
-        <div className="absolute top-1/3 left-1/2 flex w-full -translate-1/2 flex-col items-center gap-4 px-4">
+      <section className="relative min-h-screen">
+        <div className="absolute top-1/2 left-1/2 flex w-full -translate-1/2 flex-col items-center gap-4 px-4">
           <h2 className="text-center text-3xl font-bold md:text-5xl">
             CyberLevel fora das telas
           </h2>
-          <p className="max-w-4xl text-center font-light text-neutral-300 drop-shadow-xl/50 md:text-xl">
+          <p className="text-muted-foreground max-w-4xl text-center font-light md:text-xl">
             O mundo digital é só uma parte da experiência. Por isso, o{" "}
             <strong className="font-bold text-white">CyberLevel</strong> vai
             além das telas com jogos físicos que incentivam a criatividade e a
@@ -263,14 +221,14 @@ export default function Home() {
         <RetroGrid />
       </section>
 
-      <section className="grid min-h-[80lvh] w-full place-items-center overflow-hidden">
+      <section className="grid min-h-screen w-full place-items-center overflow-hidden">
         <div className="relative m-auto flex h-full w-full max-w-7xl flex-col items-center justify-between gap-4 px-4 lg:flex-row lg:pl-10">
           <div className="pt-6 md:pr-[400px]">
             <span className="text-md lg:text-xl">Design inteligente</span>
             <h2 className="text-2xl font-bold lg:text-4xl">
               Visual que cresce junto com você{" "}
             </h2>
-            <p className="text-md max-w-2xl pt-10 font-light text-neutral-300 lg:text-2xl">
+            <p className="text-md text-muted-foreground max-w-2xl pt-10 font-light lg:text-2xl">
               Cada idade tem um olhar — e nossa plataforma entende isso. Para
               crianças, um universo colorido e lúdico. Para adolescentes, um
               estilo futurista e ousado. O{" "}
