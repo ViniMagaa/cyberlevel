@@ -20,12 +20,15 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        pixel:
+          "group relative box-border flex items-center justify-center border-none bg-none tracking-tight outline-none",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
+        pixel: "h-14 px-4 pt-2 pb-3 ",
       },
     },
     defaultVariants: {
@@ -39,6 +42,7 @@ function Button({
   className,
   variant,
   size,
+  children,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -55,7 +59,19 @@ function Button({
         "rounded-full",
       )}
       {...props}
-    />
+    >
+      {variant === "pixel" ? (
+        <>
+          <div className="before bg-primary-500 border-primary-700 group-hover:bg-primary-400 absolute top-0 left-0 z-0 box-border h-[calc(100%-4px)] w-full border-0 border-solid px-4 py-3 transition duration-75 group-active:translate-y-1" />
+          <div className="content text-shadow-primary-600/50 font-monocraft relative z-20 inline-block text-lg whitespace-nowrap text-black transition duration-75 select-none group-active:translate-y-1">
+            {children}
+          </div>
+          <div className="after bg-primary-600 border-primary-700 absolute top-1.5 left-0 -z-10 box-border h-[calc(100%-4px)] w-full border-0 border-solid" />
+        </>
+      ) : (
+        children
+      )}
+    </Comp>
   );
 }
 
