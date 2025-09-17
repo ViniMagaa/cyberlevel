@@ -15,6 +15,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
@@ -37,13 +38,12 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { deleteArchetype } from "../actions";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 type ArchetypeCardProps = {
   archetype: Prisma.ArchetypeGetPayload<{
-    select: {
-      id: true;
-      name: true;
-      description: true;
+    include: {
       modules: {
         include: {
           _count: true;
@@ -85,9 +85,23 @@ export function ArchetypeCard({ archetype }: ArchetypeCardProps) {
   );
 
   return (
-    <Card className="relative">
+    <Card className="relative h-fit gap-2">
+      <CardHeader>
+        {archetype.imageUrl ? (
+          <AspectRatio ratio={4 / 5}>
+            <Image
+              src={archetype.imageUrl}
+              alt={archetype.name}
+              fill
+              className="rounded-md object-cover"
+            />
+          </AspectRatio>
+        ) : (
+          <p className="text-muted-foreground">Sem imagem</p>
+        )}
+      </CardHeader>
       <CardContent className="space-y-2">
-        <CardTitle>{archetype.name}</CardTitle>
+        <CardTitle className="text-2xl">{archetype.name}</CardTitle>
         <CardDescription className="space-y-1">
           <p className="line-clamp-4">{archetype.description}</p>
           <div>

@@ -37,6 +37,7 @@ model Archetype {
   id          String   @id @default(uuid())
   name        String
   description String
+  imageUrl    String?
   modules     Module[]
 }
 
