@@ -3,18 +3,20 @@
 import {
   createModule,
   updateModule,
+  uploadModuleImage,
 } from "@/app/(admin)/admin/modulos/actions";
 import { cn } from "@/lib/utils";
 import { ageGroup } from "@/utils/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Archetype, Prisma } from "@prisma/client";
+import { Archetype, Module } from "@prisma/client";
 import { ArrowLeft, Check, ChevronsUpDown, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AspectRatio } from "./ui/aspect-ratio";
 import { Button } from "./ui/button";
 import {
   Command,
@@ -24,7 +26,14 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
@@ -36,6 +45,9 @@ import {
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
+const MAX_FILE_SIZE = 1024 * 1024 * 5;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 export const moduleSchema = z
   .object({
     title: z.string().min(1, "Título é obrigatório"),
@@ -44,11 +56,29 @@ export const moduleSchema = z
       error: "Selecione o público",
     }),
     archetypeId: z.string().optional(),
+    pixelBackgroundImage: z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Apenas .jpg, .png e .webp são suportados",
+      )
+      .optional(),
+    pixelIslandImage: z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Apenas .jpg, .png e .webp são suportados",
+      )
+      .optional(),
+    pixelBackgroundImageUrl: z.string().optional(),
+    pixelIslandImageUrl: z.string().optional(),
   })
   .refine(
     (data) => {
       if (data.ageGroup === "TEEN") {
-        return !!data.archetypeId && data.archetypeId.trim() !== "";
+        return data.archetypeId && data.archetypeId.length > 0;
       }
       return true;
     },
@@ -56,25 +86,72 @@ export const moduleSchema = z
       path: ["archetypeId"],
       message: "Arquétipo é obrigatório",
     },
+  )
+  .refine(
+    (data) => {
+      if (data.ageGroup === "CHILD") {
+        return !!data.pixelBackgroundImage || !!data.pixelBackgroundImageUrl;
+      }
+      return true;
+    },
+    {
+      path: ["pixelBackgroundImage"],
+      message: "Imagem de fundo é obrigatória",
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.ageGroup === "CHILD") {
+        return !!data.pixelIslandImage || !!data.pixelIslandImageUrl;
+      }
+      return true;
+    },
+    {
+      path: ["pixelIslandImage"],
+      message: "Imagem da ilha é obrigatória",
+    },
   );
 
 export type ModuleFormSchema = z.infer<typeof moduleSchema>;
 
+type TModuleFormContent = Omit<ModuleFormSchema, "image" | "archetype"> & {
+  order: number;
+  archetype:
+    | {
+        connect: {
+          id: string;
+        };
+      }
+    | undefined;
+  pixelBackgroundImageUrl?: string;
+  pixelIslandImageUrl?: string;
+};
+
 type ModuleFormProps = {
-  module?: Prisma.ModuleCreateInput;
+  module?: Module;
   archetypes: Archetype[];
 };
 
 export function ModuleForm({ module, archetypes }: ModuleFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [pixelBackgroundPreview, setPixelBackgroundPreview] = useState<
+    string | undefined
+  >(module?.pixelBackgroundImageUrl ?? undefined);
+  const [pixelIslandPreview, setPixelIslandPreview] = useState<
+    string | undefined
+  >(module?.pixelIslandImageUrl ?? undefined);
 
   const form = useForm<ModuleFormSchema>({
     resolver: zodResolver(moduleSchema),
-    defaultValues: module ?? {
-      title: "",
-      description: "",
-      ageGroup: undefined,
-      archetypeId: undefined,
+    defaultValues: {
+      title: module?.title ?? "",
+      description: module?.description ?? "",
+      ageGroup: module?.ageGroup ?? undefined,
+      archetypeId: module?.archetypeId ?? undefined,
+      pixelBackgroundImage: undefined,
+      pixelIslandImage: undefined,
+      pixelBackgroundImageUrl: module?.pixelBackgroundImageUrl ?? undefined,
+      pixelIslandImageUrl: module?.pixelIslandImageUrl ?? undefined,
     },
   });
 
@@ -83,17 +160,37 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
   function onSubmit(data: ModuleFormSchema) {
     startTransition(async () => {
       try {
-        const newModuleData: Prisma.ModuleCreateInput = {
+        let pixelBackgroundImageUrl = module?.pixelBackgroundImageUrl;
+        let pixelIslandImageUrl = module?.pixelIslandImageUrl;
+
+        // Se o usuário selecionar um arquivo novo, faz o upload
+        if (data.pixelBackgroundImage) {
+          pixelBackgroundImageUrl = await uploadModuleImage(
+            data.pixelBackgroundImage,
+            "backgrounds",
+          );
+        }
+        if (data.pixelIslandImage) {
+          pixelIslandImageUrl = await uploadModuleImage(
+            data.pixelIslandImage,
+            "islands",
+          );
+        }
+
+        const newModuleData: TModuleFormContent = {
           title: data.title,
           description: data.description,
-          order: module?.order ?? -1,
+          order: module?.order ? module.order : -1,
           ageGroup: data.ageGroup,
           archetype: data.archetypeId
             ? { connect: { id: data.archetypeId } }
             : undefined,
+          pixelBackgroundImageUrl: pixelBackgroundImageUrl ?? undefined,
+          pixelIslandImageUrl: pixelIslandImageUrl ?? undefined,
         };
+
         if (module && module.id) {
-          await updateModule(module.id, data);
+          await updateModule(module.id, newModuleData);
           toast.success("Módulo atualizado");
         } else {
           await createModule(newModuleData);
@@ -164,7 +261,6 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
         <FormField
           control={form.control}
           name="archetypeId"
-          disabled={watch("ageGroup") !== "TEEN"}
           render={({ field }) => (
             <FormItem
               className={cn(
@@ -178,8 +274,9 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
                     <Button
                       variant="outline"
                       role="combobox"
+                      disabled={watch("ageGroup") !== "TEEN"}
                       className={cn(
-                        "justify-between",
+                        "justify-between rounded-md!",
                         !field.value && "text-muted-foreground",
                       )}
                     >
@@ -213,7 +310,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
                             <Check
                               className={cn(
                                 "ml-auto",
-                                archetype.name === field.value
+                                archetype.id === field.value
                                   ? "opacity-100"
                                   : "opacity-0",
                               )}
@@ -226,6 +323,81 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
                 </PopoverContent>
               </Popover>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="pixelBackgroundImage"
+          render={({ field }) => (
+            <FormItem className={watch("ageGroup") !== "CHILD" ? "hidden" : ""}>
+              <FormLabel>Imagem de fundo</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  disabled={watch("ageGroup") !== "CHILD"}
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    field.onChange(file);
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setPixelBackgroundPreview(url);
+                    } else {
+                      setPixelBackgroundPreview(undefined);
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+              {pixelBackgroundPreview && (
+                <AspectRatio ratio={16 / 9}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={pixelBackgroundPreview}
+                    alt="Pré-visualização"
+                    className="h-full w-full rounded-md object-cover"
+                  />
+                </AspectRatio>
+              )}
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="pixelIslandImage"
+          render={({ field }) => (
+            <FormItem className={watch("ageGroup") !== "CHILD" ? "hidden" : ""}>
+              <FormLabel>Ilha de atividade</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  disabled={watch("ageGroup") !== "CHILD"}
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    field.onChange(file);
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setPixelIslandPreview(url);
+                    } else {
+                      setPixelIslandPreview(undefined);
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+              {pixelIslandPreview && (
+                <AspectRatio ratio={5 / 3}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={pixelIslandPreview}
+                    alt="Pré-visualização"
+                    className="h-full w-full rounded-md object-contain object-center"
+                  />
+                </AspectRatio>
+              )}
             </FormItem>
           )}
         />

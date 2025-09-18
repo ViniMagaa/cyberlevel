@@ -25,6 +25,8 @@ import { toast } from "sonner";
 import { deleteModule } from "../../modulos/actions";
 import { ActivityCard } from "./activity-card";
 import { ActivityOrderList } from "@/components/activity-order-list";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 type ModuleAccordionItemProps = {
   module: Prisma.ModuleGetPayload<{
@@ -95,10 +97,50 @@ export function ModuleAccordionItem({ module }: ModuleAccordionItemProps) {
             </AlertDialogContent>
           </AlertDialog>
         </div>
+        {module.ageGroup === "CHILD" ? (
+          <div className="flex gap-4">
+            <div className="w-full max-w-40">
+              {module.pixelBackgroundImageUrl ? (
+                <AspectRatio ratio={16 / 9}>
+                  <Image
+                    src={module.pixelBackgroundImageUrl}
+                    alt={module.title}
+                    fill
+                    className="rounded-md object-cover"
+                  />
+                </AspectRatio>
+              ) : (
+                <p className="text-muted-foreground">Sem imagem de fundo</p>
+              )}
+            </div>
 
-        <p className="text-muted-foreground line-clamp-3">
-          {module.description}
-        </p>
+            <div className="flex flex-1 flex-col gap-2">
+              <div className="w-full max-w-15">
+                {module.pixelIslandImageUrl ? (
+                  <AspectRatio ratio={5 / 3}>
+                    <Image
+                      src={module.pixelIslandImageUrl}
+                      alt={module.title}
+                      fill
+                      className="rounded-md object-contain object-center"
+                    />
+                  </AspectRatio>
+                ) : (
+                  <p className="text-muted-foreground">Sem ilha de atividade</p>
+                )}
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <p className="text-muted-foreground line-clamp-[10] text-sm">
+                  {module.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-muted-foreground line-clamp-[10] text-sm">
+            {module.description}
+          </p>
+        )}
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
             <h4 className="font-medium">Atividades</h4>

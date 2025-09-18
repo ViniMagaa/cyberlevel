@@ -212,7 +212,7 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                         role="combobox"
                         disabled={!watch("ageGroup")}
                         className={cn(
-                          "justify-between",
+                          "justify-between rounded-md!",
                           !field.value && "text-muted-foreground",
                         )}
                       >

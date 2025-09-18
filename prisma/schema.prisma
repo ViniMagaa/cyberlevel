@@ -42,14 +42,16 @@ model Archetype {
 }
 
 model Module {
-  id          String     @id @default(uuid())
-  title       String
-  description String
-  order       Int
-  archetypeId String?
-  ageGroup    AgeGroup
-  archetype   Archetype? @relation(fields: [archetypeId], references: [id])
-  activities  Activity[]
+  id                      String     @id @default(uuid())
+  title                   String
+  description             String
+  order                   Int
+  archetypeId             String?
+  pixelBackgroundImageUrl String?
+  pixelIslandImageUrl     String?
+  ageGroup                AgeGroup
+  archetype               Archetype? @relation(fields: [archetypeId], references: [id])
+  activities              Activity[]
 }
 
 model Activity {
