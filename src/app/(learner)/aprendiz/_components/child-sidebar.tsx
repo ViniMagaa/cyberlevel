@@ -1,8 +1,28 @@
+"use client";
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+
+const menuItems = [
+  {
+    label: "Início",
+    href: "/aprendiz",
+    image: "/images/pixel-home-icon.png",
+  },
+  {
+    label: "Missões",
+    href: "/aprendiz/missoes",
+    image: "/images/pixel-tasks-icon.png",
+  },
+  {
+    label: "Perfil",
+    href: "/aprendiz/perfil",
+    image: "/images/pixel-user-icon.png",
+  },
+];
 
 export function ChildSidebar() {
   const [isMenuActive, setIsMenuActive] = useState(false);
@@ -23,7 +43,7 @@ export function ChildSidebar() {
 
       <div
         className={cn(
-          "bg-primary-950 fixed z-50 flex h-full w-18 flex-col gap-12 overflow-x-clip p-4 transition-all",
+          "bg-primary-900 fixed z-50 flex h-full w-18 flex-col gap-12 overflow-x-clip rounded p-4 transition-all",
           isMenuActive && "w-72",
         )}
       >
@@ -41,57 +61,31 @@ export function ChildSidebar() {
             />
           </AspectRatio>
         </div>
-        <Link href="/aprendiz" className="group relative">
-          <div className="grid w-12 place-items-center">
-            <AspectRatio ratio={1 / 1}>
-              <Image
-                src="/images/pixel-home-icon.png"
-                alt="Início"
-                width={50}
-                height={50}
-                className="no-blur"
-              />
-            </AspectRatio>
-          </div>
 
-          <p className="font-monocraft group-hover:text-primary-300 absolute top-1/2 left-20 -translate-y-1/2 text-2xl">
-            Início
-          </p>
-        </Link>
-        <Link href="/aprendiz/missoes" className="group relative">
-          <div className="grid w-12 place-items-center">
-            <AspectRatio ratio={1 / 1}>
-              <Image
-                src="/images/pixel-tasks-icon.png"
-                alt="Missões"
-                width={50}
-                height={50}
-                className="no-blur"
-              />
-            </AspectRatio>
-          </div>
+        {menuItems.map((item, index) => (
+          <Link
+            key={index}
+            href={item.href}
+            onClick={() => setIsMenuActive(false)}
+            className="group relative"
+          >
+            <div className="grid w-12 place-items-center">
+              <AspectRatio ratio={1 / 1}>
+                <Image
+                  src={item.image}
+                  alt={item.label}
+                  width={50}
+                  height={50}
+                  className="no-blur"
+                />
+              </AspectRatio>
+            </div>
 
-          <p className="font-monocraft group-hover:text-primary-300 absolute top-1/2 left-20 -translate-y-1/2 text-2xl">
-            Missões
-          </p>
-        </Link>
-        <Link href="/aprendiz/perfil" className="group relative">
-          <div className="grid w-12 place-items-center">
-            <AspectRatio ratio={1 / 1}>
-              <Image
-                src="/images/pixel-user-icon.png"
-                alt="Perfil"
-                width={50}
-                height={50}
-                className="no-blur"
-              />
-            </AspectRatio>
-          </div>
-
-          <p className="font-monocraft group-hover:text-primary-300 absolute top-1/2 left-20 -translate-y-1/2 text-2xl">
-            Perfil
-          </p>
-        </Link>
+            <p className="font-monocraft group-hover:text-primary-300 absolute top-1/2 left-20 -translate-y-1/2 text-2xl">
+              {item.label}
+            </p>
+          </Link>
+        ))}
       </div>
     </>
   );
