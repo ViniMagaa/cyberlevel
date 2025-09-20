@@ -68,6 +68,24 @@
       width: autofill;
     }
   }
+
+  @keyframes float-diagonal {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(4px, -4px);
+    }
+    50% {
+      transform: translate(-4px, 4px);
+    }
+    75% {
+      transform: translate(4px, 4px);
+    }
+  }
+
+  --animate-float-diagonal: float-diagonal 4s ease-in-out infinite;
 }
 
 @theme inline {
