@@ -1,4 +1,3 @@
-import PixelBlast from "@/components/pixel-blast";
 import Prism from "@/components/prism";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -8,21 +7,11 @@ export default function RegisterPage() {
   return (
     <div className="grid min-h-screen w-screen select-none md:grid-cols-2">
       <section className="relative h-[50vh] overflow-hidden md:h-screen">
-        <PixelBlast
-          variant="circle"
-          pixelSize={6}
-          color="#2db487"
-          patternScale={6}
-          patternDensity={2}
-          pixelSizeJitter={0.5}
-          enableRipples={false}
-          liquid
-          liquidStrength={0.12}
-          liquidRadius={0.5}
-          liquidWobbleSpeed={5}
-          speed={0.6}
-          edgeFade={0.25}
-          transparent
+        <Image
+          alt="CyberLevel"
+          src="/images/learner-register-background.png"
+          fill
+          className="no-blur inset-0 opacity-65 select-none"
         />
         <div className="absolute top-1/2 left-1/2 flex -translate-1/2 flex-col justify-center gap-4">
           <div>
@@ -33,11 +22,9 @@ export default function RegisterPage() {
               height={360}
               className="no-blur select-none"
             />
-            <div className="flex justify-end">
-              <span className="font-monocraft m-auto bg-black text-right text-2xl uppercase">
-                Kids
-              </span>
-            </div>
+            <p className="font-monocraft mr-5 text-right text-2xl font-bold uppercase">
+              Kids
+            </p>
           </div>
           <Button variant="pixel" size="pixel" className="m-auto">
             Tenho menos de 12 anos
