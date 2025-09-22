@@ -1,4 +1,4 @@
-import { updateUserData } from "@/api/user-settings";
+import { updateUserData } from "@/app/api/user-settings";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CardDescription } from "@/components/ui/card";

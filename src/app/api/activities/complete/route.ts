@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 
-const BASE_XP = 100; // XP base por atividade
-const MIN_XP = 10; // XP mínimo
+const BASE_XP = 100;
+const MIN_XP = 10;
 
 function calculateXP(startedAt: Date, completedAt: Date) {
-  const timeTaken = (completedAt.getTime() - startedAt.getTime()) / 1000; // Segundos
+  const timeTaken = (completedAt.getTime() - startedAt.getTime()) / 1000;
   let xp = BASE_XP;
   if (timeTaken > 30) {
-    xp -= Math.floor(timeTaken - 30); // Penalidade 1 XP por segundo extra
+    xp -= Math.floor(timeTaken - 30);
   }
   return Math.max(xp, MIN_XP);
 }
@@ -16,12 +16,8 @@ function calculateXP(startedAt: Date, completedAt: Date) {
 export async function POST(req: NextRequest) {
   try {
     const { userId, activityId } = await req.json();
-
-    // Busca o progresso atual
     let progress = await db.activityProgress.findUnique({
-      where: {
-        userId_activityId: { userId, activityId },
-      },
+      where: { userId_activityId: { userId, activityId } },
     });
 
     const now = new Date();
@@ -35,15 +31,13 @@ export async function POST(req: NextRequest) {
 
     if (progress.status === "COMPLETED") {
       return NextResponse.json({
-        message: "Atividade já concluída",
+        message: "Já concluído",
         xpEarned: progress.xpEarned,
       });
     }
 
-    // Calcula XP
     const xpEarned = calculateXP(progress.startedAt!, now);
 
-    // Atualiza progresso
     progress = await db.activityProgress.update({
       where: { userId_activityId: { userId, activityId } },
       data: {
@@ -54,7 +48,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Atualiza XP do usuário
     const user = await db.user.update({
       where: { id: userId },
       data: { xp: { increment: xpEarned } },
@@ -67,6 +60,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao concluir atividade" },
+      { status: 500 },
+    );
   }
 }

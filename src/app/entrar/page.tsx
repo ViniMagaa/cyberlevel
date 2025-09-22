@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import signIn from "@/api/sign-in";
+import signIn from "@/app/api/sign-in";
 import { Particles } from "@/components/magicui/particles";
 import { Button } from "@/components/ui/button";
 import {

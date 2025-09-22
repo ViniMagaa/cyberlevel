@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { activityType } from "@/utils/enums";
 import { Activity, ActivityProgress } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 
 type ChildActivityIslandProps = {
   activity: Activity;
@@ -78,12 +79,12 @@ export function ChildActivityIsland({
           </p>
           <DropdownMenuSeparator />
           <div className="w-full p-2">
-            {status === "NOT_STARTED" && userProgress ? (
-              <div className="font-monocraft text-sm">
+            {status === "COMPLETED" && userProgress ? (
+              <div className="font-monocraft text-center text-sm">
                 <p>
-                  <strong className="font-upheaval text-4xl">
-                    {userProgress.xpEarned ?? 1000}
-                  </strong>{" "}
+                  <span className="font-upheaval text-4xl">
+                    {userProgress.xpEarned}
+                  </span>{" "}
                   XP
                 </p>
                 <p>
@@ -92,10 +93,12 @@ export function ChildActivityIsland({
                 </p>
               </div>
             ) : (
-              <Button variant="pixel" size="pixel" className="m-auto">
-                {status === "IN_PROGRESS" && "Continuar"}
-                {status === "NOT_STARTED" && "Iniciar"}
-              </Button>
+              <Link href={`/aprendiz/missoes/${activity.id}`}>
+                <Button variant="pixel" size="pixel" className="m-auto">
+                  {status === "IN_PROGRESS" && "Continuar"}
+                  {status === "NOT_STARTED" && "Iniciar"}
+                </Button>
+              </Link>
             )}
           </div>
         </DropdownMenuContent>

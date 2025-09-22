@@ -1,4 +1,4 @@
-import { updatePassword } from "@/api/user-settings";
+import { updatePassword } from "@/app/api/user-settings";
 import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
 import {

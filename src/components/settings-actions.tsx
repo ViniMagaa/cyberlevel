@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteUser } from "@/api/user-settings";
+import { deleteUser } from "@/app/api/user-settings";
 import {
   AlertDialog,
   AlertDialogAction,

@@ -111,7 +111,9 @@ export default async function ChildDashboard({ user }: ChildDashboardProps) {
               </AspectRatio>
             </div>
             <div>
-              <p className="font-upheaval text-4xl">{streakTotal} dias</p>
+              <p className="font-upheaval text-4xl">
+                {streakTotal} dia{streakTotal === 1 ? "" : "s"}
+              </p>
               <span className="text-muted-foreground font-monocraft">
                 de ofensiva
               </span>

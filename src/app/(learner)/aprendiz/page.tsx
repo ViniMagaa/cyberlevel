@@ -1,4 +1,4 @@
-import { getUser } from "@/api/user-settings";
+import { getUser } from "@/app/api/user-settings";
 import { createClient } from "@/utils/supabase/server";
 import { differenceInYears } from "date-fns";
 import { redirect } from "next/navigation";

@@ -1,4 +1,4 @@
-import { getUser } from "@/api/user-settings";
+import { getUser } from "@/app/api/user-settings";
 import { SettingsActions } from "@/components/settings-actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";

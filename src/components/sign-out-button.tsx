@@ -1,6 +1,6 @@
 "use client";
 
-import signOut from "@/api/sign-out";
+import signOut from "@/app/api/sign-out";
 import {
   AlertDialog,
   AlertDialogAction,

@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
           activityId,
           status: "IN_PROGRESS",
           startedAt: now,
-          attempts: 1,
+          attempts: 0,
           xpEarned: 0,
         },
       });
