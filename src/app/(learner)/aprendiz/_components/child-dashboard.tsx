@@ -3,14 +3,15 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { ChildSignOutButton } from "./child-sign-out-button";
+import { calculateStreak } from "@/utils/strak";
 
 type ChildDashboardProps = {
   user: User;
 };
 
-export default function ChildDashboard({ user }: ChildDashboardProps) {
-  const experienceTotal = 60000;
-  const streakTotal = 30;
+export default async function ChildDashboard({ user }: ChildDashboardProps) {
+  const xpTotal = user.xp;
+  const streakTotal = await calculateStreak(user.id);
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col-reverse gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
@@ -89,7 +90,7 @@ export default function ChildDashboard({ user }: ChildDashboardProps) {
               </AspectRatio>
             </div>
             <div>
-              <p className="font-upheaval text-4xl">{experienceTotal}</p>
+              <p className="font-upheaval text-4xl">{xpTotal}</p>
               <span className="text-muted-foreground font-monocraft">
                 pontos de XP
               </span>

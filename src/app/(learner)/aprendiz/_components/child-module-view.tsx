@@ -2,13 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { ChildActivityIsland } from "./child-activity-island";
 
 type ChildModuleViewProps = {
-  modules: Prisma.ModuleGetPayload<{ include: { activities: true } }>[];
+  modules: Prisma.ModuleGetPayload<{
+    include: { activities: { include: { activityProgress: true } } };
+  }>[];
 };
 
 export function ChildModuleView({ modules }: ChildModuleViewProps) {
@@ -22,6 +24,22 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
   }
 
   const selectedModule = modules[moduleIndex];
+
+  const enabledActivityId = useMemo(() => {
+    let id: string | undefined;
+    for (const mod of modules) {
+      const activity = mod.activities.find((act) => {
+        const progress = act.activityProgress[0]; // pega o progresso do usuário ou undefined
+        return !progress || progress.status !== "COMPLETED";
+      });
+
+      if (activity) {
+        id = activity.id;
+        break; // achou a primeira, sai do loop
+      }
+    }
+    return id;
+  }, [modules]);
 
   return modules.length > 0 ? (
     <div className="outline-primary-400/40 relative ml-20 h-screen w-full overflow-hidden rounded-tl-3xl rounded-bl-3xl outline">
@@ -41,7 +59,7 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
 
       <ScrollArea className="max-sm:h-screen">
         <div
-          className={`flex h-[calc(${selectedModule.activities.length.toString()}*(160px+5rem)+5rem+12rem)] flex-col items-center gap-20 py-30 sm:h-screen sm:w-[calc(${selectedModule.activities.length.toString()}*(160px+5rem)+5rem+12rem)] sm:flex-row sm:py-0 sm:pl-20`}
+          className={`flex h-[calc(${selectedModule.activities.length.toString()}*15rem+17rem)] flex-col items-center gap-20 pt-60 pb-30 sm:h-screen sm:w-[calc(${selectedModule.activities.length.toString()}*15rem+17rem)] sm:flex-row sm:py-0 sm:pl-20`}
         >
           {moduleIndex > 0 && (
             <Button
@@ -53,24 +71,19 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
               Anterior
             </Button>
           )}
-          {selectedModule.activities.map((activity, index) => (
-            <div key={activity.id} className="shrink-0 scale-75 sm:scale-100">
-              <Image
-                src={selectedModule.pixelIslandImageUrl!}
-                alt={activity.title}
-                width={160}
-                height={110}
-                className={cn(
-                  "no-blur animate-float-diagonal brightness-80 drop-shadow-xl/25 transition select-none hover:scale-105 hover:brightness-100",
-                  index % 2 === 0 ? "sm:mt-12" : "sm:mb-12",
-                )}
-                style={{
-                  animationDelay: `${index * 300}ms`,
-                  animationDuration: `${3000 + index * 500}ms`,
-                }}
+          {selectedModule.activities.map((activity, index) => {
+            const userProgress = activity.activityProgress[0];
+            return (
+              <ChildActivityIsland
+                key={activity.id}
+                enabled={activity.id === enabledActivityId}
+                activity={activity}
+                userProgress={userProgress}
+                islandImageUrl={selectedModule.pixelIslandImageUrl!}
+                index={index}
               />
-            </div>
-          ))}
+            );
+          })}
           {moduleIndex < modules.length - 1 && (
             <Button
               variant="pixel"

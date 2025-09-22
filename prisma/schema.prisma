@@ -19,15 +19,17 @@ model User {
   birthdate DateTime
   role      UserRole
   createdAt DateTime @default(now())
+  xp        Int      @default(0)
 
   // store relations
   cart     ShoppingCart? @relation("ShoppingCartToUser")
   orders   Order[]
-  Wishlist Wishlist?
-  Address  Address[]
+  wishlist Wishlist?
+  address  Address[]
 
-  articles     Article[]
-  articleViews ArticleView[]
+  articles         Article[]
+  articleViews     ArticleView[]
+  activityProgress ActivityProgress[]
 }
 
 // -------------------------------------
@@ -55,13 +57,30 @@ model Module {
 }
 
 model Activity {
-  id       String       @id @default(uuid())
-  moduleId String
-  type     ActivityType
-  title    String
-  order    Int
-  content  Json // structure varies per activity type
-  module   Module       @relation(fields: [moduleId], references: [id])
+  id               String             @id @default(uuid())
+  moduleId         String
+  type             ActivityType
+  title            String
+  order            Int
+  content          Json // structure varies per activity type
+  module           Module             @relation(fields: [moduleId], references: [id])
+  activityProgress ActivityProgress[]
+}
+
+model ActivityProgress {
+  id          String         @id @default(uuid())
+  userId      String
+  activityId  String
+  status      ProgressStatus @default(NOT_STARTED)
+  startedAt   DateTime?
+  completedAt DateTime?
+  attempts    Int            @default(0)
+  xpEarned    Int            @default(0)
+
+  user     User     @relation(fields: [userId], references: [id])
+  activity Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([userId, activityId])
 }
 
 // -------
@@ -239,4 +258,10 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
   REFUNDED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
 }
