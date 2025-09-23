@@ -1,10 +1,13 @@
+import { cn } from "@/lib/utils";
+
 type ParagraphsProps = {
   text: string;
+  className?: string;
 };
 
-export function Paragraphs({ text }: ParagraphsProps) {
+export function Paragraphs({ text, className }: ParagraphsProps) {
   return text.split("\n").map((paragraph, i) => (
-    <p className="text-muted-foreground" key={i}>
+    <p className={cn("text-muted-foreground", className)} key={i}>
       {paragraph}
     </p>
   ));

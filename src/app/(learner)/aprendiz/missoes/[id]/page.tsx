@@ -1,7 +1,8 @@
 import { db } from "@/lib/prisma";
-import { TQuizContent } from "@/utils/activity-types";
+import { TFakeNewsContent, TQuizContent } from "@/utils/activity-types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { ChildFakeNews } from "./_components/child-fake-news";
 import { ChildQuiz } from "./_components/child-quiz";
 
 type ActivityPageProps = {
@@ -35,6 +36,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <ChildQuiz
           activity={activity}
           quiz={activity.content as unknown as TQuizContent}
+          userId={user.id}
+        />
+      );
+    case "FAKE_NEWS":
+      return (
+        <ChildFakeNews
+          activity={activity}
+          fakeNews={activity.content as unknown as TFakeNewsContent}
           userId={user.id}
         />
       );
