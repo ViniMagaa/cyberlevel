@@ -1,9 +1,14 @@
 import { db } from "@/lib/prisma";
-import { TFakeNewsContent, TQuizContent } from "@/utils/activity-types";
+import {
+  TFakeNewsContent,
+  TMatchPairsContent,
+  TQuizContent,
+} from "@/utils/activity-types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ChildFakeNews } from "./_components/child-fake-news";
 import { ChildQuiz } from "./_components/child-quiz";
+import { ChildMatchPairs } from "./_components/child-match-pairs";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -30,12 +35,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
 
   if (!activity) return redirect("/dashboard");
 
+  const content = activity.content as unknown;
+
   switch (activity.type) {
     case "QUIZ":
       return (
         <ChildQuiz
           activity={activity}
-          quiz={activity.content as unknown as TQuizContent}
+          quiz={content as TQuizContent}
           userId={user.id}
         />
       );
@@ -43,7 +50,15 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
       return (
         <ChildFakeNews
           activity={activity}
-          fakeNews={activity.content as unknown as TFakeNewsContent}
+          fakeNews={content as TFakeNewsContent}
+          userId={user.id}
+        />
+      );
+    case "MATCH_PAIRS":
+      return (
+        <ChildMatchPairs
+          activity={activity}
+          matchPairs={content as TMatchPairsContent}
           userId={user.id}
         />
       );
