@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { ChildSignOutButton } from "./child-sign-out-button";
-import { calculateStreak } from "@/utils/strak";
+import { calculateStreak } from "@/utils/streak";
 
 type ChildDashboardProps = {
   user: User;
