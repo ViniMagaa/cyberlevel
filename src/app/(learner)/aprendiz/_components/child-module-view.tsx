@@ -27,7 +27,8 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
 
   const enabledActivityId = useMemo(() => {
     let id: string | undefined;
-    for (const mod of modules) {
+    for (let i = 0; i < modules.length; i++) {
+      const mod = modules[i];
       const activity = mod.activities.find((act) => {
         const progress = act.activityProgress[0]; // pega o progresso do usuário ou undefined
         return !progress || progress.status !== "COMPLETED";
@@ -35,6 +36,7 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
 
       if (activity) {
         id = activity.id;
+        setModuleIndex(i);
         break; // achou a primeira, sai do loop
       }
     }
