@@ -69,7 +69,7 @@ export function CartDrawerItem({ userId, cartItem }: CartDrawerItemProps) {
                   src={cartItem.product.imageUrl}
                   alt={cartItem.product.name}
                   fill
-                  className="rounded-md object-cover shadow-lg"
+                  className="rounded-md object-contain shadow-lg"
                 />
               </AspectRatio>
             )}

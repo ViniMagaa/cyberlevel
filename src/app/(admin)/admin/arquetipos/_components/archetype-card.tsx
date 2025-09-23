@@ -93,7 +93,7 @@ export function ArchetypeCard({ archetype }: ArchetypeCardProps) {
               src={archetype.imageUrl}
               alt={archetype.name}
               fill
-              className="rounded-md object-cover"
+              className="rounded-md object-contain"
             />
           </AspectRatio>
         ) : (

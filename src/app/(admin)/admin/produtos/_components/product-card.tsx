@@ -64,7 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={product.imageUrl}
               alt={product.name}
               fill
-              className="rounded-md object-cover"
+              className="rounded-md object-contain"
             />
           </AspectRatio>
         )}

@@ -87,7 +87,7 @@ export default async function Dashboard() {
                                 src={product.imageUrl}
                                 alt={product.name}
                                 fill
-                                className="rounded-md object-cover shadow-lg"
+                                className="rounded-md object-contain shadow-lg"
                               />
                             </AspectRatio>
                           )}
