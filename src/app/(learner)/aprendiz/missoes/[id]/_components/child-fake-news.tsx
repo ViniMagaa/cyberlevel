@@ -202,8 +202,8 @@ export function ChildFakeNews({
 
         {completed && (
           <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-4xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl">
+            <h2 className="font-upheaval text-6xl md:text-6xl">Parabéns!</h2>
+            <p className="font-monocraft text-xl leading-none">
               Você identificou a notícia e ganhou{" "}
               <span className="font-upheaval text-4xl">{xpEarned} XP</span>
             </p>

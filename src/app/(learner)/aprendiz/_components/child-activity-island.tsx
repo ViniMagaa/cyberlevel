@@ -83,9 +83,8 @@ export function ChildActivityIsland({
               <div className="font-monocraft text-center text-sm">
                 <p>
                   <span className="font-upheaval text-4xl">
-                    {userProgress.xpEarned}
-                  </span>{" "}
-                  XP
+                    {userProgress.xpEarned} XP
+                  </span>
                 </p>
                 <p>
                   {userProgress.attempts} tentativa
