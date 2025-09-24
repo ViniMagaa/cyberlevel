@@ -2,6 +2,7 @@ import { db } from "@/lib/prisma";
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TInformativeTextContent,
   TMatchPairsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -9,12 +10,13 @@ import {
 } from "@/utils/activity-types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { ChildFakeNews } from "./_components/child-fake-news";
-import { ChildQuiz } from "./_components/child-quiz";
-import { ChildMatchPairs } from "./_components/child-match-pairs";
-import { ChildThemedPassword } from "./_components/child-themed-password";
 import { ChildFakeChat } from "./_components/child-fake-chat";
+import { ChildFakeNews } from "./_components/child-fake-news";
+import { ChildInformativeText } from "./_components/child-informative-text";
+import { ChildMatchPairs } from "./_components/child-match-pairs";
 import { ChildPostOrNot } from "./_components/child-post-or-not";
+import { ChildQuiz } from "./_components/child-quiz";
+import { ChildThemedPassword } from "./_components/child-themed-password";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -89,6 +91,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <ChildPostOrNot
           activity={activity}
           postOrNot={content as TPostOrNotContent}
+          userId={user.id}
+        />
+      );
+    case "INFORMATIVE_TEXT":
+      return (
+        <ChildInformativeText
+          activity={activity}
+          informativeText={content as TInformativeTextContent}
           userId={user.id}
         />
       );
