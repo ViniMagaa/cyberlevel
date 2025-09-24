@@ -49,9 +49,9 @@ export function SignOutButton() {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Encerrar seção</AlertDialogTitle>
+          <AlertDialogTitle>Encerrar sessão</AlertDialogTitle>
           <AlertDialogDescription>
-            Você tem certeza que deseja encerrar sua seção?
+            Você tem certeza que deseja encerrar sua sessão?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
