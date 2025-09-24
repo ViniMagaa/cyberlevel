@@ -3,6 +3,7 @@ import {
   TFakeChatContent,
   TFakeNewsContent,
   TMatchPairsContent,
+  TPostOrNotContent,
   TQuizContent,
   TThemedPasswordContent,
 } from "@/utils/activity-types";
@@ -13,6 +14,7 @@ import { ChildQuiz } from "./_components/child-quiz";
 import { ChildMatchPairs } from "./_components/child-match-pairs";
 import { ChildThemedPassword } from "./_components/child-themed-password";
 import { ChildFakeChat } from "./_components/child-fake-chat";
+import { ChildPostOrNot } from "./_components/child-post-or-not";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -82,7 +84,15 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           userId={user.id}
         />
       );
+    case "POST_OR_NOT":
+      return (
+        <ChildPostOrNot
+          activity={activity}
+          postOrNot={content as TPostOrNotContent}
+          userId={user.id}
+        />
+      );
     default:
-      return null;
+      return redirect("/dashboard");
   }
 }
