@@ -288,13 +288,15 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
                           <FormLabel>Aceito os termos e condições</FormLabel>
                           <p className="text-muted-foreground text-sm">
                             Ao clicar, você concorda com os{" "}
-                            <Button
-                              type="button"
-                              variant="link"
-                              className="p-0"
-                            >
-                              termos e condições do CyberLevel
-                            </Button>
+                            <Link href="/termos" target="_blank">
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="p-0"
+                              >
+                                termos e condições do CyberLevel
+                              </Button>
+                            </Link>
                           </p>
                           <FormMessage />
                         </div>
