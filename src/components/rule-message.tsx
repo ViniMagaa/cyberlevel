@@ -6,9 +6,10 @@ type RuleMessageProps = {
     type: TThemedPasswordRules;
     value?: string;
   };
+  onlyText?: boolean;
 };
 
-export function RuleMessage({ rule }: RuleMessageProps) {
+export function RuleMessage({ rule, onlyText = false }: RuleMessageProps) {
   let message: string = "";
 
   switch (rule.type) {
@@ -39,6 +40,8 @@ export function RuleMessage({ rule }: RuleMessageProps) {
     default:
       message = "Tipo incorreto da senha";
   }
+
+  if (onlyText) return <>{message}</>;
 
   return (
     <Card className="border-primary-600 bg-primary-400 dark:border-primary-600 dark:bg-primary-800 p-3 text-center">

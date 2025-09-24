@@ -3,12 +3,14 @@ import {
   TFakeNewsContent,
   TMatchPairsContent,
   TQuizContent,
+  TThemedPasswordContent,
 } from "@/utils/activity-types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ChildFakeNews } from "./_components/child-fake-news";
 import { ChildQuiz } from "./_components/child-quiz";
 import { ChildMatchPairs } from "./_components/child-match-pairs";
+import { ChildThemedPassword } from "./_components/child-themed-password";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -59,6 +61,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <ChildMatchPairs
           activity={activity}
           matchPairs={content as TMatchPairsContent}
+          userId={user.id}
+        />
+      );
+    case "THEMED_PASSWORD":
+      return (
+        <ChildThemedPassword
+          activity={activity}
+          themedPassword={content as TThemedPasswordContent}
           userId={user.id}
         />
       );
