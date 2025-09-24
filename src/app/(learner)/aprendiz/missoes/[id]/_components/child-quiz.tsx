@@ -9,7 +9,7 @@ import { TQuizContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 type ChildQuizProps = {
@@ -30,8 +30,6 @@ export function ChildQuiz({ activity, quiz, userId }: ChildQuizProps) {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [completed, setCompleted] = useState(false);
   const [xpEarned, setXpEarned] = useState<number | null>(null);
-
-  const router = useRouter();
 
   const isLastQuestion = currentIndex + 1 >= quiz.questions.length;
   const currentQuestion = quiz.questions[currentIndex];
@@ -191,12 +189,9 @@ export function ChildQuiz({ activity, quiz, userId }: ChildQuizProps) {
               Você concluiu o quiz e ganhou{" "}
               <span className="font-upheaval text-4xl">{xpEarned} XP</span>
             </p>
-            <Button
-              onClick={() => router.push("/aprendiz/missoes")}
-              className="font-monocraft mt-4"
-            >
-              Voltar às missões
-            </Button>
+            <Link href="/aprendiz/missoes">
+              <Button className="font-monocraft mt-4">Voltar às missões</Button>
+            </Link>
           </div>
         )}
       </div>

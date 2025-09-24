@@ -9,7 +9,7 @@ import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 type ChildFakeChatProps = {
@@ -32,8 +32,6 @@ export function ChildFakeChat({
   const [feedback, setFeedback] = useState<string | null>(null);
   const [completed, setCompleted] = useState(false);
   const [xpEarned, setXpEarned] = useState<number | null>(null);
-
-  const router = useRouter();
 
   const isLastMessage = currentIndex + 1 >= fakeChat.messages.length;
   const currentMessage = fakeChat.messages[currentIndex];
@@ -224,12 +222,9 @@ export function ChildFakeChat({
               Você concluiu a simulação e ganhou{" "}
               <span className="font-upheaval text-4xl">{xpEarned} XP</span>
             </p>
-            <Button
-              onClick={() => router.push("/aprendiz/missoes")}
-              className="font-monocraft mt-4"
-            >
-              Voltar às missões
-            </Button>
+            <Link href="/aprendiz/missoes">
+              <Button className="font-monocraft mt-4">Voltar às missões</Button>
+            </Link>
           </div>
         )}
       </div>
