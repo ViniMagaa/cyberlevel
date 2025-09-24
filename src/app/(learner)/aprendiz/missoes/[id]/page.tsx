@@ -1,5 +1,6 @@
 import { db } from "@/lib/prisma";
 import {
+  TFakeChatContent,
   TFakeNewsContent,
   TMatchPairsContent,
   TQuizContent,
@@ -11,6 +12,7 @@ import { ChildFakeNews } from "./_components/child-fake-news";
 import { ChildQuiz } from "./_components/child-quiz";
 import { ChildMatchPairs } from "./_components/child-match-pairs";
 import { ChildThemedPassword } from "./_components/child-themed-password";
+import { ChildFakeChat } from "./_components/child-fake-chat";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -69,6 +71,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <ChildThemedPassword
           activity={activity}
           themedPassword={content as TThemedPasswordContent}
+          userId={user.id}
+        />
+      );
+    case "FAKE_CHAT":
+      return (
+        <ChildFakeChat
+          activity={activity}
+          fakeChat={content as TFakeChatContent}
           userId={user.id}
         />
       );
