@@ -92,7 +92,7 @@ export function ChildActivityIsland({
                 </p>
               </div>
             ) : (
-              <Link href={`/aprendiz/missoes/${activity.id}`}>
+              <Link href={`/aprendiz/crianca/missoes/${activity.id}`}>
                 <Button variant="pixel" size="pixel" className="m-auto">
                   {status === "IN_PROGRESS" && "Continuar"}
                   {status === "NOT_STARTED" && "Iniciar"}

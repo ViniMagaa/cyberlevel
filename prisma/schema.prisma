@@ -17,6 +17,7 @@ model User {
   username  String   @unique
   email     String   @unique
   birthdate DateTime
+  ageGroup  AgeGroup?
   role      UserRole
   createdAt DateTime @default(now())
   xp        Int      @default(0)

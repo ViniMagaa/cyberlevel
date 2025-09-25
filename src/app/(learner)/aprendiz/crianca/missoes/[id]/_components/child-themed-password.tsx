@@ -215,7 +215,7 @@ export function ChildThemedPassword({
               Você criou sua senha e ganhou{" "}
               <span className="font-upheaval text-4xl">{xpEarned} XP</span>
             </p>
-            <Link href="/aprendiz/missoes">
+            <Link href="/aprendiz/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>
             </Link>
           </div>
