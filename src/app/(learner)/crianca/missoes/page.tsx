@@ -1,16 +1,11 @@
+import { getUserSession } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ChildModuleView } from "../_components/child-module-view";
 
 export default async function LearnerActivities() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const childrenModules = await db.module.findMany({
     include: {

@@ -92,7 +92,11 @@ export function ChildActivityIsland({
                 </p>
               </div>
             ) : (
-              <Link href={`/aprendiz/missoes/${activity.id}`}>
+<<<<<<<< HEAD:src/app/(learner)/crianca/_components/child-activity-island.tsx
+              <Link href={`/crianca/missoes/${activity.id}`}>
+========
+              <Link href={`/aprendiz/crianca/missoes/${activity.id}`}>
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/_components/child-activity-island.tsx
                 <Button variant="pixel" size="pixel" className="m-auto">
                   {status === "IN_PROGRESS" && "Continuar"}
                   {status === "NOT_STARTED" && "Iniciar"}

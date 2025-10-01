@@ -1,16 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
+import { getUserSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ArticleCard } from "./_components/article-card";
 import { getPublishedArticles } from "./actions";
 
 export default async function Articles() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const articles = await getPublishedArticles(user.id);
 

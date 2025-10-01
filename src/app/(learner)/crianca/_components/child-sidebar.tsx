@@ -9,17 +9,29 @@ import { useState } from "react";
 const menuItems = [
   {
     label: "Início",
-    href: "/aprendiz",
+<<<<<<<< HEAD:src/app/(learner)/crianca/_components/child-sidebar.tsx
+    href: "/crianca",
+========
+    href: "/aprendiz/crianca",
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/_components/child-sidebar.tsx
     image: "/images/pixel-home-icon.png",
   },
   {
     label: "Missões",
-    href: "/aprendiz/missoes",
+<<<<<<<< HEAD:src/app/(learner)/crianca/_components/child-sidebar.tsx
+    href: "/crianca/missoes",
+========
+    href: "/aprendiz/crianca/missoes",
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/_components/child-sidebar.tsx
     image: "/images/pixel-tasks-icon.png",
   },
   {
     label: "Perfil",
-    href: "/aprendiz/perfil",
+<<<<<<<< HEAD:src/app/(learner)/crianca/_components/child-sidebar.tsx
+    href: "/crianca/perfil",
+========
+    href: "/aprendiz/crianca/perfil",
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/_components/child-sidebar.tsx
     image: "/images/pixel-user-icon.png",
   },
 ];

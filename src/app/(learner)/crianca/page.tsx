@@ -1,22 +1,49 @@
+import { getUser } from "@/app/api/user-settings";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { User } from "@prisma/client";
+<<<<<<<< HEAD:src/app/(learner)/crianca/page.tsx
+import { getUserSession } from "@/lib/auth";
+import { calculateStreak } from "@/utils/streak";
+========
+import { calculateStreak } from "@/utils/streak";
+import { createClient } from "@/utils/supabase/server";
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/page.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { ChildSignOutButton } from "./child-sign-out-button";
-import { calculateStreak } from "@/utils/streak";
+import { redirect } from "next/navigation";
+import { ChildSignOutButton } from "./_components/child-sign-out-button";
 
-type ChildDashboardProps = {
-  user: User;
-};
+export default async function Dashboard() {
+<<<<<<<< HEAD:src/app/(learner)/crianca/page.tsx
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
-export default async function ChildDashboard({ user }: ChildDashboardProps) {
   const xpTotal = user.xp;
   const streakTotal = await calculateStreak(user.id);
+========
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return redirect("/dashboard");
+
+  const userData = await getUser(user.id);
+
+  if (!userData) redirect("/dashboard");
+
+  const xpTotal = userData.xp;
+  const streakTotal = await calculateStreak(userData.id);
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/page.tsx
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col-reverse gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
       <div className="col-span-2 flex flex-1/2 auto-rows-min flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-2xl lg:p-6">
-        <Link href="/aprendiz/missoes" className="h-fit sm:col-span-2">
+<<<<<<<< HEAD:src/app/(learner)/crianca/page.tsx
+        <Link href="/crianca/missoes" className="h-fit sm:col-span-2">
+========
+        <Link href="/aprendiz/crianca/missoes" className="h-fit sm:col-span-2">
+>>>>>>>> 774d0193b4bae464265fff6bb89c0711d3c7c445:src/app/(learner)/aprendiz/crianca/page.tsx
           <div className="bg-primary-600 group border-primary-500/40 relative overflow-hidden rounded-xl border">
             <AspectRatio ratio={16 / 9} className="relative overflow-hidden">
               <Image
@@ -63,9 +90,9 @@ export default async function ChildDashboard({ user }: ChildDashboardProps) {
               className="no-blur rounded-xl object-cover"
             />
             <div>
-              <p className="font-monocraft text-2xl">{user.name}</p>
+              <p className="font-monocraft text-2xl">{userData.name}</p>
               <span className="text-muted-foreground/80 font-monocraft">
-                @{user.username}
+                @{userData.username}
               </span>
             </div>
           </div>

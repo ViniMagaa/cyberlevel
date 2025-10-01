@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
+import { getUserSession } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPublishedArticles } from "../actions";
 import { ArticleCard } from "./article-card";
 
 export default async function LastArticles() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const articles = await getPublishedArticles(user.id, 2);
 

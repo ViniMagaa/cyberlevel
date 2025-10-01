@@ -1,4 +1,5 @@
-import { requireUserSession } from "@/lib/auth";
+import { getUserSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { CartDrawer } from "./_components/cart-drawer";
 import { FeaturedProduct } from "./_components/featured-product";
 import { ProductCard } from "./_components/product-card";
@@ -6,9 +7,8 @@ import { WishlistDrawer } from "./_components/wishlist-drawer";
 import { getActiveProducts, getCart, getWishlist } from "./actions";
 
 export default async function StorePage() {
-  const { user } = await requireUserSession();
-
-  if (!user) return <div>Usuário não encontrado.</div>;
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const [[featuredProduct, ...products], cart, wishlist] = await Promise.all([
     getActiveProducts(),

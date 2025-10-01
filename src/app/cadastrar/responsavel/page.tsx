@@ -122,7 +122,7 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
         return;
       }
 
-      router.push("/dashboard");
+      router.refresh();
     });
   };
 

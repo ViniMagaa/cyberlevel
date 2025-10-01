@@ -1,20 +1,31 @@
-import { createClient } from "@/utils/supabase/server";
-import { db } from "./prisma";
+"use server";
 
-export async function requireUserSession() {
+import { createClient } from "@/utils/supabase/server";
+import { User as UserData } from "@prisma/client";
+import { User } from "@supabase/supabase-js";
+
+export async function getUserSession(): Promise<(User & UserData) | null> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { user: null, role: null };
 
-  const data = await db.user.findUnique({
-    where: { id: user.id },
-    select: { role: true },
-  });
+  if (!user) return null;
 
-  return {
-    user,
-    role: data?.role,
+  const { data, error } = await supabase
+    .from("User")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  const userData: User & UserData = {
+    ...user,
+    ...data,
   };
+
+  return userData;
 }
