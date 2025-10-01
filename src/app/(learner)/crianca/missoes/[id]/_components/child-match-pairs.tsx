@@ -1,13 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TMatchPairsContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type ChildMatchPairsProps = {
@@ -29,15 +30,13 @@ export function ChildMatchPairs({
   matchPairs,
   userId,
 }: ChildMatchPairsProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
-
   const [cards, setCards] = useState<Card[]>([]);
   const [flipped, setFlipped] = useState<string[]>([]);
   const [attempts, setAttempts] = useState(0);
   const [timeLeft, setTimeLeft] = useState(matchPairs.timeLimit);
+
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   // Monta cartas (term + definition) e embaralha
   function createCardsFromConcepts(): Card[] {
@@ -59,15 +58,6 @@ export function ChildMatchPairs({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchPairs]);
 
-  // marca completado se já houver progresso
-  useEffect(() => {
-    const prog = activity.activityProgress?.[0];
-    if (prog?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(prog.xpEarned ?? null);
-    }
-  }, [activity]);
-
   // Timer
   useEffect(() => {
     if (!started || completed) return;
@@ -79,21 +69,6 @@ export function ChildMatchPairs({
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, started, completed]);
-
-  // inicia atividade
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-      setTimeLeft(matchPairs.timeLimit);
-      setAttempts(0);
-      setFlipped([]);
-      setCards(shuffleArray(createCardsFromConcepts()));
-    });
-  }
 
   // flip da carta
   function handleFlip(id: string) {
@@ -144,7 +119,7 @@ export function ChildMatchPairs({
   // checa vitória / limite de tentativas
   useEffect(() => {
     if (cards.length > 0 && cards.every((c) => c.matched)) {
-      handleFinish();
+      complete();
     } else if (
       attempts > 0 &&
       attempts >= matchPairs.maxAttempts &&
@@ -157,7 +132,7 @@ export function ChildMatchPairs({
   }, [cards, attempts]);
 
   function resetActivity() {
-    setStarted(false);
+    start();
     setFlipped([]);
     setAttempts(0);
     setCards(shuffleArray(createCardsFromConcepts()));
@@ -172,19 +147,6 @@ export function ChildMatchPairs({
   function handleMaxAttemptsReached() {
     toast.error("Máximo de tentativas atingido! Tente novamente");
     resetActivity();
-  }
-
-  function handleFinish() {
-    toast.success(matchPairs.feedback || "Muito bem!");
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -214,7 +176,7 @@ export function ChildMatchPairs({
               {matchPairs.title}
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >

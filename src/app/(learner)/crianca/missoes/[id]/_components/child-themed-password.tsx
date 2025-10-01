@@ -2,14 +2,14 @@
 
 import { RuleMessage } from "@/components/rule-message";
 import { Button } from "@/components/ui/button";
+import { useActivity } from "@/hooks/use-activity";
 import { TThemedPasswordContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 type ChildThemedPasswordProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -26,30 +26,11 @@ export function ChildThemedPassword({
   themedPassword,
   userId,
 }: ChildThemedPasswordProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
-
   const [password, setPassword] = useState("");
   const [currentRuleIndex, setCurrentRuleIndex] = useState(0);
 
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   function validateRule(rule: TThemedPasswordContent["rules"][0]) {
     switch (rule.type) {
@@ -80,23 +61,9 @@ export function ChildThemedPassword({
       if (currentRuleIndex + 1 < themedPassword.rules.length) {
         setCurrentRuleIndex((prev) => prev + 1);
       } else {
-        handleFinish();
+        complete();
       }
     }
-  }
-
-  function handleFinish() {
-    toast.success(themedPassword.feedback);
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -126,7 +93,7 @@ export function ChildThemedPassword({
               {activity.title}
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >

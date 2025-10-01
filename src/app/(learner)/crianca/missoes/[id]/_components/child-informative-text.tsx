@@ -5,13 +5,13 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useActivity } from "@/hooks/use-activity";
 import { TInformativeTextContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -28,40 +28,8 @@ export function ChildInformativeText({
   informativeText,
   userId,
 }: ChildInformativeTextProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
-
-  function handleFinish() {
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
-  }
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   return (
     <div className="relative h-full w-full">
@@ -91,7 +59,7 @@ export function ChildInformativeText({
               Leia com atenção para aprender!
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >
@@ -146,7 +114,7 @@ export function ChildInformativeText({
                   <div className="mt-6 flex justify-end">
                     <Button
                       className="font-monocraft"
-                      onClick={handleFinish}
+                      onClick={complete}
                       disabled={isPending}
                     >
                       Concluir leitura

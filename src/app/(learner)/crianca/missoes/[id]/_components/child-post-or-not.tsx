@@ -4,6 +4,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TPostOrNotContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
@@ -11,7 +12,7 @@ import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
 type ChildPostOrNotProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -26,29 +27,11 @@ export function ChildPostOrNot({
   postOrNot,
   userId,
 }: ChildPostOrNotProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
   const [selected, setSelected] = useState<"post" | "not" | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   function handleAnswer(choice: "post" | "not") {
     setSelected(choice);
@@ -62,19 +45,6 @@ export function ChildPostOrNot({
         ? postOrNot.justification
         : "Ops, não é a melhor decisão. Tente novamente!",
     );
-  }
-
-  function handleFinish() {
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -105,7 +75,7 @@ export function ChildPostOrNot({
               Decida se deve postar ou não!
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >
@@ -196,7 +166,7 @@ export function ChildPostOrNot({
                     (selected === "not" && !postOrNot.isSafe)) && (
                     <Button
                       className="font-monocraft ml-auto"
-                      onClick={handleFinish}
+                      onClick={complete}
                       disabled={isPending}
                     >
                       Finalizar

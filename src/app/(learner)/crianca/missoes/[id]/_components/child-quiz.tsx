@@ -5,12 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { useActivity } from "@/hooks/use-activity";
 import { TQuizContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
 type ChildQuizProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -23,33 +24,15 @@ type ChildQuizProps = {
 };
 
 export function ChildQuiz({ activity, quiz, userId }: ChildQuizProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
+
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   const isLastQuestion = currentIndex + 1 >= quiz.questions.length;
   const currentQuestion = quiz.questions[currentIndex];
-
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
 
   function handleAnswer() {
     if (selected === null) return;
@@ -63,21 +46,8 @@ export function ChildQuiz({ activity, quiz, userId }: ChildQuizProps) {
       setSelected(null);
       setIsCorrect(null);
     } else {
-      handleFinish();
+      complete();
     }
-  }
-
-  function handleFinish() {
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -103,7 +73,7 @@ export function ChildQuiz({ activity, quiz, userId }: ChildQuizProps) {
               Teste seu conhecimento
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >

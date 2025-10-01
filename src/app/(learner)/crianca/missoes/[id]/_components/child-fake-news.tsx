@@ -4,13 +4,14 @@ import { Paragraphs } from "@/components/paragraphs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TFakeNewsContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
 type ChildFakeNewsProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -27,47 +28,16 @@ export function ChildFakeNews({
   fakeNews,
   userId,
 }: ChildFakeNewsProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
   const [isFakeSelected, setIsFakeSelected] = useState<boolean | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   function handleAnswer() {
     if (isFakeSelected === null) return;
 
     setIsCorrect(isFakeSelected === fakeNews.isFake);
-  }
-
-  function handleFinish() {
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -98,7 +68,7 @@ export function ChildFakeNews({
               Simulação de jornal online
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >
@@ -190,7 +160,7 @@ export function ChildFakeNews({
             {isFakeSelected !== null && isCorrect && (
               <Button
                 className="font-monocraft ml-auto"
-                onClick={handleFinish}
+                onClick={complete}
                 disabled={isFakeSelected === null || !isCorrect || isPending}
               >
                 Finalizar{" "}

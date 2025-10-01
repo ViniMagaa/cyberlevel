@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TFakeChatContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
@@ -10,7 +11,7 @@ import { Prisma } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
 type ChildFakeChatProps = {
   activity: Prisma.ActivityGetPayload<{
@@ -25,33 +26,15 @@ export function ChildFakeChat({
   fakeChat,
   userId,
 }: ChildFakeChatProps) {
-  const [isPending, startTransition] = useTransition();
-  const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [completed, setCompleted] = useState(false);
-  const [xpEarned, setXpEarned] = useState<number | null>(null);
+
+  const { isPending, started, completed, xpEarned, start, complete } =
+    useActivity(userId, activity.id);
 
   const isLastMessage = currentIndex + 1 >= fakeChat.messages.length;
   const currentMessage = fakeChat.messages[currentIndex];
-
-  useEffect(() => {
-    if (activity.activityProgress[0]?.status === "COMPLETED") {
-      setCompleted(true);
-      setXpEarned(activity.activityProgress[0]?.xpEarned);
-    }
-  }, [activity]);
-
-  function handleStart() {
-    startTransition(async () => {
-      await fetch("/api/activities/start", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-      setStarted(true);
-    });
-  }
 
   function handleAnswer(i: number) {
     setSelected(i);
@@ -71,21 +54,8 @@ export function ChildFakeChat({
       setSelected(null);
       setFeedback(null);
     } else {
-      handleFinish();
+      complete();
     }
-  }
-
-  function handleFinish() {
-    startTransition(async () => {
-      const res = await fetch("/api/activities/complete", {
-        method: "POST",
-        body: JSON.stringify({ userId, activityId: activity.id }),
-      });
-
-      const data = await res.json();
-      setXpEarned(data.xpEarned);
-      setCompleted(true);
-    });
   }
 
   return (
@@ -114,7 +84,7 @@ export function ChildFakeChat({
               {fakeChat.title}
             </p>
             <Button
-              onClick={handleStart}
+              onClick={start}
               disabled={isPending}
               className="font-monocraft mt-4"
             >
