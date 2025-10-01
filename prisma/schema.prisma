@@ -8,33 +8,25 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// ----------
-// User Model
-// ----------
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  username  String   @unique
-  email     String   @unique
-  birthdate DateTime
-  role      UserRole
-  createdAt DateTime @default(now())
-  xp        Int      @default(0)
-
-  // store relations
-  cart     ShoppingCart? @relation("ShoppingCartToUser")
-  orders   Order[]
-  wishlist Wishlist?
-  address  Address[]
-
+  id               String             @id @default(uuid())
+  name             String
+  username         String             @unique
+  email            String             @unique
+  birthdate        DateTime
+  role             UserRole
+  ageGroup         AgeGroup?
+  createdAt        DateTime           @default(now())
+  xp               Int                @default(0)
+  activityProgress ActivityProgress[]
+  address          Address[]
   articles         Article[]
   articleViews     ArticleView[]
-  activityProgress ActivityProgress[]
+  orders           Order[]
+  cart             ShoppingCart?      @relation("ShoppingCartToUser")
+  wishlist         Wishlist?
 }
 
-// -------------------------------------
-// Archetype, Module and Activity Models
-// -------------------------------------
 model Archetype {
   id          String   @id @default(uuid())
   name        String
@@ -47,13 +39,13 @@ model Module {
   id                      String     @id @default(uuid())
   title                   String
   description             String
-  order                   Int
   archetypeId             String?
+  ageGroup                AgeGroup
+  order                   Int
   pixelBackgroundImageUrl String?
   pixelIslandImageUrl     String?
-  ageGroup                AgeGroup
-  archetype               Archetype? @relation(fields: [archetypeId], references: [id], onDelete: Cascade)
   activities              Activity[]
+  archetype               Archetype? @relation(fields: [archetypeId], references: [id], onDelete: Cascade)
 }
 
 model Activity {
@@ -61,8 +53,8 @@ model Activity {
   moduleId         String
   type             ActivityType
   title            String
+  content          Json
   order            Int
-  content          Json // structure varies per activity type
   module           Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   activityProgress ActivityProgress[]
 }
@@ -76,28 +68,23 @@ model ActivityProgress {
   completedAt DateTime?
   attempts    Int            @default(0)
   xpEarned    Int            @default(0)
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  activity    Activity       @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, activityId])
 }
 
-// -------
-// Article
-// -------
 model Article {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   content     String
   imageUrl    String?
   authorId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isPublished Boolean  @default(false)
-
-  author User?         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  views  ArticleView[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  isPublished Boolean       @default(false)
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  views       ArticleView[]
 }
 
 model ArticleView {
@@ -105,67 +92,53 @@ model ArticleView {
   articleId String
   userId    String
   viewedAt  DateTime @default(now())
-
-  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([articleId, userId])
 }
 
-// ------------
-// Store Models
-// ------------
 model Product {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  price       Decimal
-  imageUrl    String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id            String         @id @default(uuid())
+  name          String
+  description   String
+  price         Decimal
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  imageUrl      String?
+  updatedAt     DateTime       @updatedAt
   cartItems     CartItem[]
-  wishlistItems WishlistItem[]
   orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
 }
 
 model ShoppingCart {
-  id        String   @id @default(uuid())
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(name: "ShoppingCartToUser", fields: [userId], references: [id], onDelete: Cascade)
-
-  items CartItem[]
-
-  @@unique([userId])
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     CartItem[]
+  user      User       @relation("ShoppingCartToUser", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CartItem {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   cartId    String
   productId String
-  quantity  Int      @default(1)
-  addedAt   DateTime @default(now())
-
-  cart    ShoppingCart @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int          @default(1)
+  addedAt   DateTime     @default(now())
+  cart      ShoppingCart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
 }
 
 model Wishlist {
-  id        String   @id @default(uuid())
-  userId    String
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  items WishlistItem[]
-
-  @@unique([userId])
+  id        String         @id @default(uuid())
+  userId    String         @unique
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     WishlistItem[]
 }
 
 model WishlistItem {
@@ -174,9 +147,8 @@ model WishlistItem {
   productId  String
   note       String?
   addedAt    DateTime @default(now())
-
-  wishlist Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
-  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
 
   @@unique([wishlistId, productId])
 }
@@ -188,11 +160,9 @@ model Order {
   status    OrderStatus @default(PENDING)
   total     Decimal     @default(0)
   createdAt DateTime    @default(now())
-
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  address Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
-
-  items OrderItem[]
+  address   Address?    @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
 }
 
 model OrderItem {
@@ -204,14 +174,10 @@ model OrderItem {
   quantity    Int      @default(1)
   subtotal    Decimal
   createdAt   DateTime @default(now())
-
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-// -------
-// Address
-// -------
 model Address {
   id         String  @id @default(uuid())
   userId     String
@@ -221,14 +187,10 @@ model Address {
   city       String
   state      String
   zipCode    String
-
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orders Order[]
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders     Order[]
 }
 
-// -----
-// Enums
-// -----
 enum UserRole {
   ADMIN
   RESPONSIBLE
@@ -236,8 +198,8 @@ enum UserRole {
 }
 
 enum AgeGroup {
-  CHILD // <= 11 years old
-  TEEN // >= 17 years old
+  CHILD
+  TEEN
 }
 
 enum ActivityType {

@@ -90,7 +90,7 @@ export function ArticleForm({ article, userId }: ArticleFormProps) {
 
         // Se o usuário selecionar um arquivo novo, faz o upload
         if (data.image) {
-          imageUrl = await uploadArticleImage(data.image, "articles");
+          imageUrl = await uploadArticleImage(data.image);
         }
 
         // Monta o payload que será salvo no JSON

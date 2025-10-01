@@ -1,10 +1,30 @@
+"use server";
+
+import { AgeGroup, User, UserRole } from "@prisma/client";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { publicRoutes } from "../public-routes";
+import { ROLE_PATHS } from "../role-paths";
+
+function getPathForRole(role?: UserRole | null, ageGroup?: AgeGroup | null) {
+  if (role === "ADMIN") return ROLE_PATHS.ADMIN;
+  if (role === "RESPONSIBLE") return ROLE_PATHS.RESPONSIBLE;
+  if (role === "LEARNER") {
+    if (ageGroup === "CHILD") return ROLE_PATHS.LEARNER.CHILD;
+    if (ageGroup === "TEEN") return ROLE_PATHS.LEARNER.TEEN;
+  }
+
+  return "";
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+  const { pathname } = request.nextUrl;
 
-  const supabase = createServerClient(
+  // Se for rota pública, deixa passar
+  if (publicRoutes.includes(pathname)) return supabaseResponse;
+
+  const supabase = await createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -27,52 +47,54 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let userData: User | null = null;
+
+  // Busca role no Supabase
+  if (user) {
+    const { data, error } = await supabase
+      .from("User")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (!error && data) {
+      userData = data;
+    }
+  }
+
   // Bloqueia não logado
   if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/") &&
-    !request.nextUrl.pathname.startsWith("/entrar") &&
-    !request.nextUrl.pathname.startsWith("/cadastrar")
+    (!user || !userData) &&
+    !pathname.startsWith("/entrar") &&
+    !pathname.startsWith("/cadastrar")
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/entrar";
     return NextResponse.redirect(url);
   }
 
-  let role: string | null = null;
-
-  // Busca role no Supabase
-  if (user) {
-    const { data, error } = await supabase
-      .from("User")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (!error && data) {
-      role = data.role;
-    }
-  }
-
   // Restrições de acesso
-  const path = request.nextUrl.pathname;
-  if (path.startsWith("/admin") && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-  if (path.startsWith("/aprendiz") && role !== "LEARNER") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-  if (path.startsWith("/responsavel") && role !== "RESPONSIBLE") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+  const url = request.nextUrl.clone();
+  const expectedPath = getPathForRole(userData?.role, userData?.ageGroup);
 
-  // Evita usuário logado voltar pro login/cadastro
-  if (role && (path.startsWith("/entrar") || path.startsWith("/cadastrar"))) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    url.search = "";
+  if (!url.pathname.startsWith(expectedPath)) {
+    url.pathname = expectedPath;
     return NextResponse.redirect(url);
   }
 
-  return supabaseResponse;
+  // Evita usuário logado voltar pro login/cadastro
+  if (
+    userData &&
+    (url.pathname.startsWith("/entrar") ||
+      url.pathname.startsWith("/cadastrar"))
+  ) {
+    url.pathname = expectedPath;
+    return NextResponse.redirect(url);
+  }
+
+  if (pathname.startsWith(expectedPath)) {
+    return supabaseResponse;
+  }
+
+  return NextResponse.redirect(new URL(expectedPath, request.url));
 }

@@ -6,7 +6,7 @@ import { ptBR } from "date-fns/locale";
 import { ArrowRight, CalendarIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -40,7 +40,6 @@ import {
 } from "@/components/ui/popover";
 import { handleAuthError } from "@/lib/handle-auth-error";
 import { cn } from "@/lib/utils";
-import { UserRole } from "@prisma/client";
 
 const registerSchema = z
   .object({
@@ -76,15 +75,9 @@ const registerSchema = z
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
-type RegisterPageProps = {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
-};
-
-export default function RegisterPage({ searchParams }: RegisterPageProps) {
+export default function RegisterPage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
-  const userRole = use(searchParams).role?.toLocaleUpperCase();
 
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -105,8 +98,6 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
     password,
     birthdate,
   }: RegisterForm) => {
-    const role = userRole as UserRole;
-
     startTransition(async () => {
       const result = await signUp({
         name,
@@ -114,7 +105,7 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
         email,
         password,
         birthdate,
-        role,
+        role: "RESPONSIBLE",
       });
 
       if (!result.success) {
@@ -122,7 +113,7 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
         return;
       }
 
-      router.push("/dashboard");
+      router.refresh();
     });
   };
 

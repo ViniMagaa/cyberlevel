@@ -1,3 +1,4 @@
+import { getUserSession } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import {
   TFakeChatContent,
@@ -8,7 +9,6 @@ import {
   TQuizContent,
   TThemedPasswordContent,
 } from "@/utils/activity-types";
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ChildFakeChat } from "./_components/child-fake-chat";
 import { ChildFakeNews } from "./_components/child-fake-news";
@@ -23,13 +23,8 @@ type ActivityPageProps = {
 };
 
 export default async function ActivityPage({ params }: ActivityPageProps) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const { id } = await params;
   const activity = await db.activity.findUnique({
@@ -41,7 +36,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
     where: { id },
   });
 
-  if (!activity) return redirect("/dashboard");
+  if (!activity) return redirect("/entrar");
 
   const content = activity.content as unknown;
 
@@ -103,6 +98,6 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         />
       );
     default:
-      return redirect("/dashboard");
+      return redirect("/entrar");
   }
 }

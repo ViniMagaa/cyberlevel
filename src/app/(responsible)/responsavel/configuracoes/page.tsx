@@ -1,21 +1,13 @@
-import { getUser } from "@/app/api/user-settings";
 import { SettingsActions } from "@/components/settings-actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { getUserSession } from "@/lib/auth";
 import { formatDate } from "@/utils/format-date";
-import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export default async function Settings() {
-  const supabase = await createClient();
-  const {
-    data: { user: userData },
-  } = await supabase.auth.getUser();
-
-  if (!userData) return <p>Usuário não encontrado</p>;
-
-  const user = await getUser(userData.id);
-
-  if (!user) return <p>Usuário não encontrado</p>;
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   return (
     <div className="w-full space-y-4 p-4">
@@ -38,7 +30,7 @@ export default async function Settings() {
             <Separator />
             <div className="text-md flex justify-between sm:text-xl">
               <strong>Nascimento</strong>{" "}
-              <span>{formatDate(user.birthdate)}</span>
+              <span>{formatDate(new Date(user.birthdate))}</span>
             </div>
           </CardContent>
         </Card>

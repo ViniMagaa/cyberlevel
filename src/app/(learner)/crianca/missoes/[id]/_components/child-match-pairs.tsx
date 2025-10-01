@@ -175,6 +175,7 @@ export function ChildMatchPairs({
   }
 
   function handleFinish() {
+    toast.success(matchPairs.feedback || "Muito bem!");
     startTransition(async () => {
       const res = await fetch("/api/activities/complete", {
         method: "POST",
@@ -294,7 +295,7 @@ export function ChildMatchPairs({
               Você completou a atividade e ganhou{" "}
               <span className="font-upheaval text-4xl">{xpEarned} XP</span>
             </p>
-            <Link href="/aprendiz/missoes">
+            <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>
             </Link>
           </div>

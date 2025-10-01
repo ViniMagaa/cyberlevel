@@ -1,11 +1,11 @@
 "use server";
 
+import { formatPrismaError } from "@/lib/format-prisma-error";
+import { db } from "@/lib/prisma";
+import { decimalToNumber } from "@/lib/prisma-helpers";
+import { supabaseAdmin } from "@/utils/supabase/supabase-admin";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/prisma";
-import { formatPrismaError } from "@/lib/format-prisma-error";
-import { supabaseAdmin } from "@/utils/supabase/supabase-admin";
-import { decimalToNumber } from "@/lib/prisma-helpers";
 
 const BUCKET = "products";
 
@@ -80,14 +80,14 @@ export async function deleteProduct(id: string) {
   }
 }
 
-export async function uploadProductImage(file: File, folder: string) {
+export async function uploadProductImage(file: File) {
   if (!file) throw new Error("Arquivo não enviado");
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const ext = file.type.split("/")[1] || "png";
   const filename = `${crypto.randomUUID()}.${ext}`;
-  const filepath = `${folder}/${filename}`;
+  const filepath = `${filename}`;
 
   const { error } = await supabaseAdmin.storage
     .from(BUCKET)

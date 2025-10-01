@@ -51,14 +51,14 @@ export async function deleteArticle(id: string) {
   }
 }
 
-export async function uploadArticleImage(file: File, folder: string) {
+export async function uploadArticleImage(file: File) {
   if (!file) throw new Error("Arquivo não enviado");
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const ext = file.type.split("/")[1] || "png";
   const filename = `${crypto.randomUUID()}.${ext}`;
-  const filepath = `${folder}/${filename}`;
+  const filepath = `${filename}`;
 
   const { error } = await supabaseAdmin.storage
     .from(BUCKET)

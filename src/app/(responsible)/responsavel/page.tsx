@@ -1,4 +1,7 @@
+import { Paragraphs } from "@/components/paragraphs";
 import { SignOutButton } from "@/components/sign-out-button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,38 +17,26 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { db } from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import LastArticles from "./artigos/_components/last-articles";
-import { getActiveProducts } from "./loja/actions";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
-import { Paragraphs } from "@/components/paragraphs";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { getUserSession } from "@/lib/auth";
 import { formatCurrency } from "@/utils/format-currency";
+import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { LastArticles } from "./artigos/_components/last-articles";
+import { getActiveProducts } from "./loja/actions";
 
 export default async function Dashboard() {
-  const supabase = await createClient();
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
-
-  const [userData, products] = await Promise.all([
-    db.user.findUnique({ where: { id: user.id } }),
-    getActiveProducts(),
-  ]);
+  const products = await getActiveProducts();
 
   return (
     <div className="flex w-full flex-col gap-4 p-6 sm:grid sm:min-h-screen sm:grid-cols-12">
       <Card className="sm:col-span-6 lg:col-span-5">
         <CardHeader className="flex flex-wrap items-center">
           <h1 className="text-2xl font-bold sm:text-xl md:text-3xl">
-            Olá, {userData?.name}!
+            Olá, {user.name}!
           </h1>
           <div className="ml-auto">
             <SignOutButton />
@@ -64,7 +55,7 @@ export default async function Dashboard() {
       <Card className="pb-0 sm:col-span-6 sm:row-span-11 lg:col-span-5">
         <ScrollArea className="h-[90svh)] sm:h-[calc(100svh-175px)]">
           <CardContent className="pb-4">
-            <LastArticles />
+            <LastArticles userId={user.id} />
           </CardContent>
         </ScrollArea>
       </Card>
@@ -103,18 +94,6 @@ export default async function Dashboard() {
                             {formatCurrency(Number(product.price))}
                           </p>
                         </CardHeader>
-                        {/* <div className="flex w-full grow flex-wrap items-center gap-4">
-                          <div className="w-full max-w-48">
-                          </div>
-                          <CardHeader className="grow p-0">
-                            <CardTitle className="text-xl font-bold">
-                              {product.name}
-                            </CardTitle>
-                            <CardDescription className="text-sm">
-                              <Paragraphs text={product.description} />
-                            </CardDescription>
-                          </CardHeader>
-                        </div> */}
                       </CardContent>
                     </Card>
                   </CarouselItem>

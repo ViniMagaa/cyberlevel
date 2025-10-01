@@ -1,20 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getPublishedArticles } from "../actions";
 import { ArticleCard } from "./article-card";
 
-export default async function LastArticles() {
-  const supabase = await createClient();
+type LastArticlesProps = {
+  userId: string;
+};
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return redirect("/dashboard");
-
-  const articles = await getPublishedArticles(user.id, 2);
+export async function LastArticles({ userId }: LastArticlesProps) {
+  const articles = await getPublishedArticles(userId, 2);
 
   return (
     <section className="space-y-4">

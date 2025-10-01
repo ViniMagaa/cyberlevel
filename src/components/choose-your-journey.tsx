@@ -1,9 +1,9 @@
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { MagicCard } from "./magicui/magic-card";
 import { Particles } from "./magicui/particles";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardTitle } from "./ui/card";
-import { ArrowRight } from "lucide-react";
 
 export function ChooseYourJourney() {
   return (
@@ -88,7 +88,7 @@ export function ChooseYourJourney() {
                   variant="outline"
                   asChild
                 >
-                  <Link href="/cadastrar/aprendiz">
+                  <Link href="/cadastrar/crianca">
                     Prosseguir <ArrowRight />
                   </Link>
                 </Button>

@@ -12,9 +12,7 @@ export default async function signUp({
   email,
   password,
   name,
-  username,
-  birthdate,
-  role,
+  ...rest
 }: SignUpProps): Promise<
   | { success: true }
   | { success: false; error: { code: string; message: string } }
@@ -56,10 +54,8 @@ export default async function signUp({
     data: {
       id: user.id,
       name,
-      username,
       email,
-      birthdate,
-      role,
+      ...rest,
     },
   });
 

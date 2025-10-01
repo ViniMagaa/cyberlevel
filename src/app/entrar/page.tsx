@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import signIn from "@/app/api/sign-in";
+import { MagicCard } from "@/components/magicui/magic-card";
 import { Particles } from "@/components/magicui/particles";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +29,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { handleAuthError } from "@/lib/handle-auth-error";
-import { MagicCard } from "@/components/magicui/magic-card";
 
 const loginSchema = z.object({
   email: z
@@ -61,7 +61,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      router.refresh();
     });
   };
 

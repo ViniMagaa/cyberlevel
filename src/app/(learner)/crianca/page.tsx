@@ -1,22 +1,22 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { User } from "@prisma/client";
+import { getUserSession } from "@/lib/auth";
+import { calculateStreak } from "@/utils/streak";
 import Image from "next/image";
 import Link from "next/link";
-import { ChildSignOutButton } from "./child-sign-out-button";
-import { calculateStreak } from "@/utils/streak";
+import { redirect } from "next/navigation";
+import { ChildSignOutButton } from "./_components/child-sign-out-button";
 
-type ChildDashboardProps = {
-  user: User;
-};
+export default async function Dashboard() {
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
-export default async function ChildDashboard({ user }: ChildDashboardProps) {
   const xpTotal = user.xp;
   const streakTotal = await calculateStreak(user.id);
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col-reverse gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
       <div className="col-span-2 flex flex-1/2 auto-rows-min flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-2xl lg:p-6">
-        <Link href="/aprendiz/missoes" className="h-fit sm:col-span-2">
+        <Link href="/crianca/missoes" className="h-fit sm:col-span-2">
           <div className="bg-primary-600 group border-primary-500/40 relative overflow-hidden rounded-xl border">
             <AspectRatio ratio={16 / 9} className="relative overflow-hidden">
               <Image

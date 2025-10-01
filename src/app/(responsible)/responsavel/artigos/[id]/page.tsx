@@ -3,11 +3,12 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { createClient } from "@/utils/supabase/server";
+import { getUserSession } from "@/lib/auth";
 import { format, formatDistanceToNow, isSameSecond } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArticleViewTracker } from "../_components/article-view-tracker";
@@ -18,11 +19,8 @@ type ArticlePageProps = {
 };
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return <p>Usuário não encontrado</p>;
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
 
   const { id } = await params;
   const article = await getPublishedArticleById(id, user.id);

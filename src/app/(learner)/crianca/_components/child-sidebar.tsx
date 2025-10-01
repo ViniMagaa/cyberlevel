@@ -9,17 +9,17 @@ import { useState } from "react";
 const menuItems = [
   {
     label: "Início",
-    href: "/aprendiz",
+    href: "/crianca",
     image: "/images/pixel-home-icon.png",
   },
   {
     label: "Missões",
-    href: "/aprendiz/missoes",
+    href: "/crianca/missoes",
     image: "/images/pixel-tasks-icon.png",
   },
   {
     label: "Perfil",
-    href: "/aprendiz/perfil",
+    href: "/crianca/perfil",
     image: "/images/pixel-user-icon.png",
   },
 ];
