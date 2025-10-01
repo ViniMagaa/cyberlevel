@@ -1,5 +1,3 @@
-"use server";
-
 import { AgeGroup, User, UserRole } from "@prisma/client";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
@@ -78,8 +76,6 @@ export async function updateSession(request: NextRequest) {
   const expectedPath = getPathForRole(userData?.role, userData?.ageGroup);
 
   if (!url.pathname.startsWith(expectedPath)) {
-    url.pathname = expectedPath;
-    return NextResponse.redirect(url);
   }
 
   // Evita usuário logado voltar pro login/cadastro

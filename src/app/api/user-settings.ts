@@ -6,12 +6,6 @@ import { createClient } from "@/utils/supabase/server";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function getUser(id: string) {
-  return await db.user.findUnique({
-    where: { id },
-  });
-}
-
 export async function updateUserData(
   userId: string,
   data: Prisma.UserUpdateInput,

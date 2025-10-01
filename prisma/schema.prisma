@@ -9,22 +9,24 @@ datasource db {
 }
 
 model User {
-  id               String             @id @default(uuid())
-  name             String
-  username         String             @unique
-  email            String             @unique
-  birthdate        DateTime
-  role             UserRole
-  ageGroup         AgeGroup?
-  createdAt        DateTime           @default(now())
-  xp               Int                @default(0)
-  activityProgress ActivityProgress[]
-  address          Address[]
-  articles         Article[]
-  articleViews     ArticleView[]
-  orders           Order[]
-  cart             ShoppingCart?      @relation("ShoppingCartToUser")
-  wishlist         Wishlist?
+  id                 String             @id @default(uuid())
+  name               String
+  username           String             @unique
+  email              String             @unique
+  birthdate          DateTime
+  ageGroup           AgeGroup?
+  role               UserRole
+  createdAt          DateTime           @default(now())
+  xp                 Int                @default(0)
+  currentArchetypeId String?
+  cart               ShoppingCart?      @relation("ShoppingCartToUser")
+  orders             Order[]
+  wishlist           Wishlist?
+  address            Address[]
+  currentArchetype   Archetype?         @relation(fields: [currentArchetypeId], references: [id])
+  articles           Article[]
+  articleViews       ArticleView[]
+  ActivityProgress   ActivityProgress[]
 }
 
 model Archetype {
@@ -33,6 +35,7 @@ model Archetype {
   description String
   imageUrl    String?
   modules     Module[]
+  users       User[]
 }
 
 model Module {

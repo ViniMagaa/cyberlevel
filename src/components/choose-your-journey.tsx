@@ -88,7 +88,7 @@ export function ChooseYourJourney() {
                   variant="outline"
                   asChild
                 >
-                  <Link href="/cadastrar/crianca">
+                  <Link href="/cadastrar/aprendiz">
                     Prosseguir <ArrowRight />
                   </Link>
                 </Button>
