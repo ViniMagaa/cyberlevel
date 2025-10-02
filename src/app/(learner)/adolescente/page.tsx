@@ -11,7 +11,7 @@ export default async function Dashboard() {
 
   return (
     <div>
-      <TeenHeader user={user} archetypeName={archetype.name} />
+      <TeenHeader user={user} archetype={archetype} />
     </div>
   );
 }

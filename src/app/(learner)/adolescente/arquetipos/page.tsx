@@ -13,7 +13,7 @@ export default async function TeenArchetypesPage() {
   });
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center gap-12 py-20">
+    <div className="flex min-h-screen w-full max-w-screen flex-col items-center justify-center gap-12 py-20">
       <Particles
         className="absolute inset-0 z-0"
         quantity={100}
