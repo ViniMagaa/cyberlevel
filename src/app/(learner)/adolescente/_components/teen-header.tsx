@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@/components/logo";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,8 +32,8 @@ const menuItems = [
 export function TeenHeader({ user, archetypeName }: TeenHeaderProps) {
   return (
     <header className="flex flex-col">
-      <nav className="flex items-center justify-between rounded-md p-4">
-        <p className="text-lg font-bold">Logo</p>
+      <nav className="flex items-center justify-between rounded-md px-6 py-4">
+        <Logo />
         <menu className="flex items-center gap-2 sm:gap-4">
           {menuItems.map(({ href, label }, i) => (
             <Link key={i} href={href}>

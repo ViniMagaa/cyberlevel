@@ -1,6 +1,7 @@
 "use client";
 
 import { ChooseYourJourney } from "@/components/choose-your-journey";
+import { Logo } from "@/components/logo";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import { Particles } from "@/components/magicui/particles";
 import { RetroGrid } from "@/components/magicui/retro-grid";
@@ -22,7 +23,7 @@ export default function Home() {
       />
       <header className="relative h-screen">
         <div className="flex items-center justify-between border-b-[1px] border-neutral-700 px-5 py-5 md:px-10">
-          <p className="text-lg font-bold">Logo</p>
+          <Logo />
           <div className="flex items-baseline gap-4">
             <Button
               size="lg"
