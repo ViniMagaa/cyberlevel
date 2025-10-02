@@ -1,10 +1,13 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { User as UserData } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 
-export async function getUserSession(): Promise<(User & UserData) | null> {
+type UserSessionData = User &
+  Prisma.UserGetPayload<{ include: { currentArchetype: true } }>;
+
+export async function getUserSession(): Promise<UserSessionData | null> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -14,7 +17,7 @@ export async function getUserSession(): Promise<(User & UserData) | null> {
 
   const { data, error } = await supabase
     .from("User")
-    .select("*")
+    .select("*, currentArchetype:Archetype(*)")
     .eq("id", user.id)
     .single();
 
@@ -22,7 +25,7 @@ export async function getUserSession(): Promise<(User & UserData) | null> {
     return null;
   }
 
-  const userData: User & UserData = {
+  const userData: UserSessionData = {
     ...user,
     ...data,
   };
