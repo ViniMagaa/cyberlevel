@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,12 +35,11 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Prisma } from "@prisma/client";
 import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { deleteArchetype } from "../actions";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
 
 type ArchetypeCardProps = {
   archetype: Prisma.ArchetypeGetPayload<{
@@ -85,8 +85,8 @@ export function ArchetypeCard({ archetype }: ArchetypeCardProps) {
   );
 
   return (
-    <Card className="relative h-fit gap-2">
-      <CardHeader>
+    <Card className="relative h-fit gap-2 pt-0 pb-4">
+      <CardHeader className="p-0">
         {archetype.imageUrl ? (
           <AspectRatio ratio={4 / 5}>
             <Image
@@ -100,8 +100,13 @@ export function ArchetypeCard({ archetype }: ArchetypeCardProps) {
           <p className="text-muted-foreground">Sem imagem</p>
         )}
       </CardHeader>
-      <CardContent className="space-y-2">
-        <CardTitle className="text-2xl">{archetype.name}</CardTitle>
+      <CardContent className="space-y-2 px-4">
+        <CardTitle
+          className="text-3xl font-extrabold"
+          style={{ color: archetype.primaryColor }}
+        >
+          {archetype.name}
+        </CardTitle>
         <CardDescription className="space-y-1">
           <p className="line-clamp-4">{archetype.description}</p>
           <div>

@@ -30,12 +30,13 @@ model User {
 }
 
 model Archetype {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  imageUrl    String?
-  modules     Module[]
-  users       User[]
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  imageUrl     String?
+  primaryColor String
+  modules      Module[]
+  users        User[]
 }
 
 model Module {
@@ -47,6 +48,7 @@ model Module {
   order                   Int
   pixelBackgroundImageUrl String?
   pixelIslandImageUrl     String?
+  iconUrl                 String?
   activities              Activity[]
   archetype               Archetype? @relation(fields: [archetypeId], references: [id], onDelete: Cascade)
 }

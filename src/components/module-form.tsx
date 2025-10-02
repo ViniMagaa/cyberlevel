@@ -46,7 +46,12 @@ import {
 import { Textarea } from "./ui/textarea";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/svg+xml",
+];
 
 export const moduleSchema = z
   .object({
@@ -61,7 +66,7 @@ export const moduleSchema = z
       .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
       .refine(
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-        "Apenas .jpg, .png e .webp são suportados",
+        "Apenas .jpg, .png, .webp e .svg são suportados",
       )
       .optional(),
     pixelIslandImage: z
@@ -69,11 +74,20 @@ export const moduleSchema = z
       .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
       .refine(
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-        "Apenas .jpg, .png e .webp são suportados",
+        "Apenas .jpg, .png, .webp e .svg são suportados",
+      )
+      .optional(),
+    icon: z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, "O tamanho máximo é 5MB")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Apenas .jpg, .png, .webp e .svg são suportados",
       )
       .optional(),
     pixelBackgroundImageUrl: z.string().optional(),
     pixelIslandImageUrl: z.string().optional(),
+    iconUrl: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -110,6 +124,18 @@ export const moduleSchema = z
       path: ["pixelIslandImage"],
       message: "Imagem da ilha é obrigatória",
     },
+  )
+  .refine(
+    (data) => {
+      if (data.ageGroup === "TEEN") {
+        return !!data.icon || !!data.iconUrl;
+      }
+      return true;
+    },
+    {
+      path: ["icon"],
+      message: "Ícone do módulo é obrigatório",
+    },
   );
 
 export type ModuleFormSchema = z.infer<typeof moduleSchema>;
@@ -125,6 +151,7 @@ type TModuleFormContent = Omit<ModuleFormSchema, "image" | "archetype"> & {
     | undefined;
   pixelBackgroundImageUrl?: string;
   pixelIslandImageUrl?: string;
+  iconUrl?: string;
 };
 
 type ModuleFormProps = {
@@ -140,6 +167,9 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
   const [pixelIslandPreview, setPixelIslandPreview] = useState<
     string | undefined
   >(module?.pixelIslandImageUrl ?? undefined);
+  const [iconPreview, setIconPreview] = useState<string | undefined>(
+    module?.iconUrl ?? undefined,
+  );
 
   const form = useForm<ModuleFormSchema>({
     resolver: zodResolver(moduleSchema),
@@ -162,6 +192,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
       try {
         let pixelBackgroundImageUrl = module?.pixelBackgroundImageUrl;
         let pixelIslandImageUrl = module?.pixelIslandImageUrl;
+        let iconUrl = module?.iconUrl;
 
         // Se o usuário selecionar um arquivo novo, faz o upload
         if (data.pixelBackgroundImage) {
@@ -176,6 +207,9 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
             "islands",
           );
         }
+        if (data.icon) {
+          iconUrl = await uploadModuleImage(data.icon, "icons");
+        }
 
         const newModuleData: TModuleFormContent = {
           title: data.title,
@@ -187,6 +221,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
             : undefined,
           pixelBackgroundImageUrl: pixelBackgroundImageUrl ?? undefined,
           pixelIslandImageUrl: pixelIslandImageUrl ?? undefined,
+          iconUrl: iconUrl ?? undefined,
         };
 
         if (module && module.id) {
@@ -337,7 +372,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
                 <Input
                   type="file"
                   disabled={watch("ageGroup") !== "CHILD"}
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/jpeg,image/png,image/webp,image/svg+xml"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     field.onChange(file);
@@ -368,39 +403,92 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
           control={form.control}
           name="pixelIslandImage"
           render={({ field }) => (
-            <FormItem className={watch("ageGroup") !== "CHILD" ? "hidden" : ""}>
-              <FormLabel>Ilha de atividade</FormLabel>
-              <FormControl>
-                <Input
-                  type="file"
-                  disabled={watch("ageGroup") !== "CHILD"}
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    field.onChange(file);
-                    if (file) {
-                      const url = URL.createObjectURL(file);
-                      setPixelIslandPreview(url);
-                    } else {
-                      setPixelIslandPreview(undefined);
-                    }
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
+            <FormItem
+              className={
+                watch("ageGroup") !== "CHILD"
+                  ? "hidden"
+                  : "flex flex-row items-end gap-4"
+              }
+            >
               {pixelIslandPreview && (
-                <AspectRatio ratio={5 / 3}>
+                <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={pixelIslandPreview}
                     alt="Pré-visualização"
-                    className="h-full w-full rounded-md object-contain object-center"
+                    className="w-full max-w-16 rounded-md object-contain object-center"
                   />
-                </AspectRatio>
+                </>
               )}
+              <div className="grid flex-1 gap-2">
+                <FormLabel>Ilha de atividade</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    disabled={watch("ageGroup") !== "CHILD"}
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      field.onChange(file);
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        setPixelIslandPreview(url);
+                      } else {
+                        setPixelIslandPreview(undefined);
+                      }
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="icon"
+          render={({ field }) => (
+            <FormItem
+              className={
+                watch("ageGroup") !== "TEEN"
+                  ? "hidden"
+                  : "flex flex-row items-end gap-4"
+              }
+            >
+              {iconPreview && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={iconPreview}
+                    alt="Pré-visualização"
+                    className="w-full max-w-16 rounded-md object-contain"
+                  />
+                </>
+              )}
+              <div className="grid flex-1 gap-2">
+                <FormLabel>Ícone do módulo</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      field.onChange(file);
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        setIconPreview(url);
+                      } else {
+                        setIconPreview(undefined);
+                      }
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+
         <div className="flex flex-wrap justify-between gap-4">
           <Button type="button" variant="link" className="px-0" asChild>
             <Link href="/admin/atividades">

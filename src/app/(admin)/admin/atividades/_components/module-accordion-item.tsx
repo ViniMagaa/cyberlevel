@@ -137,9 +137,21 @@ export function ModuleAccordionItem({ module }: ModuleAccordionItemProps) {
             </div>
           </div>
         ) : (
-          <p className="text-muted-foreground line-clamp-[10] text-sm">
-            {module.description}
-          </p>
+          <div className="flex gap-4">
+            {module.iconUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={module.iconUrl}
+                alt={module.title}
+                width={64}
+                height={64}
+                className="max-w-16 object-contain object-center"
+              />
+            )}
+            <p className="text-muted-foreground line-clamp-[10] text-sm">
+              {module.description}
+            </p>
+          </div>
         )}
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">

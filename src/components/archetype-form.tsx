@@ -5,7 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Loader2Icon } from "lucide-react";
 import { Button } from "./ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Input } from "./ui/input";
 import { Prisma } from "@prisma/client";
 import { toast } from "sonner";
@@ -34,6 +41,7 @@ export const archetypeSchema = z.object({
       "Apenas .jpg, .png e .webp são suportados",
     )
     .optional(),
+  primaryColor: z.string().min(1, "Cor principal é obrigatória"),
 });
 
 export type ArchetypeFormSchema = z.infer<typeof archetypeSchema>;
@@ -54,7 +62,12 @@ export function ArchetypeForm({ archetype }: ArchetypeFormProps) {
 
   const form = useForm<ArchetypeFormSchema>({
     resolver: zodResolver(archetypeSchema),
-    defaultValues: archetype ?? { name: "", description: "", image: undefined },
+    defaultValues: archetype ?? {
+      name: "",
+      description: "",
+      image: undefined,
+      primaryColor: undefined,
+    },
   });
 
   function onSubmit(data: ArchetypeFormSchema) {
@@ -72,6 +85,7 @@ export function ArchetypeForm({ archetype }: ArchetypeFormProps) {
           name: data.name,
           description: data.description,
           imageUrl: imageUrl ?? undefined, // <- URL pública do Supabase
+          primaryColor: data.primaryColor,
         };
 
         if (archetype && archetype.id) {
@@ -116,6 +130,25 @@ export function ArchetypeForm({ archetype }: ArchetypeFormProps) {
                 <Textarea
                   placeholder="Descrição do arquétipo"
                   className="max-h-80 resize-y"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Cor principal */}
+        <FormField
+          control={form.control}
+          name="primaryColor"
+          render={({ field }) => (
+            <FormItem className="flex gap-2">
+              <FormLabel>Cor principal</FormLabel>
+              <FormControl>
+                <Input
+                  type="color"
+                  className="h-9 flex-1 cursor-pointer rounded-md border p-1"
                   {...field}
                 />
               </FormControl>

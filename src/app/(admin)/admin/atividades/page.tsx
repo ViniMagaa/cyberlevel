@@ -70,8 +70,13 @@ export default async function Activities() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-start gap-2">
-              <ChevronRight />
-              <h3 className="text-xl font-semibold">{archetype.name}</h3>
+              <ChevronRight style={{ color: archetype.primaryColor }} />
+              <h3
+                className="text-4xl font-extrabold"
+                style={{ color: archetype.primaryColor }}
+              >
+                {archetype.name}
+              </h3>
             </div>
             <div className="ml-8 space-y-4">
               <div className="flex gap-4">
