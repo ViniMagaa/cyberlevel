@@ -27,6 +27,15 @@ model User {
   articles           Article[]
   articleViews       ArticleView[]
   ActivityProgress   ActivityProgress[]
+  avatarId           String?
+  avatar             Avatar?            @relation("UserAvatar", fields: [avatarId], references: [id])
+}
+
+model Avatar {
+  id       String   @id @default(uuid())
+  imageUrl String
+  ageGroup AgeGroup
+  users    User[]   @relation("UserAvatar")
 }
 
 model Archetype {

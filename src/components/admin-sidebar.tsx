@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  CircleUserRound,
   Component,
   FileText,
   Home,
@@ -93,6 +94,16 @@ export function AdminSidebar() {
                           <Link href="/admin/atividades">
                             <NotebookPen />
                             <span>Atividades</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuSubItem>
+
+                      {/* Avatares */}
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton asChild>
+                          <Link href="/admin/avatares">
+                            <CircleUserRound />
+                            <span>Avatares</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
