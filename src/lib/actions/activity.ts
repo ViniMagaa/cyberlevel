@@ -52,7 +52,7 @@ export async function startActivity(userId: string, activityId: string) {
       activityId,
       status: "IN_PROGRESS",
       startedAt: now,
-      attempts: 0,
+      attempts: 1,
     },
   });
 
