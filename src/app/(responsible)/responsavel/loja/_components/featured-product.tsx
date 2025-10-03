@@ -5,6 +5,12 @@ import { Paragraphs } from "@/components/paragraphs";
 import TiltedCard from "@/components/tilted-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  addToCart,
+  addToWishlist,
+  removeFromCart,
+  removeFromWishlist,
+} from "@/lib/actions/store";
 import { formatCurrency } from "@/utils/format-currency";
 import { Product } from "@prisma/client";
 import {
@@ -16,12 +22,6 @@ import {
   X,
 } from "lucide-react";
 import { useTransition } from "react";
-import {
-  addToCart,
-  addToWishlist,
-  removeFromCart,
-  removeFromWishlist,
-} from "../actions";
 
 type FeaturedProductProps = {
   userId: string;

@@ -18,6 +18,11 @@ const menuItems = [
     image: "/images/pixel-tasks-icon.png",
   },
   {
+    label: "Loja",
+    href: "/crianca/loja",
+    image: "/images/pixel-store-icon.png",
+  },
+  {
     label: "Perfil",
     href: "/crianca/perfil",
     image: "/images/pixel-user-icon.png",

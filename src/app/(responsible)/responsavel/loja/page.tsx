@@ -1,10 +1,10 @@
+import { getActiveProducts, getCart, getWishlist } from "@/lib/actions/store";
 import { getUserSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { CartDrawer } from "./_components/cart-drawer";
 import { FeaturedProduct } from "./_components/featured-product";
 import { ProductCard } from "./_components/product-card";
 import { WishlistDrawer } from "./_components/wishlist-drawer";
-import { getActiveProducts, getCart, getWishlist } from "./actions";
 
 export default async function StorePage() {
   const user = await getUserSession();

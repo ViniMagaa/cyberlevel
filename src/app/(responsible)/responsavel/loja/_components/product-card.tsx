@@ -15,14 +15,15 @@ import { Product } from "@prisma/client";
 import { Check, Heart, Loader2Icon, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
   addToCart,
   addToWishlist,
   removeFromCart,
   removeFromWishlist,
-} from "../actions";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+} from "@/lib/actions/store";
 
 type ProductCardProps = {
   userId: string;

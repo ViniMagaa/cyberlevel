@@ -17,13 +17,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getActiveProducts } from "@/lib/actions/store";
 import { getUserSession } from "@/lib/auth";
 import { formatCurrency } from "@/utils/format-currency";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LastArticles } from "./artigos/_components/last-articles";
-import { getActiveProducts } from "./loja/actions";
 
 export default async function Dashboard() {
   const user = await getUserSession();

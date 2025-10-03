@@ -1,6 +1,7 @@
 "use client";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,13 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { addToCart, removeFromCart } from "@/lib/actions/store";
 import { formatCurrency } from "@/utils/format-currency";
 import { Prisma } from "@prisma/client";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
-import { addToCart, removeFromCart } from "../actions";
-import { Badge } from "@/components/ui/badge";
 
 type CartDrawerItemProps = {
   userId: string;

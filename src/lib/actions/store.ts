@@ -5,9 +5,6 @@ import { revalidatePath } from "next/cache";
 import { formatPrismaError } from "@/lib/format-prisma-error";
 import { decimalToNumber } from "@/lib/prisma-helpers";
 
-// --------
-// Products
-// --------
 export async function getActiveProducts() {
   try {
     const products = await db.product.findMany({
@@ -23,9 +20,6 @@ export async function getActiveProducts() {
   }
 }
 
-// ----
-// Cart
-// ----
 export async function getCart(userId: string) {
   try {
     const cart = await db.shoppingCart.findUnique({
@@ -59,7 +53,7 @@ export async function addToCart(
       update: { quantity: { increment: quantity } },
     });
 
-    revalidatePath("/responsavel/loja");
+    revalidatePath("/");
     return decimalToNumber(item);
   } catch (error) {
     const message = formatPrismaError(error);
@@ -77,7 +71,7 @@ export async function removeFromCart(userId: string, productId: string) {
       where: { cartId_productId: { cartId: cart.id, productId } },
     });
 
-    revalidatePath("/responsavel/loja");
+    revalidatePath("/");
     return decimalToNumber(item);
   } catch (error) {
     const message = formatPrismaError(error);
@@ -86,9 +80,6 @@ export async function removeFromCart(userId: string, productId: string) {
   }
 }
 
-// --------
-// Wishlist
-// --------
 export async function getWishlist(userId: string) {
   try {
     const wishlist = await db.wishlist.findUnique({
@@ -122,7 +113,7 @@ export async function addToWishlist(
       update: { note },
     });
 
-    revalidatePath("/responsavel/loja");
+    revalidatePath("/");
     return decimalToNumber(item);
   } catch (error) {
     const message = formatPrismaError(error);
@@ -140,7 +131,7 @@ export async function removeFromWishlist(userId: string, productId: string) {
       where: { wishlistId_productId: { wishlistId: wishlist.id, productId } },
     });
 
-    revalidatePath("/responsavel/loja");
+    revalidatePath("/");
     return decimalToNumber(item);
   } catch (error) {
     const message = formatPrismaError(error);
@@ -158,7 +149,7 @@ export async function removeAllFromWishlist(userId: string) {
       where: { wishlistId: wishlist.id },
     });
 
-    revalidatePath("/responsavel/loja");
+    revalidatePath("/");
   } catch (error) {
     const message = formatPrismaError(error);
     console.error("Erro ao remover todos os itens dos favoritos:", message);
