@@ -26,10 +26,18 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "old-english";
+  src: url("../../public/fonts/engravers-old-english.otf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-mars: "mars";
   --font-monocraft: "monocraft";
   --font-upheaval: "upheaval";
+  --font-old-english: "old-english";
 
   --color-primary-50: #eefbf5;
   --color-primary-100: #d7f4e5;
@@ -168,14 +176,14 @@
     }
   }
   @keyframes shine {
-  0% {
-    background-position: 0% 0%;
+    0% {
+      background-position: 0% 0%;
     }
-  50% {
-    background-position: 100% 100%;
+    50% {
+      background-position: 100% 100%;
     }
-  to {
-    background-position: 0% 0%;
+    to {
+      background-position: 0% 0%;
     }
   }
 }
