@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { ChildActivityIsland } from "./child-activity-island";
+import { getEnabledActivityId } from "@/utils/activity";
 
 type ChildModuleViewProps = {
   modules: Prisma.ModuleGetPayload<{
@@ -26,20 +27,8 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
   const selectedModule = modules[moduleIndex];
 
   const enabledActivityId = useMemo(() => {
-    let id: string | undefined;
-    for (let i = 0; i < modules.length; i++) {
-      const mod = modules[i];
-      const activity = mod.activities.find((act) => {
-        const progress = act.activityProgress[0]; // pega o progresso do usuário ou undefined
-        return !progress || progress.status !== "COMPLETED";
-      });
-
-      if (activity) {
-        id = activity.id;
-        setModuleIndex(i);
-        break; // achou a primeira, sai do loop
-      }
-    }
+    const { id, moduleIndex } = getEnabledActivityId(modules);
+    if (moduleIndex) setModuleIndex(moduleIndex);
     return id;
   }, [modules]);
 

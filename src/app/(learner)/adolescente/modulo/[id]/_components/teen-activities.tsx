@@ -6,10 +6,12 @@ import { ShineBorder } from "@/components/ui/shine-border";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { ArrowLeft, BookOpen, BookOpenCheck } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TeenActivityStatusBadge } from "./teen-activity-status-badge";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { getEnabledActivityId } from "@/utils/activity";
 
 type TeenActivitiesProps = {
   module: Prisma.ModuleGetPayload<{
@@ -27,6 +29,15 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
     useState<Prisma.ActivityGetPayload<{
       include: { activityProgress: true };
     }> | null>(null);
+
+  const selectedActivityStatus = selectedActivity
+    ? selectedActivity.activityProgress.at(0)?.status || "NOT_STARTED"
+    : null;
+
+  const enabledActivityId = useMemo(() => {
+    const { id } = getEnabledActivityId([module]);
+    return id;
+  }, [module]);
 
   return (
     <div className="space-y-4 px-4 pb-4">
@@ -137,6 +148,29 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                     Selecione um fragmento ao lado
                   </p>
                 )}
+                {selectedActivity ? (
+                  selectedActivityStatus !== "COMPLETED" ? (
+                    enabledActivityId === selectedActivity.id ? (
+                      <Link
+                        href={`/adolescente/atividade/${selectedActivity.id}`}
+                      >
+                        <Button>
+                          {selectedActivityStatus === "NOT_STARTED"
+                            ? "Iniciar"
+                            : "Continuar"}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <p className="text-muted-foreground text-xl font-bold">
+                        Faça o fragmento anterior
+                      </p>
+                    )
+                  ) : (
+                    <p className="text-muted-foreground text-xl font-bold">
+                      Atividade concluída
+                    </p>
+                  )
+                ) : null}
               </CardContent>
             </Card>
           </div>
