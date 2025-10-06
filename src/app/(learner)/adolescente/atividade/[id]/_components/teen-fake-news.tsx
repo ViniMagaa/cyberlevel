@@ -190,7 +190,7 @@ export function TeenFakeNews({
       {completed && (
         <div className="flex h-full flex-col items-center justify-center space-y-4 px-4 text-center">
           <h2 className="text-4xl font-extrabold md:text-8xl">Parabéns!</h2>
-          <p className="none text-xl">
+          <p className="text-xl">
             Você identificou a notícia e ganhou{" "}
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>

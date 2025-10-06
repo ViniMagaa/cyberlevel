@@ -83,7 +83,12 @@ export default async function Dashboard() {
                     ) : (
                       <div className="flex w-full items-center justify-between">
                         <Badge
-                          style={{ backgroundColor: archetype.primaryColor }}
+                          style={{
+                            backgroundColor: isCompleted
+                              ? archetype.primaryColor
+                              : "",
+                          }}
+                          variant={isCompleted ? "default" : "secondary"}
                           className="font-bold"
                         >
                           {isCompleted

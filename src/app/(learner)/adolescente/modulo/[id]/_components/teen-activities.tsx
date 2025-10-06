@@ -40,7 +40,7 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
   }, [module]);
 
   return (
-    <div className="space-y-4 px-4 pb-4">
+    <div className="mx-auto w-full max-w-5xl space-y-4 px-4 pb-4">
       <h2
         className="text-xl font-semibold sm:text-2xl"
         style={{ color: primaryColor }}
@@ -60,6 +60,7 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                   onClick={() => setSelectedActivity(activity)}
                   className={cn(
                     "relative cursor-pointer border-0 p-0 transition-transform duration-500 hover:scale-102",
+                    status === "COMPLETED" && "opacity-50",
                   )}
                 >
                   {selectedActivity?.id === activity.id && (
@@ -80,17 +81,17 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                       ) : (
                         <BookOpen />
                       )}
-                      <div className="flex-1">
-                        <h3 className="font-medium">{activity.title}</h3>
-                        <div className="flex w-full flex-wrap justify-between gap-2">
+                      <div className="flex w-full flex-1 flex-wrap items-center justify-between gap-2">
+                        <div>
+                          <h3 className="font-medium">{activity.title}</h3>
                           <p className="text-muted-foreground text-sm">
                             {activityType[activity.type]}
                           </p>
-                          <TeenActivityStatusBadge
-                            status={status}
-                            primaryColor={primaryColor}
-                          />
                         </div>
+                        <TeenActivityStatusBadge
+                          status={status}
+                          primaryColor={primaryColor}
+                        />
                       </div>
                     </div>
                   </MagicCard>
@@ -130,18 +131,26 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
               >
                 <div>
                   <h3
-                    className="text-xl font-bold sm:text-2xl"
+                    className="text-4xl font-bold"
                     style={{ color: primaryColor }}
                   >
                     {selectedActivity
                       ? selectedActivity.title
                       : "Aprendizado através de jogos"}
                   </h3>
-                  <p className="text-muted-foreground">
-                    {selectedActivity
-                      ? activityType[selectedActivity.type]
-                      : "Aprender é mais fácil quando você pratica de verdade. Nossos jogos transformam teoria em desafios, ajudando você a reconhecer riscos digitais, evitar armadilhas e testar seus conhecimentos de forma divertida e eficaz."}
-                  </p>
+
+                  {selectedActivity ? (
+                    <p className="text-muted-foreground text-2xl">
+                      {activityType[selectedActivity.type]}
+                    </p>
+                  ) : (
+                    <p className="text-muted-foreground">
+                      Aprender é mais fácil quando você pratica de verdade.
+                      Nossos jogos transformam teoria em desafios, ajudando você
+                      a reconhecer riscos digitais, evitar armadilhas e testar
+                      seus conhecimentos de forma divertida e eficaz.
+                    </p>
+                  )}
                 </div>
                 {!selectedActivity && (
                   <p className="text-muted-foreground text-xl font-bold">
@@ -166,9 +175,22 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                       </p>
                     )
                   ) : (
-                    <p className="text-muted-foreground text-xl font-bold">
-                      Atividade concluída
-                    </p>
+                    <div>
+                      <p className="text-muted-foreground text-xl font-bold">
+                        Fragmento concluído
+                      </p>
+                      <p>
+                        Você ganhou{" "}
+                        <span
+                          className="text-xl font-extrabold"
+                          style={{ color: primaryColor }}
+                        >
+                          {selectedActivity.activityProgress.at(0)?.xpEarned ||
+                            0}{" "}
+                          XP
+                        </span>
+                      </p>
+                    </div>
                   )
                 ) : null}
               </CardContent>
