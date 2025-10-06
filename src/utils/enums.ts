@@ -1,4 +1,9 @@
-import { ActivityType, AgeGroup, UserRole } from "@prisma/client";
+import {
+  ActivityType,
+  AgeGroup,
+  ProgressStatus,
+  UserRole,
+} from "@prisma/client";
 import { ThemedPasswordRules, TThemedPasswordRules } from "./activity-types";
 
 export const ageGroup: Record<AgeGroup, string> = {
@@ -31,4 +36,10 @@ export const userRoles: Record<UserRole, string> = {
   [UserRole.ADMIN]: "Admin",
   [UserRole.LEARNER]: "Aprendiz",
   [UserRole.RESPONSIBLE]: "Responsável",
+};
+
+export const progressStatus: Record<ProgressStatus, string> = {
+  [ProgressStatus.COMPLETED]: "Concluído",
+  [ProgressStatus.IN_PROGRESS]: "Iniciado",
+  [ProgressStatus.NOT_STARTED]: "Não iniciado",
 };

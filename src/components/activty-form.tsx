@@ -223,7 +223,7 @@ export function ActivityForm({ activity, modules }: ActivityFormProps) {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-full p-0">
                     <Command>
                       <CommandInput
                         placeholder="Selecione o módulo"

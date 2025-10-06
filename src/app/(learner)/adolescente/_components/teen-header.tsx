@@ -1,52 +1,21 @@
 "use client";
 
-import { Logo } from "@/components/logo";
-import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Archetype, User } from "@prisma/client";
 import { ArrowRightLeft, Sparkles, Trophy } from "lucide-react";
 import Link from "next/link";
+import { TeenNavbar } from "./teen-navbar";
 
 type TeenHeaderProps = {
   user: User;
   archetype: Archetype;
 };
 
-const menuItems = [
-  {
-    label: "Início",
-    href: "/adolescente",
-  },
-  {
-    label: "Ranking",
-    href: "/adolescente/ranking",
-  },
-  {
-    label: "Perfil",
-    href: "/adolescente/perfil",
-  },
-];
-
 export function TeenHeader({ user, archetype }: TeenHeaderProps) {
   return (
     <header className="flex flex-col">
-      <nav className="flex items-center justify-between rounded-md px-6 py-4">
-        <Logo />
-        <menu className="flex items-center gap-2 sm:gap-4">
-          {menuItems.map(({ href, label }, i) => (
-            <Link key={i} href={href}>
-              <Button variant="ghost" size="sm">
-                {label}
-              </Button>
-            </Link>
-          ))}
-          <SignOutButton />
-        </menu>
-      </nav>
-
-      <Separator />
+      <TeenNavbar />
 
       <div className="space-y-6 p-6">
         <div>
