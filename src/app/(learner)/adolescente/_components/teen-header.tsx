@@ -17,7 +17,7 @@ export function TeenHeader({ user, archetype }: TeenHeaderProps) {
     <header className="flex flex-col">
       <TeenNavbar />
 
-      <div className="space-y-6 p-6">
+      <div className="mx-auto w-full max-w-6xl space-y-6 p-6">
         <div>
           <h1
             className="text-2xl font-bold uppercase sm:text-4xl"

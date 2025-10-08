@@ -194,7 +194,7 @@ export function TeenFakeNews({
             Você identificou a notícia e ganhou{" "}
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
-          <Link href="/crianca/missoes">
+          <Link href={`/adolescente/modulo/${activity.moduleId}`}>
             <Button>Voltar às missões</Button>
           </Link>
         </div>

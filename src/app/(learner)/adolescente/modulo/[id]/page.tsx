@@ -14,7 +14,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
     where: { id },
     include: {
       archetype: true,
-      activities: { include: { activityProgress: true } },
+      activities: {
+        include: { activityProgress: true },
+        orderBy: { order: "asc" },
+      },
     },
   });
 
@@ -28,7 +31,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
       <TeenNavbar />
 
       <div className="mx-auto flex w-full max-w-5xl flex-wrap gap-2 px-4">
-        <BackButton size="icon" />
+        <BackButton size="icon" path="/adolescente" />
 
         <div className="space-y-4">
           <div className="flex items-center gap-2">
