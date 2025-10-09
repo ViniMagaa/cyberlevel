@@ -3,14 +3,16 @@ import { db } from "@/lib/prisma";
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TMatchPairsContent,
   TQuizContent,
   TThemedPasswordContent,
 } from "@/utils/activity-types";
 import { redirect } from "next/navigation";
+import { TeenFakeChat } from "./_components/teen-fake-chat";
 import { TeenFakeNews } from "./_components/teen-fake-news";
+import { TeenMatchPairs } from "./_components/teen-match-pairs";
 import { TeenQuiz } from "./_components/teen-quiz";
 import { TeenThemedPassword } from "./_components/teen-themed-password";
-import { TeenFakeChat } from "./_components/teen-fake-chat";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -58,6 +60,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         />
       );
     case "MATCH_PAIRS":
+      return (
+        <TeenMatchPairs
+          activity={activity}
+          primaryColor={primaryColor}
+          matchPairs={content as TMatchPairsContent}
+          userId={user.id}
+        />
+      );
     case "THEMED_PASSWORD":
       return (
         <TeenThemedPassword
