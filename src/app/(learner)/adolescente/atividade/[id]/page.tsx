@@ -3,6 +3,7 @@ import { db } from "@/lib/prisma";
 import {
   TFakeChatContent,
   TFakeNewsContent,
+  TInformativeTextContent,
   TMatchPairsContent,
   TPostOrNotContent,
   TQuizContent,
@@ -15,6 +16,7 @@ import { TeenMatchPairs } from "./_components/teen-match-pairs";
 import { TeenQuiz } from "./_components/teen-quiz";
 import { TeenThemedPassword } from "./_components/teen-themed-password";
 import { TeenPostOrNot } from "./_components/teen-post-or-not";
+import { TeenInformativeText } from "./_components/teen-informative-text";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -98,6 +100,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         />
       );
     case "INFORMATIVE_TEXT":
+      return (
+        <TeenInformativeText
+          activity={activity}
+          primaryColor={primaryColor}
+          informativeText={content as TInformativeTextContent}
+          userId={user.id}
+        />
+      );
     default:
       return redirect("/adolescente");
   }
