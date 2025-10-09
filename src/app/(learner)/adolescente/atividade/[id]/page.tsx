@@ -4,6 +4,7 @@ import {
   TFakeChatContent,
   TFakeNewsContent,
   TMatchPairsContent,
+  TPostOrNotContent,
   TQuizContent,
   TThemedPasswordContent,
 } from "@/utils/activity-types";
@@ -13,6 +14,7 @@ import { TeenFakeNews } from "./_components/teen-fake-news";
 import { TeenMatchPairs } from "./_components/teen-match-pairs";
 import { TeenQuiz } from "./_components/teen-quiz";
 import { TeenThemedPassword } from "./_components/teen-themed-password";
+import { TeenPostOrNot } from "./_components/teen-post-or-not";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -87,6 +89,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         />
       );
     case "POST_OR_NOT":
+      return (
+        <TeenPostOrNot
+          activity={activity}
+          primaryColor={primaryColor}
+          postOrNot={content as TPostOrNotContent}
+          userId={user.id}
+        />
+      );
     case "INFORMATIVE_TEXT":
     default:
       return redirect("/adolescente");
