@@ -1,5 +1,6 @@
 "use client";
 
+import LetterGlitch from "@/components/letter-glitch";
 import { RuleMessage } from "@/components/rule-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { TThemedPasswordContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
-import { ArrowRight, Loader2Icon } from "lucide-react";
+import { ArrowRight, ChevronsRight, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -78,12 +79,26 @@ export function TeenThemedPassword({
 
   return (
     <div className="grid min-h-screen w-full place-items-center">
+      <div className="fixed inset-0 -z-10 opacity-40">
+        <LetterGlitch
+          glitchColors={[
+            primaryColor,
+            primaryColor + "bb",
+            primaryColor + "55",
+          ]}
+          glitchSpeed={100}
+          centerVignette={true}
+          outerVignette={true}
+          smooth={true}
+        />
+      </div>
+
       {!started && !completed && (
         <div className="w-full max-w-lg space-y-12 px-4 text-center">
           <h1 className="text-5xl font-black uppercase md:text-8xl">
             {activityType[activity.type]}
           </h1>
-          <div>
+          <div className="mx-auto max-w-sm">
             <p
               className="text-xl uppercase md:text-2xl"
               style={{ color: primaryColor }}
@@ -102,19 +117,23 @@ export function TeenThemedPassword({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
 
       {started && !completed && (
-        <div className="flex w-full max-w-md flex-col gap-6 py-12 text-center">
+        <div className="flex w-full max-w-md flex-col gap-6 px-4 py-12 text-center">
           <h1 className="text-5xl font-black">{activity.title}</h1>
           <p className="text-xl font-semibold">{themedPassword.mission}</p>
           <div className="relative">
             <Input
               type="text"
-              className="h-auto w-full rounded-full py-2 pr-12 pl-4 text-2xl!"
+              className="h-auto w-full rounded-full bg-neutral-950! py-2 pr-12 pl-4 text-2xl!"
               value={password}
               onKeyDown={(e) => e.key === "Enter" && handleCheck()}
               onChange={(e) => setPassword(e.target.value)}
@@ -126,21 +145,21 @@ export function TeenThemedPassword({
               disabled={isPending}
             >
               {!isPending ? (
-                <ArrowRight />
+                <ArrowRight className="size-6" />
               ) : (
-                <Loader2Icon className="animate-spin" />
+                <Loader2Icon className="size-6 animate-spin" />
               )}
             </Button>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col-reverse gap-4">
             {themedPassword.rules.map((rule, index) => (
               <div
                 key={index}
                 className={cn(
-                  "translate-y-1 opacity-0 transition-all duration-500",
-                  currentRuleIndex >= index && "translate-0 opacity-100",
-                  index - 1 > currentRuleIndex && "hidden",
+                  "translate-y-2 opacity-0 transition-all duration-500",
+                  currentRuleIndex >= index && "static translate-0 opacity-100",
+                  index > currentRuleIndex && "absolute",
                 )}
               >
                 <RuleMessage rule={rule} valid={validateRule(rule)} />
@@ -158,7 +177,9 @@ export function TeenThemedPassword({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

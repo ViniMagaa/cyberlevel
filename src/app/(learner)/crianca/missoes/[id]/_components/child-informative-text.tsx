@@ -95,7 +95,7 @@ export function ChildInformativeText({
                       />
                     </AspectRatio>
                   )}
-                  <div className="prose prose-neutral dark:prose-invert">
+                  <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <Markdown
                       remarkPlugins={[remarkGfm]}
                       components={{

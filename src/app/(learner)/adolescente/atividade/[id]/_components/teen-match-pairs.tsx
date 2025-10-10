@@ -1,5 +1,6 @@
 "use client";
 
+import Plasma from "@/components/plasma";
 import { Button } from "@/components/ui/button";
 import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
@@ -7,7 +8,7 @@ import { TMatchPairsContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2Icon } from "lucide-react";
+import { ChevronsRight, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -158,24 +159,22 @@ export function TeenMatchPairs({
   }
 
   function handleMaxAttemptsReached() {
-    toast.error("Máximo de tentativas atingido!");
+    toast.error("Máximo de tentativas atingido! Tente novamente.");
     resetActivity();
   }
 
   return (
     <div className="relative grid min-h-screen w-full place-items-center py-12">
-      <div
-        className="absolute top-0 -z-10 h-[1px] w-full overflow-hidden"
-        style={{
-          backgroundColor: primaryColor,
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 -z-20 rounded-[inherit] opacity-20"
-        style={{
-          background: `linear-gradient(to bottom, ${primaryColor} 5%, ${primaryColor}55, transparent 40%)`,
-        }}
-      />
+      <div className="fixed inset-0 -z-10">
+        <Plasma
+          color={primaryColor}
+          speed={0.6}
+          direction="forward"
+          scale={0.8}
+          opacity={0.4}
+          mouseInteractive={true}
+        />
+      </div>
 
       {/* Efeito de flash ao acertar/errar */}
       <AnimatePresence>
@@ -198,7 +197,7 @@ export function TeenMatchPairs({
           <h1 className="text-5xl font-black uppercase md:text-8xl">
             {activityType[activity.type]}
           </h1>
-          <div className="mx-auto max-w-lg">
+          <div className="mx-auto max-w-md">
             <p
               className="text-xl uppercase md:text-2xl"
               style={{ color: primaryColor }}
@@ -217,7 +216,11 @@ export function TeenMatchPairs({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
@@ -232,7 +235,7 @@ export function TeenMatchPairs({
             <span
               style={{
                 backgroundColor: primaryColor + "55",
-                borderColor: primaryColor,
+                borderColor: primaryColor + "55",
               }}
               className="rounded-full border px-3 py-1 text-base font-bold text-white sm:text-xl"
             >
@@ -241,7 +244,7 @@ export function TeenMatchPairs({
             <span
               style={{
                 backgroundColor: primaryColor + "55",
-                borderColor: primaryColor,
+                borderColor: primaryColor + "55",
               }}
               className="rounded-full border px-3 py-1 text-base font-bold text-white sm:text-xl"
             >
@@ -266,7 +269,7 @@ export function TeenMatchPairs({
                     borderColor: card.matched
                       ? "transparent"
                       : selectedLeft === card.id
-                        ? primaryColor
+                        ? primaryColor + "55"
                         : "#ccc",
                     backgroundColor:
                       selectedLeft === card.id ? primaryColor + "55" : "white",
@@ -293,7 +296,7 @@ export function TeenMatchPairs({
                     borderColor: card.matched
                       ? "transparent"
                       : selectedRight === card.id
-                        ? primaryColor
+                        ? primaryColor + "55"
                         : "#ccc",
                     backgroundColor:
                       selectedRight === card.id ? primaryColor + "55" : "white",
@@ -315,7 +318,9 @@ export function TeenMatchPairs({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

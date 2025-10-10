@@ -10,7 +10,7 @@ import { useActivity } from "@/hooks/use-activity";
 import { TInformativeTextContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
-import { Loader2Icon } from "lucide-react";
+import { ChevronsRight, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -69,7 +69,11 @@ export function TeenInformativeText({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
@@ -115,9 +119,16 @@ export function TeenInformativeText({
                   </Markdown>
                 </div>
                 <div className="mt-6 flex justify-end">
-                  <Button onClick={complete} disabled={isPending}>
+                  <Button
+                    size="lg"
+                    className="text-xl font-bold uppercase"
+                    onClick={complete}
+                    disabled={isPending}
+                  >
                     Concluir leitura
-                    {isPending && <Loader2Icon className="animate-spin" />}
+                    {isPending && (
+                      <Loader2Icon className="size-6 animate-spin" />
+                    )}
                   </Button>
                 </div>
               </ScrollArea>
@@ -134,7 +145,9 @@ export function TeenInformativeText({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

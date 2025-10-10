@@ -8,7 +8,7 @@ import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TQuizContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
-import { Check, Loader2Icon, X } from "lucide-react";
+import { Check, ChevronsRight, Loader2Icon, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -60,7 +60,20 @@ export function TeenQuiz({
   }
 
   return (
-    <div className="grid min-h-screen w-full place-items-center">
+    <div className="relative grid min-h-screen w-full place-items-center">
+      <div
+        className="absolute top-0 -z-10 h-[1px] w-full overflow-hidden"
+        style={{
+          backgroundColor: primaryColor,
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 -z-20 rounded-[inherit] opacity-20"
+        style={{
+          background: `linear-gradient(to bottom, ${primaryColor} 5%, ${primaryColor}55, transparent 40%)`,
+        }}
+      />
+
       {!started && !completed && (
         <div className="w-full max-w-2xl space-y-12 px-4 text-center">
           <h1 className="text-5xl font-black uppercase md:text-8xl">
@@ -86,37 +99,28 @@ export function TeenQuiz({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
 
       {started && !completed && (
-        <div className="w-full">
+        <div className="flex w-full flex-col items-center gap-12">
           <h1 className="px-4 pt-12 text-center text-4xl font-black uppercase md:text-6xl">
             {quiz.title}
           </h1>
 
-          <div className="relative mt-12 flex w-full justify-center py-12">
-            <div
-              className="absolute top-0 -z-10 h-[1px] w-full overflow-hidden"
-              style={{
-                backgroundColor: primaryColor,
-              }}
-            />
-            <div
-              className="pointer-events-none absolute inset-0 -z-20 rounded-[inherit] opacity-20"
-              style={{
-                background: `linear-gradient(to bottom, ${primaryColor} 5%, ${primaryColor}55, transparent 40%)`,
-              }}
-            />
-
-            <Card className="mx-4 w-full max-w-2xl gap-4 rounded-4xl p-4">
+          <div className="w-full px-4">
+            <Card className="mx-auto w-full max-w-2xl gap-4 rounded-4xl p-4">
               <CardHeader className="flex flex-wrap items-center justify-between gap-2 p-0">
                 <span
                   style={{
                     backgroundColor: primaryColor + "55",
-                    borderColor: primaryColor,
+                    borderColor: primaryColor + "55",
                   }}
                   className="rounded-full border px-3 py-1 text-base font-bold text-white sm:text-xl"
                 >
@@ -125,7 +129,7 @@ export function TeenQuiz({
                 <span
                   style={{
                     backgroundColor: primaryColor + "55",
-                    borderColor: primaryColor,
+                    borderColor: primaryColor + "55",
                   }}
                   className="rounded-full border px-3 py-1 text-base font-bold text-white sm:text-xl"
                 >
@@ -190,23 +194,29 @@ export function TeenQuiz({
                   <div className="ml-auto">
                     {isCorrect === null && (
                       <Button
-                        className="ml-auto"
+                        size="lg"
+                        className="text-xl font-bold uppercase"
                         onClick={handleAnswer}
                         disabled={selected === null || isPending}
                       >
                         Confirmar{" "}
-                        {isPending && <Loader2Icon className="animate-spin" />}
+                        {isPending && (
+                          <Loader2Icon className="size-6 animate-spin" />
+                        )}
                       </Button>
                     )}
 
                     {isCorrect !== null && (
                       <Button
-                        className="ml-auto"
+                        size="lg"
+                        className="text-xl font-bold uppercase"
                         disabled={isPending}
                         onClick={handleNext}
                       >
                         {isLastQuestion ? "Finalizar" : "Próximo"}
-                        {isPending && <Loader2Icon className="animate-spin" />}
+                        {isPending && (
+                          <Loader2Icon className="size-6 animate-spin" />
+                        )}
                       </Button>
                     )}
                   </div>
@@ -225,7 +235,9 @@ export function TeenQuiz({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

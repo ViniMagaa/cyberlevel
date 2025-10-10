@@ -1,5 +1,6 @@
 "use client";
 
+import LightRays from "@/components/light-rays";
 import { Paragraphs } from "@/components/paragraphs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { TFakeNewsContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
 import { format } from "date-fns";
-import { Globe, Loader2Icon } from "lucide-react";
+import { ChevronsRight, Globe, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -44,7 +45,22 @@ export function TeenFakeNews({
   }
 
   return (
-    <div className="grid min-h-screen w-full place-items-center">
+    <div className="relative grid min-h-screen w-full place-items-center">
+      <div className="fixed inset-0 -z-10">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor={primaryColor}
+          raysSpeed={1.5}
+          lightSpread={0.8}
+          rayLength={1.2}
+          fadeDistance={1.5}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+        />
+      </div>
+
       {!started && !completed && (
         <div className="w-full max-w-2xl space-y-12 px-4 text-center">
           <div>
@@ -76,7 +92,11 @@ export function TeenFakeNews({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
@@ -167,21 +187,25 @@ export function TeenFakeNews({
           </div>
           {!isCorrect && (
             <Button
-              className="ml-auto"
+              size="lg"
+              className="ml-auto text-xl font-bold uppercase"
               onClick={handleAnswer}
               disabled={isFakeSelected === null || isPending}
             >
-              Confirmar {isPending && <Loader2Icon className="animate-spin" />}
+              Confirmar{" "}
+              {isPending && <Loader2Icon className="size-6 animate-spin" />}
             </Button>
           )}
 
           {isFakeSelected !== null && isCorrect && (
             <Button
-              className="ml-auto"
+              size="lg"
+              className="ml-auto text-xl font-bold uppercase"
               onClick={complete}
               disabled={isFakeSelected === null || !isCorrect || isPending}
             >
-              Finalizar {isPending && <Loader2Icon className="animate-spin" />}
+              Finalizar{" "}
+              {isPending && <Loader2Icon className="size-6 animate-spin" />}
             </Button>
           )}
         </div>
@@ -195,7 +219,9 @@ export function TeenFakeNews({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import Silk from "@/components/silk";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { TPostOrNotContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
-import { Loader2Icon } from "lucide-react";
+import { ChevronsRight, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -50,30 +51,27 @@ export function TeenPostOrNot({
 
   return (
     <div className="relative grid min-h-screen w-full place-items-center py-12">
-      <div
-        className="absolute top-0 -z-10 h-[1px] w-full overflow-hidden"
-        style={{
-          backgroundColor: primaryColor,
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 -z-20 rounded-[inherit] opacity-20"
-        style={{
-          background: `linear-gradient(to bottom, ${primaryColor} 5%, ${primaryColor}55, transparent 40%)`,
-        }}
-      />
+      <div className="fixed inset-0 -z-10 opacity-40">
+        <Silk
+          speed={3}
+          scale={1}
+          color={primaryColor}
+          noiseIntensity={1.5}
+          rotation={0}
+        />
+      </div>
 
       {!started && !completed && (
         <div className="w-full space-y-12 px-4 text-center">
           <h1 className="mx-auto max-w-2xl text-5xl font-black uppercase md:text-8xl">
             {activityType[activity.type]}
           </h1>
-          <div className="mx-auto max-w-lg">
+          <div className="mx-auto max-w-sm">
             <p
               className="text-xl uppercase md:text-2xl"
               style={{ color: primaryColor }}
             >
-              Avalie cada situação e decida
+              Avalie a situação e decida
             </p>
             <p className="text-muted-foreground md:text-md text-sm">
               É seguro postar isso? Aprenda a pensar antes de publicar e evite
@@ -87,7 +85,11 @@ export function TeenPostOrNot({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
@@ -118,7 +120,7 @@ export function TeenPostOrNot({
               </CardContent>
             </Card>
 
-            <Card className="">
+            <Card>
               <CardContent className="flex flex-col gap-6">
                 <p className="text-lg">{postOrNot.description}</p>
 
@@ -163,7 +165,7 @@ export function TeenPostOrNot({
                 </div>
 
                 {feedback && (
-                  <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
+                  <div className="flex flex-col items-center justify-between gap-2">
                     <p
                       className={cn(
                         "text-lg",
@@ -179,12 +181,15 @@ export function TeenPostOrNot({
                     {((selected === "post" && postOrNot.isSafe) ||
                       (selected === "not" && !postOrNot.isSafe)) && (
                       <Button
-                        className="ml-auto"
+                        size="lg"
+                        className="ml-auto text-xl font-bold uppercase"
                         onClick={complete}
                         disabled={isPending}
                       >
                         Finalizar
-                        {isPending && <Loader2Icon className="animate-spin" />}
+                        {isPending && (
+                          <Loader2Icon className="size-6 animate-spin" />
+                        )}
                       </Button>
                     )}
                   </div>
@@ -203,7 +208,9 @@ export function TeenPostOrNot({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}

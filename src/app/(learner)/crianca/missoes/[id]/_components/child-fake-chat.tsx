@@ -134,7 +134,7 @@ export function ChildFakeChat({
                         currentMessage.options[selected]?.isSafe
                       }
                       className={cn(
-                        "font-monocraft justify-center",
+                        "text-md h-auto max-h-none whitespace-break-spaces",
                         selected === i
                           ? opt.isSafe
                             ? "bg-primary-600!"

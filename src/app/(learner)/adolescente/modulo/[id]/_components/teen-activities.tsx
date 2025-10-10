@@ -99,9 +99,7 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
               );
             })
           ) : (
-            <p className="text-muted-foreground">
-              Nenhuma atividade encontrada
-            </p>
+            <p className="text-muted-foreground">Nenhum fragmento encontrado</p>
           )}
         </div>
 
@@ -129,9 +127,9 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                   selectedActivity ? "block" : "hidden sm:block",
                 )}
               >
-                <div>
+                <div className="space-y-2">
                   <h3
-                    className="text-4xl font-bold"
+                    className="text-3xl font-bold"
                     style={{ color: primaryColor }}
                   >
                     {selectedActivity
@@ -163,7 +161,10 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                       <Link
                         href={`/adolescente/atividade/${selectedActivity.id}`}
                       >
-                        <Button>
+                        <Button
+                          size="lg"
+                          className="text-xl font-bold uppercase"
+                        >
                           {selectedActivityStatus === "NOT_STARTED"
                             ? "Iniciar"
                             : "Continuar"}

@@ -7,7 +7,7 @@ import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TFakeChatContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
-import { Loader2Icon } from "lucide-react";
+import { ChevronsRight, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -61,20 +61,20 @@ export function TeenFakeChat({
 
   return (
     <div className="grid min-h-screen w-full place-items-center p-4">
-      {(started || completed) && (
-        <Image
-          src="/images/teen-fake-chat-background.png"
-          alt="Fake Chat"
-          fill
-          className="no-blur fixed top-0 left-0 -z-10 object-cover blur-sm brightness-90"
-        />
-      )}
+      <Image
+        src="/images/teen-fake-chat-background.png"
+        alt="Fake Chat"
+        fill
+        className="no-blur fixed top-0 left-0 -z-10 object-cover blur-sm brightness-90"
+      />
+
+      <div className="pointer-events-none absolute top-0 left-0 -z-10 h-full w-full bg-[radial-gradient(circle,_rgba(0,0,0,0.8)_0%,_rgba(0,0,0,0)_60%)]" />
 
       {!started && !completed && (
         <div className="w-full max-w-2xl space-y-12 px-4 text-center">
           <div className="relative">
             <h1
-              className="text-5xl font-black uppercase md:text-8xl"
+              className="text-5xl font-black uppercase opacity-80 md:text-8xl"
               style={{ color: primaryColor }}
             >
               Diálogo
@@ -104,13 +104,17 @@ export function TeenFakeChat({
             className="text-xl font-bold uppercase"
           >
             Começar
-            {isPending && <Loader2Icon className="animate-spin" />}
+            {isPending ? (
+              <Loader2Icon className="size-6 animate-spin" />
+            ) : (
+              <ChevronsRight className="size-7" />
+            )}
           </Button>
         </div>
       )}
 
       {started && !completed && (
-        <Card className="w-full max-w-2xl gap-4 py-4">
+        <Card className="w-full max-w-2xl gap-4 py-6">
           <CardHeader className="flex flex-row items-center gap-4">
             <Image
               src="/images/profile-picture.png"
@@ -119,10 +123,12 @@ export function TeenFakeChat({
               height={40}
               className="rounded-full"
             />
-            <CardTitle className="text-2xl">Usuário desconhecido</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl">
+              Usuário desconhecido
+            </CardTitle>
           </CardHeader>
           <Separator />
-          <CardContent className="flex flex-col gap-6 p-6 pt-2">
+          <CardContent className="flex flex-col gap-6 px-6">
             <div
               className="relative mr-auto flex max-w-sm items-center gap-2 rounded-lg rounded-bl-none p-4 leading-none text-black"
               style={{ backgroundColor: primaryColor + "22" }}
@@ -136,7 +142,7 @@ export function TeenFakeChat({
               />
             </div>
 
-            <div className="relative ml-auto flex max-h-20 w-full max-w-60 items-center gap-2 rounded-lg rounded-br-none bg-neutral-100 p-4 leading-none text-black">
+            <div className="relative ml-auto flex max-h-20 w-full max-w-40 items-center gap-2 rounded-lg rounded-br-none bg-neutral-100 p-4 leading-none text-black">
               <Image
                 src="/images/loader.svg"
                 alt="..."
@@ -150,9 +156,11 @@ export function TeenFakeChat({
             <Separator />
 
             <div className="space-y-4">
-              <p className="text-center font-bold">Qual a melhor resposta?</p>
+              <p className="text-center text-lg font-bold">
+                Qual a melhor resposta?
+              </p>
 
-              <div className="flex flex-wrap gap-3 *:flex-1">
+              <div className="flex flex-col flex-wrap gap-3 *:flex-1 sm:flex-row">
                 {currentMessage.options.map((opt, i) => (
                   <Button
                     key={i}
@@ -162,7 +170,7 @@ export function TeenFakeChat({
                       currentMessage.options[selected]?.isSafe
                     }
                     className={cn(
-                      "flex! justify-center text-wrap",
+                      "text-md h-auto max-h-none whitespace-break-spaces",
                       selected === i
                         ? opt.isSafe
                           ? "bg-primary-600!"
@@ -195,12 +203,15 @@ export function TeenFakeChat({
                   {currentMessage.options[selected!]?.isSafe && (
                     <div className="ml-auto">
                       <Button
-                        className=""
+                        size="lg"
+                        className="text-xl font-bold uppercase"
                         onClick={handleNext}
                         disabled={isPending}
                       >
                         {isLastMessage ? "Finalizar" : "Próximo"}
-                        {isPending && <Loader2Icon className="animate-spin" />}
+                        {isPending && (
+                          <Loader2Icon className="size-6 animate-spin" />
+                        )}
                       </Button>
                     </div>
                   )}
@@ -219,7 +230,9 @@ export function TeenFakeChat({
             <span className="text-2xl font-bold">{xpEarned} XP</span>
           </p>
           <Link href={`/adolescente/modulo/${activity.moduleId}`}>
-            <Button>Voltar às missões</Button>
+            <Button size="lg" className="text-xl font-bold uppercase">
+              Voltar às missões
+            </Button>
           </Link>
         </div>
       )}
