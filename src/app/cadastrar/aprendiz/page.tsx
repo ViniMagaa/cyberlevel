@@ -2,6 +2,7 @@ import Prism from "@/components/prism";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function RegisterPage() {
   return (
@@ -26,9 +27,11 @@ export default function RegisterPage() {
               Kids
             </p>
           </div>
-          <Button variant="pixel" size="pixel" className="m-auto">
-            Tenho menos de 12 anos
-          </Button>
+          <Link href="/cadastrar/aprendiz/crianca">
+            <Button variant="pixel" size="pixel" className="m-auto">
+              Tenho menos de 12 anos
+            </Button>
+          </Link>
         </div>
       </section>
 

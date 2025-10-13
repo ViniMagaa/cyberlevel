@@ -8,6 +8,8 @@ export function handleAuthError(code: string) {
       return "Usuário não encontrado";
     case "same_password":
       return "A nova senha deve ser diferente da senha anterior";
+    case "user_already_exists":
+      return "O e-mail já está cadastrado";
     default:
       return "Erro desconhecido";
   }
