@@ -3,6 +3,7 @@
 import { handleAuthError } from "@/lib/handle-auth-error";
 import { db } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
+import { supabaseAdmin } from "@/utils/supabase/supabase-admin";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -11,10 +12,43 @@ export async function updateUserData(
   data: Prisma.UserUpdateInput,
 ) {
   try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, message: "Usuário não encontrado" };
+
     await db.user.update({
       where: { id: userId },
       data: { ...data },
     });
+
+    if (
+      user.email === data.email &&
+      user.user_metadata.display_name === data.name
+    )
+      return { success: true };
+
+    const { error: updateError } =
+      await supabaseAdmin.auth.admin.updateUserById(user.id, {
+        email: String(data.email),
+        user_metadata: {
+          display_name: data.name,
+        },
+      });
+
+    if (updateError) {
+      const message = updateError.code
+        ? handleAuthError(updateError.code)
+        : "Erro ao atualizar dados";
+
+      return {
+        success: false,
+        message,
+      };
+    }
 
     revalidatePath("/");
     return { success: true };
@@ -71,10 +105,8 @@ export async function updatePassword(
 }
 
 export async function deleteUser(id: string) {
-  const supabase = await createClient();
-
   try {
-    const { error: authError } = await supabase.auth.admin.deleteUser(id);
+    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
 
     if (authError) {
       console.error("Erro Supabase Auth:", authError.message);

@@ -10,6 +10,8 @@ export function handleAuthError(code: string) {
       return "A nova senha deve ser diferente da senha anterior";
     case "user_already_exists":
       return "O e-mail já está cadastrado";
+    case "email_address_invalid":
+      return "E-mail inválido";
     default:
       return "Erro desconhecido";
   }
