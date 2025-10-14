@@ -13,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { handleAuthError } from "@/lib/handle-auth-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@prisma/client";
 import { isPast, isValid, subYears } from "date-fns";
@@ -147,24 +146,29 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
 
   function onSubmit(data: ChildRegisterForm) {
     startTransition(async () => {
-      const result = await signUp({
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        birthdate: new Date(data.birthdate),
-        role: "LEARNER",
-        ageGroup: "CHILD",
-        avatar: { connect: { id: data.avatarId } },
-      });
+      try {
+        const result = await signUp({
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          birthdate: new Date(data.birthdate),
+          role: "LEARNER",
+          ageGroup: "CHILD",
+          avatar: { connect: { id: data.avatarId } },
+        });
 
-      if (!result.success) {
-        toast.error(handleAuthError(result.error.code));
-        return;
+        if (!result.success) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success(`Bem-vindo, ${data.name}!`);
+        router.push("/crianca");
+      } catch (error) {
+        console.log(error);
+        toast.error("Erro ao cadastrar usuário");
       }
-
-      toast.success(`Bem-vindo, ${data.name}!`);
-      router.push("/crianca");
     });
   }
 
@@ -340,12 +344,12 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
                 onClick={() => handleAvatarChange("left")}
               />
 
-              <Card className="bg-primary-600/20 border-primary-600 w-44 p-0">
+              <Card className="bg-primary-600/20 border-primary-600 w-44 overflow-hidden p-0">
                 <AspectRatio ratio={1}>
                   <Image
                     src={
                       childAvatars[selectedAvatarIndex]?.imageUrl ||
-                      "/images/default-avatar.png"
+                      "/images/profile-picture.png"
                     }
                     alt="Avatar selecionado"
                     fill
@@ -480,7 +484,7 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
                 className="ml-auto"
                 disabled={isPending}
               >
-                <div className="flex items-center gap-2 text-base">
+                <div className="flex items-center gap-2">
                   Cadastrar
                   {isPending && <Loader2Icon className="animate-spin" />}
                 </div>

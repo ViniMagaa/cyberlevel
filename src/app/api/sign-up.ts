@@ -1,5 +1,6 @@
 "use server";
 
+import { handleAuthError } from "@/lib/handle-auth-error";
 import { db } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { Prisma } from "@prisma/client";
@@ -14,9 +15,19 @@ export default async function signUp({
   name,
   ...rest
 }: SignUpProps): Promise<
-  | { success: true }
-  | { success: false; error: { code: string; message: string } }
+  { success: true } | { success: false; error: string }
 > {
+  const username = await db.user.findUnique({
+    where: { username: rest.username },
+  });
+
+  if (username) {
+    return {
+      success: false,
+      error: "O nome de usuário já está sendo utilizado",
+    };
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
@@ -30,10 +41,7 @@ export default async function signUp({
   if (error) {
     return {
       success: false,
-      error: {
-        code: error.code ?? "unexpected_error",
-        message: error.message,
-      },
+      error: handleAuthError(error.code ?? "unexpected_error"),
     };
   }
 
@@ -42,10 +50,7 @@ export default async function signUp({
   if (!user) {
     return {
       success: false,
-      error: {
-        code: "user_not_found",
-        message: "User not found after sign up",
-      },
+      error: "Usuário não encontrado após o cadastro",
     };
   }
 

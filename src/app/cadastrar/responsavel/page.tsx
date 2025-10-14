@@ -38,7 +38,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { handleAuthError } from "@/lib/handle-auth-error";
 import { cn } from "@/lib/utils";
 
 const registerSchema = z
@@ -99,21 +98,27 @@ export default function RegisterPage() {
     birthdate,
   }: RegisterForm) => {
     startTransition(async () => {
-      const result = await signUp({
-        name,
-        username,
-        email,
-        password,
-        birthdate,
-        role: "RESPONSIBLE",
-      });
+      try {
+        const result = await signUp({
+          name,
+          username,
+          email,
+          password,
+          birthdate,
+          role: "RESPONSIBLE",
+        });
 
-      if (!result.success) {
-        toast.error(handleAuthError(result.error.code));
-        return;
+        if (!result.success) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success(`Bem-vindo, ${name}!`);
+        router.push("/responsavel");
+      } catch (error) {
+        console.log(error);
+        toast.error("Erro ao cadastrar usuário");
       }
-
-      router.refresh();
     });
   };
 
