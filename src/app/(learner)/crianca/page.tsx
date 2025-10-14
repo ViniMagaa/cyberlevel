@@ -7,6 +7,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChildRanking } from "./_components/child-ranking";
 import { ChildSignOutButton } from "./_components/child-sign-out-button";
+import { Button } from "@/components/ui/button";
 
 export default async function Dashboard() {
   const user = await getUserSession();
@@ -118,8 +119,29 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-primary-600 border-primary-500/40 h-full overflow-hidden rounded-xl border p-2">
-          <h2 className="font-monocraft text-center text-xl">Loja</h2>
+        <div className="bg-primary-600 border-primary-500/40 flex h-full flex-col gap-6 overflow-hidden rounded-xl border py-4">
+          <h2 className="font-monocraft text-center text-2xl font-bold">
+            Loja
+          </h2>
+
+          <div className="flex w-full flex-col items-center justify-center gap-4">
+            <div className="size-40">
+              <AspectRatio ratio={1}>
+                <Image
+                  src="/images/pixel-gift.png"
+                  alt="Presente"
+                  fill
+                  className="no-blur object-contain transition-transform hover:scale-110"
+                />
+              </AspectRatio>
+            </div>
+
+            <Link href="/crianca/loja">
+              <Button variant="pixel" size="pixel">
+                Ir para loja
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
