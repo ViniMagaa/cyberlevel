@@ -51,19 +51,9 @@ export default async function Avatars() {
 
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 xl:grid-cols-9">
         {teenAvatars.length > 0 ? (
-          teenAvatars.map(
-            (avatar, i) =>
-              avatar.imageUrl && (
-                <AspectRatio key={avatar.id} ratio={1 / 1}>
-                  <Image
-                    src={avatar.imageUrl}
-                    alt={`Avatar ${i + 1}`}
-                    fill
-                    className="rounded-md object-contain"
-                  />
-                </AspectRatio>
-              ),
-          )
+          teenAvatars.map((avatar) => (
+            <AvatarCard key={avatar.id} avatar={avatar} />
+          ))
         ) : (
           <p className="text-muted-foreground text-sm">
             Nenhum avatar encontrado.
