@@ -1,9 +1,11 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Card } from "@/components/ui/card";
 import { getUserSession } from "@/lib/auth";
 import { calculateStreak } from "@/utils/streak";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ChildRanking } from "./_components/child-ranking";
 import { ChildSignOutButton } from "./_components/child-sign-out-button";
 
 export default async function Dashboard() {
@@ -15,7 +17,7 @@ export default async function Dashboard() {
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col-reverse gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
-      <div className="col-span-2 flex flex-1/2 auto-rows-min flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-2xl lg:p-6">
+      <div className="col-span-2 flex h-screen flex-1/2 auto-rows-min flex-col gap-4 sm:gap-6 lg:max-w-2xl lg:p-6">
         <Link href="/crianca/missoes" className="h-fit sm:col-span-2">
           <div className="bg-primary-600 group border-primary-500/40 relative overflow-hidden rounded-xl border">
             <AspectRatio ratio={16 / 9} className="relative overflow-hidden">
@@ -44,27 +46,26 @@ export default async function Dashboard() {
             </div>
           </div>
         </Link>
-        <div className="bg-primary-600 border-primary-500/40 h-full overflow-hidden rounded-xl border p-2">
-          <h2 className="font-monocraft text-center text-xl">Ranking</h2>
-        </div>
-        <div className="bg-primary-600 border-primary-500/40 h-full overflow-hidden rounded-xl border p-2">
-          <h2 className="font-monocraft text-center text-xl">Loja</h2>
-        </div>
+
+        <ChildRanking userId={user.id} />
       </div>
 
       <div className="bg-primary-900 outline-primary-700 relative flex min-w-fit flex-col gap-12 rounded-3xl rounded-bl-3xl p-4 outline sm:p-6 lg:flex-1 lg:rounded-tr-none lg:rounded-br-none">
         <div className="flex items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <Image
-              src="/images/profile-picture.png"
-              alt="Usuário"
-              width={100}
-              height={100}
-              className="no-blur rounded-xl object-cover"
-            />
+            <Card className="bg-primary-600/20 border-primary-600 w-36 overflow-hidden p-0">
+              <AspectRatio ratio={1}>
+                <Image
+                  src={user.avatar?.imageUrl ?? "/images/profile-picture.png"}
+                  alt="Avatar selecionado"
+                  fill
+                  className="no-blur size-full object-contain"
+                />
+              </AspectRatio>
+            </Card>
             <div>
               <p className="font-monocraft text-2xl">{user.name}</p>
-              <span className="text-muted-foreground/80 font-monocraft">
+              <span className="font-monocraft text-white/50">
                 @{user.username}
               </span>
             </div>
@@ -91,9 +92,7 @@ export default async function Dashboard() {
             </div>
             <div>
               <p className="font-upheaval text-4xl">{xpTotal}</p>
-              <span className="text-muted-foreground font-monocraft">
-                pontos de XP
-              </span>
+              <span className="font-monocraft text-white/50">pontos de XP</span>
             </div>
           </div>
 
@@ -114,35 +113,13 @@ export default async function Dashboard() {
               <p className="font-upheaval text-4xl">
                 {streakTotal} dia{streakTotal === 1 ? "" : "s"}
               </p>
-              <span className="text-muted-foreground font-monocraft">
-                de ofensiva
-              </span>
+              <span className="font-monocraft text-white/50">de ofensiva</span>
             </div>
           </div>
         </div>
 
-        <div className="mx-auto space-y-4">
-          <h2 className="font-upheaval text-center text-2xl sm:text-4xl">
-            Conquistas
-          </h2>
-
-          <div className="flex flex-col gap-4 select-none sm:grid sm:grid-cols-3">
-            <div className="bg-primary-600 border-primary-500/40 mx-auto grid h-32 w-32 place-items-center rounded-xl border">
-              <h2 className="font-upheaval text-primary-400 text-center text-8xl">
-                ?
-              </h2>
-            </div>
-            <div className="bg-primary-600 border-primary-500/40 mx-auto grid h-32 w-32 place-items-center rounded-xl border">
-              <h2 className="font-upheaval text-primary-400 text-center text-8xl">
-                ?
-              </h2>
-            </div>
-            <div className="bg-primary-600 border-primary-500/40 mx-auto grid h-32 w-32 place-items-center rounded-xl border">
-              <h2 className="font-upheaval text-primary-400 text-center text-8xl">
-                ?
-              </h2>
-            </div>
-          </div>
+        <div className="bg-primary-600 border-primary-500/40 h-full overflow-hidden rounded-xl border p-2">
+          <h2 className="font-monocraft text-center text-xl">Loja</h2>
         </div>
       </div>
     </section>
