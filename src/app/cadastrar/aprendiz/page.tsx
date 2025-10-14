@@ -65,12 +65,14 @@ export default function RegisterPage() {
               </span>
             </div>
           </div>
-          <Button
-            className="m-auto py-6 text-xl font-semibold hover:gap-4"
-            size="lg"
-          >
-            Tenho 12 anos ou mais <ArrowRight className="size-5" />
-          </Button>
+          <Link href="/cadastrar/aprendiz/adolescente" className="mx-auto">
+            <Button
+              className="py-6 text-xl font-semibold hover:gap-4"
+              size="lg"
+            >
+              Tenho 12 anos ou mais <ArrowRight className="size-5" />
+            </Button>
+          </Link>
         </div>
       </section>
     </div>
