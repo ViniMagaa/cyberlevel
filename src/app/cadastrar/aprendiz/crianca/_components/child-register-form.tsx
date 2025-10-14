@@ -17,6 +17,7 @@ import { handleAuthError } from "@/lib/handle-auth-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@prisma/client";
 import { isPast, isValid, subYears } from "date-fns";
+import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -92,6 +93,7 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
     watch,
     register,
     trigger,
+    clearErrors,
   } = form;
 
   async function handleNext() {
@@ -121,6 +123,7 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
     }
 
     setStep((prev) => prev + 1);
+    clearErrors();
   }
 
   function handlePrev() {
@@ -182,7 +185,12 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
                 CyberLevel
               </h1>
             </div>
-            <Button variant="pixel" size="pixel" onClick={() => setStep(1)}>
+            <Button
+              type="button"
+              variant="pixel"
+              size="pixel"
+              onClick={() => setStep(1)}
+            >
               Iniciar jornada
             </Button>
           </div>
@@ -250,10 +258,16 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
             </p>
 
             <div className="flex flex-wrap justify-between gap-2">
-              <Button variant="pixel" size="pixel" onClick={handlePrev}>
+              <Button
+                type="button"
+                variant="pixel"
+                size="pixel"
+                onClick={handlePrev}
+              >
                 Voltar
               </Button>
               <Button
+                type="button"
                 variant="pixel"
                 size="pixel"
                 className="ml-auto"
@@ -291,10 +305,16 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
             </p>
 
             <div className="flex flex-wrap justify-between gap-2">
-              <Button variant="pixel" size="pixel" onClick={handlePrev}>
+              <Button
+                type="button"
+                variant="pixel"
+                size="pixel"
+                onClick={handlePrev}
+              >
                 Voltar
               </Button>
               <Button
+                type="button"
                 variant="pixel"
                 size="pixel"
                 className="ml-auto"
@@ -349,10 +369,16 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
             </p>
 
             <div className="flex flex-wrap justify-between gap-2">
-              <Button variant="pixel" size="pixel" onClick={handlePrev}>
+              <Button
+                type="button"
+                variant="pixel"
+                size="pixel"
+                onClick={handlePrev}
+              >
                 Voltar
               </Button>
               <Button
+                type="button"
                 variant="pixel"
                 size="pixel"
                 className="ml-auto"
@@ -439,7 +465,12 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
             />
 
             <div className="flex flex-wrap justify-between gap-2">
-              <Button variant="pixel" size="pixel" onClick={handlePrev}>
+              <Button
+                type="button"
+                variant="pixel"
+                size="pixel"
+                onClick={handlePrev}
+              >
                 Voltar
               </Button>
               <Button
@@ -449,7 +480,10 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
                 className="ml-auto"
                 disabled={isPending}
               >
-                {isPending ? "Cadastrando..." : "Cadastrar"}
+                <div className="flex items-center gap-2 text-base">
+                  Cadastrar
+                  {isPending && <Loader2Icon className="animate-spin" />}
+                </div>
               </Button>
             </div>
           </div>

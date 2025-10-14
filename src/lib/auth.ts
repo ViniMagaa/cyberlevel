@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 
 type UserSessionData = User &
-  Prisma.UserGetPayload<{ include: { currentArchetype: true } }>;
+  Prisma.UserGetPayload<{ include: { currentArchetype: true; avatar: true } }>;
 
 export async function getUserSession(): Promise<UserSessionData | null> {
   const supabase = await createClient();
@@ -17,7 +17,7 @@ export async function getUserSession(): Promise<UserSessionData | null> {
 
   const { data, error } = await supabase
     .from("User")
-    .select("*, currentArchetype:Archetype(*)")
+    .select("*, currentArchetype:Archetype(*), avatar:Avatar(*)")
     .eq("id", user.id)
     .single();
 
