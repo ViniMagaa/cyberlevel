@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/back-button";
+import { getUserSession } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { TeenNavbar } from "../../_components/teen-navbar";
 import { TeenActivities } from "./_components/teen-activities";
 
 type ModulePageProps = {
@@ -9,6 +9,9 @@ type ModulePageProps = {
 };
 
 export default async function ModulePage({ params }: ModulePageProps) {
+  const user = await getUserSession();
+  if (!user) return redirect("/entrar");
+
   const { id } = await params;
   const teenModule = await db.module.findUnique({
     where: { id },
@@ -27,9 +30,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     teenModule.archetype?.primaryColor || "var(--color-primary-500)";
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <TeenNavbar />
-
+    <div className="flex w-full flex-col gap-4 py-4">
       <div className="mx-auto flex w-full max-w-5xl flex-wrap gap-2 px-4">
         <BackButton size="icon" path="/adolescente" />
 

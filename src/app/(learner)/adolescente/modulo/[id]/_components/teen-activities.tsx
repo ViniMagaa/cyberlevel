@@ -81,7 +81,7 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
                       ) : (
                         <BookOpen />
                       )}
-                      <div className="flex w-full flex-1 flex-wrap items-center justify-between gap-2">
+                      <div className="flex w-full flex-1 items-center justify-between gap-2">
                         <div>
                           <h3 className="font-medium">{activity.title}</h3>
                           <p className="text-muted-foreground text-sm">
@@ -109,7 +109,7 @@ export function TeenActivities({ module, primaryColor }: TeenActivitiesProps) {
             !!selectedActivity && "top-4",
           )}
         >
-          <div className="sticky top-6 h-full">
+          <div className="sticky top-6 h-full sm:h-auto">
             <Card className="relative z-10 grid h-full place-items-center bg-neutral-950 text-center transition-transform">
               <ShineBorder shineColor={[primaryColor, primaryColor]} />
 

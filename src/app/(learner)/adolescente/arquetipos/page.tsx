@@ -13,9 +13,9 @@ export default async function TeenArchetypesPage() {
   });
 
   return (
-    <div className="flex min-h-screen w-full max-w-screen flex-col items-center justify-center gap-12 py-20">
+    <div className="flex h-full min-h-screen w-full max-w-screen flex-col items-center justify-center gap-12 py-20">
       <Particles
-        className="absolute inset-0 z-0"
+        className="fixed inset-0 z-0"
         quantity={100}
         ease={80}
         color="#ffffff"

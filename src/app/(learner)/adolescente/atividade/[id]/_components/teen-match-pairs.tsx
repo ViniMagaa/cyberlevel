@@ -1,6 +1,6 @@
 "use client";
 
-import Plasma from "@/components/plasma";
+import Beams from "@/components/beams";
 import { Button } from "@/components/ui/button";
 import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
@@ -165,14 +165,16 @@ export function TeenMatchPairs({
 
   return (
     <div className="relative grid min-h-screen w-full place-items-center py-12">
-      <div className="fixed inset-0 -z-10">
-        <Plasma
-          color={primaryColor}
-          speed={0.6}
-          direction="forward"
-          scale={0.8}
-          opacity={0.4}
-          mouseInteractive={true}
+      <div className="fixed -inset-15 -z-10 opacity-50">
+        <Beams
+          beamWidth={2}
+          beamHeight={15}
+          beamNumber={20}
+          lightColor={primaryColor}
+          speed={2}
+          noiseIntensity={1.75}
+          scale={0.2}
+          rotation={30}
         />
       </div>
 

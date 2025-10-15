@@ -76,7 +76,7 @@ export function TeenQuiz({
 
       {!started && !completed && (
         <div className="w-full max-w-2xl space-y-12 px-4 text-center">
-          <h1 className="text-5xl font-black uppercase md:text-8xl">
+          <h1 className="text-2xl font-black uppercase sm:text-4xl md:text-6xl">
             {quiz.title}
           </h1>
           <div>

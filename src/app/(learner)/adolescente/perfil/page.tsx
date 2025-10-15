@@ -1,17 +1,16 @@
 import { SettingsActions } from "@/components/settings-actions";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getUserSession } from "@/lib/auth";
-import { formatDate } from "@/utils/format-date";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-import { TeenNavbar } from "../_components/teen-navbar";
-import { Button } from "@/components/ui/button";
-import { ArrowRightLeft } from "lucide-react";
-import Link from "next/link";
-import { ChangeAvatarDialog } from "./_components/change-avatar-dialog";
 import { db } from "@/lib/prisma";
+import { formatDate } from "@/utils/format-date";
+import { ArrowRightLeft } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { ChangeAvatarDialog } from "./_components/change-avatar-dialog";
 
 export default async function ProfilePage() {
   const user = await getUserSession();
@@ -20,12 +19,10 @@ export default async function ProfilePage() {
   const avatars = await db.avatar.findMany({ where: { ageGroup: "TEEN" } });
 
   return (
-    <div className="w-full space-y-6">
-      <TeenNavbar userAvatarUrl={user.avatar?.imageUrl} />
-
+    <div className="w-full space-y-6 py-6">
       <h1 className="text-center text-4xl font-bold">Configurar perfil</h1>
 
-      <div className="mx-auto max-w-2xl space-y-4 px-4 pb-6">
+      <div className="mx-auto max-w-2xl space-y-4 px-4">
         <div className="mx-auto grid max-w-md grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
             <Card className="overflow-hidden p-0">
