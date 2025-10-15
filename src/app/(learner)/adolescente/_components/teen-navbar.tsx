@@ -3,9 +3,16 @@
 import { Logo } from "@/components/logo";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,13 +29,13 @@ const menuItems = [
     label: "Loja",
     href: "/adolescente/loja",
   },
-  {
-    label: "Perfil",
-    href: "/adolescente/perfil",
-  },
 ];
 
-export function TeenNavbar() {
+type TeenNavbarProps = {
+  userAvatarUrl?: string;
+};
+
+export function TeenNavbar({ userAvatarUrl }: TeenNavbarProps) {
   const [isMenuActive, setIsMenuActive] = useState(false);
 
   function handleToggleMenu() {
@@ -45,7 +52,7 @@ export function TeenNavbar() {
         onClick={handleToggleMenu}
       />
 
-      <nav className="flex items-center justify-between rounded-md px-6 py-4">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-md px-6 py-4">
         <Logo />
         <menu className="flex items-center gap-2 sm:gap-4">
           <div
@@ -78,7 +85,31 @@ export function TeenNavbar() {
               </Link>
             ))}
           </div>
-          <SignOutButton />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Image
+                src={userAvatarUrl ?? "/images/profile-picture.png"}
+                alt="Perfil"
+                width={36}
+                height={36}
+                className="border-input rounded-full border object-cover object-center"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="m-2" align="start">
+              <Link href="/adolescente/perfil">
+                <DropdownMenuItem>
+                  <User />
+                  Perfil
+                </DropdownMenuItem>
+              </Link>
+              <SignOutButton>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <LogOut /> Sair
+                </DropdownMenuItem>
+              </SignOutButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             className="inline-flex sm:hidden"
             variant="outline"

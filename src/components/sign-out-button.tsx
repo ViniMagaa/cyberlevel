@@ -14,11 +14,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { ReactNode, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 
-export function SignOutButton() {
+type SignOutButtonProps = {
+  children?: ReactNode;
+};
+
+export function SignOutButton({ children }: SignOutButtonProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -43,9 +47,11 @@ export function SignOutButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <LogOut />
-        </Button>
+        {children ?? (
+          <Button variant="outline" size="icon">
+            <LogOut />
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
