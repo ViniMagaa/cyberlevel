@@ -18,7 +18,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     include: {
       archetype: true,
       activities: {
-        include: { activityProgress: true },
+        include: { activityProgress: { where: { userId: user.id } } },
         orderBy: { order: "asc" },
       },
     },
