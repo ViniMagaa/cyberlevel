@@ -3,7 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import Preloader from "@/components/preloader";
+import NextTopLoader from "nextjs-toploader";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -32,7 +32,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Preloader>{children}</Preloader>
+          <NextTopLoader
+            color="#2db487" // cor da barra
+            height={3} // altura da barra (em px)
+            showSpinner={false} // desativa o spinner
+            crawlSpeed={300} // velocidade da animação
+            shadow="none" // remove sombra
+          />
+          {children}
+          {/* <Preloader>{children}</Preloader> */}
           <Toaster position="top-center" />
         </ThemeProvider>
       </body>
