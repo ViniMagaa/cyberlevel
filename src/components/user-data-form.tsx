@@ -170,7 +170,7 @@ export default function UserDataForm({ user }: UserDataFormProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "pl-3 text-left font-normal",
+                                "!rounded-md pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground",
                               )}
                             >
