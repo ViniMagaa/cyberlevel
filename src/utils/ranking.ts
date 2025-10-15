@@ -15,6 +15,7 @@ export async function getRanking(ageGroup?: AgeGroup) {
       username: true,
       xp: true,
       avatar: true,
+      currentArchetype: true,
     },
   });
 
