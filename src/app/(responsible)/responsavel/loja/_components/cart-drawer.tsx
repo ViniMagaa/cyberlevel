@@ -55,7 +55,7 @@ export function CartDrawer({ userId, cart }: CartDrawerProps) {
           <IShoppingCart /> Carrinho
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="!max-h-none">
+      <DrawerContent className="mt-0! h-[95vh] max-h-none!">
         <DrawerHeader>
           <DrawerTitle className="text-4xl font-bold">
             Carrinho de compras

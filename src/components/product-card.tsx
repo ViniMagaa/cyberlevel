@@ -30,6 +30,7 @@ type ProductCardProps = {
   product: Product;
   isInCart?: boolean;
   isInWishlist?: boolean;
+  showCartActions?: boolean;
 };
 
 export function ProductCard({
@@ -37,6 +38,7 @@ export function ProductCard({
   product,
   isInCart,
   isInWishlist,
+  showCartActions = true,
 }: ProductCardProps) {
   const [isPendingCart, startCartTransition] = useTransition();
   const [isPendingWishlist, startWishlistTransition] = useTransition();
@@ -89,12 +91,17 @@ export function ProductCard({
         )}
       </CardHeader>
       <CardContent
-        className={cn("h-full px-4", !isProductActive && "opacity-50")}
+        className={cn(
+          "flex h-full flex-col justify-between px-4",
+          !isProductActive && "opacity-50",
+        )}
       >
-        <CardTitle className="text-2xl font-bold">{product.name}</CardTitle>
-        <CardDescription>
-          <Paragraphs text={product.description} />
-        </CardDescription>
+        <div>
+          <CardTitle className="text-2xl font-bold">{product.name}</CardTitle>
+          <CardDescription>
+            <Paragraphs text={product.description} />
+          </CardDescription>
+        </div>
         <p className="text-lg font-black">
           {formatCurrency(Number(product.price))}
         </p>
@@ -132,7 +139,7 @@ export function ProductCard({
           </Button>
         )}
 
-        {isInCart ? (
+        {showCartActions && isInCart && (
           <Button
             variant="default"
             size="icon"
@@ -149,7 +156,9 @@ export function ProductCard({
               </>
             )}
           </Button>
-        ) : (
+        )}
+
+        {showCartActions && !isInCart && (
           <Button
             variant="outline"
             size="icon"
