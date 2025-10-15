@@ -1,8 +1,6 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/prisma";
-import Image from "next/image";
 import Link from "next/link";
 import { AvatarCard } from "./_components/avatar-card";
 
