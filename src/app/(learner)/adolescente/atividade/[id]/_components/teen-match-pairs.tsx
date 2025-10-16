@@ -264,17 +264,18 @@ export function TeenMatchPairs({
                   onClick={() => handleSelect(card)}
                   className={cn(
                     "rounded-full border px-4 py-3 text-center transition",
-                    card.matched && "bg-gray-300 opacity-50",
+                    card.matched && "opacity-50",
                   )}
                   style={{
-                    color: selectedLeft === card.id ? "white" : "black",
                     borderColor: card.matched
                       ? "transparent"
                       : selectedLeft === card.id
                         ? primaryColor + "55"
-                        : "#ccc",
+                        : "#404040",
                     backgroundColor:
-                      selectedLeft === card.id ? primaryColor + "55" : "white",
+                      selectedLeft === card.id
+                        ? primaryColor + "55"
+                        : "#171717",
                   }}
                 >
                   {card.content}
@@ -291,17 +292,18 @@ export function TeenMatchPairs({
                   onClick={() => handleSelect(card)}
                   className={cn(
                     "rounded-full border px-4 py-3 text-center transition",
-                    card.matched && "bg-gray-300 opacity-50",
+                    card.matched && "opacity-50",
                   )}
                   style={{
-                    color: selectedRight === card.id ? "white" : "black",
                     borderColor: card.matched
                       ? "transparent"
                       : selectedRight === card.id
                         ? primaryColor + "55"
-                        : "#ccc",
+                        : "#404040",
                     backgroundColor:
-                      selectedRight === card.id ? primaryColor + "55" : "white",
+                      selectedRight === card.id
+                        ? primaryColor + "55"
+                        : "#171717",
                   }}
                 >
                   {card.content}
