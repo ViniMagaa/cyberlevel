@@ -62,20 +62,19 @@
     }
   }
 
-  --animate-height-width: height-width 1s ease-in-out;
-
-  @keyframes height-width {
-    from {
-      opacity: 0;
-      height: 0px;
-      width: 0px;
+  @keyframes scale {
+    0% {
+      scale: 1;
     }
-    to {
-      opacity: 30%;
-      height: autofill;
-      width: autofill;
+    50% {
+      scale: 1.1;
+    }
+    100% {
+      scale: 1;
     }
   }
+
+  --animate-scale: scale 2s ease-in-out infinite;
 
   @keyframes float-diagonal {
     0%,

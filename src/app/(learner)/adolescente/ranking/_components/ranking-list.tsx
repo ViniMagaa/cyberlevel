@@ -2,13 +2,15 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Archetype, Avatar, User } from "@prisma/client";
+import { ActivityProgress, Archetype, Avatar, User } from "@prisma/client";
 import Image from "next/image";
+import { StreakBadge } from "../../_components/streak-badge";
 
 type RankingListProps = {
   users: (Pick<User, "id" | "name" | "username" | "xp"> & {
     currentArchetype?: Archetype | null;
     avatar: Avatar | null;
+    ActivityProgress?: ActivityProgress[] | null;
   })[];
   userId: string;
   showArchetypeName?: boolean;
@@ -55,16 +57,24 @@ export function RankingList({
                     />
                   </AspectRatio>
                 </Card>
-                {user.id === userId ? (
-                  <p className="text-xl font-bold">Você</p>
-                ) : (
-                  <div>
-                    <p className="font-semibold">{user.name}</p>
-                    <p className="text-sm font-thin text-white/50">
-                      @{user.username}
-                    </p>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  {user.id === userId ? (
+                    <p className="text-xl font-bold">Você</p>
+                  ) : (
+                    <div>
+                      <p className="font-semibold">{user.name}</p>
+                      <p className="text-sm font-thin text-white/50">
+                        @{user.username}
+                      </p>
+                    </div>
+                  )}
+                  {user.ActivityProgress && (
+                    <StreakBadge
+                      activityProgresses={user.ActivityProgress}
+                      small
+                    />
+                  )}
+                </div>
 
                 {showArchetypeName && (
                   <p

@@ -4,13 +4,14 @@ import { Archetype, Prisma } from "@prisma/client";
 import { ArrowRightLeft, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { StreakBadge } from "./streak-badge";
 
 type TeenHeaderProps = {
   user: Prisma.UserGetPayload<{ include: { avatar: true } }>;
   archetype: Archetype;
 };
 
-export function TeenHeader({ user, archetype }: TeenHeaderProps) {
+export async function TeenHeader({ user, archetype }: TeenHeaderProps) {
   return (
     <header className="mx-auto flex w-full max-w-6xl flex-col items-center overflow-hidden md:flex-row">
       <div className="mx-auto w-full space-y-6 p-6">
@@ -67,6 +68,8 @@ export function TeenHeader({ user, archetype }: TeenHeaderProps) {
             </Link>
           </Card>
         </div>
+
+        <StreakBadge userId={user.id} />
       </div>
 
       {archetype.imageUrl && (

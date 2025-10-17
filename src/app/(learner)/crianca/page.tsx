@@ -14,7 +14,7 @@ export default async function Dashboard() {
   if (!user) return redirect("/entrar");
 
   const xpTotal = user.xp;
-  const streakTotal = await calculateStreak(user.id);
+  const { streak } = await calculateStreak({ userId: user.id });
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col-reverse gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
@@ -112,7 +112,7 @@ export default async function Dashboard() {
             </div>
             <div>
               <p className="font-upheaval text-4xl">
-                {streakTotal} dia{streakTotal === 1 ? "" : "s"}
+                {streak} dia{streak === 1 ? "" : "s"}
               </p>
               <span className="font-monocraft text-white/50">de ofensiva</span>
             </div>
