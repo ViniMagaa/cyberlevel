@@ -10,13 +10,14 @@ import { redirect } from "next/navigation";
 import { ChildRanking } from "./_components/child-ranking";
 import { ChildSignOutButton } from "./_components/child-sign-out-button";
 import { ResponsibleLinkNotifier } from "@/components/responsible-link-notifier";
+import { cn } from "@/lib/utils";
 
 export default async function Dashboard() {
   const user = await getUserSession();
   if (!user) return redirect("/entrar");
 
   const xpTotal = user.xp;
-  const [{ streak }, responsibleLinks] = await Promise.all([
+  const [{ streak, isToday }, responsibleLinks] = await Promise.all([
     calculateStreak({ userId: user.id }),
     getResponsibleByLearnerId(user.id),
   ]);
@@ -94,7 +95,7 @@ export default async function Dashboard() {
                   src="/images/pixel-experience-icon.png"
                   alt="XP"
                   fill
-                  className="no-blur"
+                  className="no-blur transition-transform hover:scale-110"
                 />
               </AspectRatio>
             </div>
@@ -111,7 +112,12 @@ export default async function Dashboard() {
                   src="/images/pixel-clock-icon.png"
                   alt="Ofensiva"
                   fill
-                  className="no-blur"
+                  className={cn(
+                    "no-blur",
+                    !isToday
+                      ? "grayscale"
+                      : "transition-transform hover:scale-110",
+                  )}
                 />
               </AspectRatio>
             </div>

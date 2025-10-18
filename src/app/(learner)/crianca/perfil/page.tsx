@@ -10,13 +10,14 @@ import { redirect } from "next/navigation";
 import { ChildDeleteAccount } from "../_components/child-delete-account";
 import { getResponsibleByLearnerId } from "@/utils/responsible-link";
 import { ChildResponsibleLinkCard } from "../_components/child-responsible-link-card";
+import { cn } from "@/lib/utils";
 
 export default async function ProfilePage() {
   const user = await getUserSession();
   if (!user) return redirect("/entrar");
 
   const xpTotal = user.xp;
-  const [{ streak }, responsibleLinks] = await Promise.all([
+  const [{ streak, isToday }, responsibleLinks] = await Promise.all([
     calculateStreak({ userId: user.id }),
     getResponsibleByLearnerId(user.id),
   ]);
@@ -45,7 +46,7 @@ export default async function ProfilePage() {
                 </AspectRatio>
               </Card>
               <div className="font-monocraft text-center sm:text-left">
-                <p className="text-2xl font-bold">{user.name}</p>
+                <p className="text-2xl">{user.name}</p>
                 <span className="text-white/50">@{user.username}</span>
                 <p className="text-sm">{user.email}</p>
                 <p className="text-sm">
@@ -74,9 +75,7 @@ export default async function ProfilePage() {
                   src="/images/pixel-experience-icon.png"
                   alt="XP"
                   fill
-                  sizes="24"
-                  priority
-                  className="no-blur"
+                  className="no-blur transition-transform hover:scale-110"
                 />
               </AspectRatio>
             </div>
@@ -95,9 +94,12 @@ export default async function ProfilePage() {
                   src="/images/pixel-clock-icon.png"
                   alt="Ofensiva"
                   fill
-                  sizes="24"
-                  priority
-                  className="no-blur"
+                  className={cn(
+                    "no-blur",
+                    !isToday
+                      ? "opacity-70 grayscale"
+                      : "transition-transform hover:scale-110",
+                  )}
                 />
               </AspectRatio>
             </div>
