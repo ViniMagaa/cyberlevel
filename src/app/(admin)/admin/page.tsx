@@ -1,4 +1,3 @@
-import { SignOutButton } from "@/components/sign-out-button";
 import { getUserSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -15,8 +14,6 @@ export default async function Dashboard() {
             Você está no painel administrativo.
           </p>
         </div>
-
-        <SignOutButton />
       </div>
     </div>
   );

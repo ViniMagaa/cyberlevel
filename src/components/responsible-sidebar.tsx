@@ -4,6 +4,7 @@ import {
   Home,
   Settings,
   Store,
+  Users,
 } from "lucide-react";
 
 import {
@@ -19,11 +20,19 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { Logo } from "./logo";
+import { SignOutButton } from "./sign-out-button";
+import { Separator } from "./ui/separator";
 
 export function ResponsibleSidebar() {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="gap-0">
+        <div className="flex items-center justify-between p-4">
+          <Logo />
+          <SignOutButton />
+        </div>
+        <Separator />
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -38,7 +47,7 @@ export function ResponsibleSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              {/* ARtigos */}
+              {/* Artigos */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/responsavel/artigos">
@@ -47,6 +56,16 @@ export function ResponsibleSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+
+              {/* Estatísticas */}
+              <SidebarMenuSubItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/responsavel/aprendizes">
+                    <Users />
+                    <span>Aprendizes</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuSubItem>
 
               {/* Estatísticas */}
               <SidebarMenuSubItem>

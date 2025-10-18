@@ -1,5 +1,4 @@
 import { Paragraphs } from "@/components/paragraphs";
-import { SignOutButton } from "@/components/sign-out-button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +37,6 @@ export default async function Dashboard() {
           <h1 className="text-2xl font-bold sm:text-xl md:text-3xl">
             Olá, {user.name}!
           </h1>
-          <div className="ml-auto">
-            <SignOutButton />
-          </div>
         </CardHeader>
       </Card>
 

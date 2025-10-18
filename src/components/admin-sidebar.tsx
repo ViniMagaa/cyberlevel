@@ -29,11 +29,19 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { Logo } from "./logo";
+import { Separator } from "./ui/separator";
+import { SignOutButton } from "./sign-out-button";
 
 export function AdminSidebar() {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="gap-0">
+        <div className="flex items-center justify-between p-4">
+          <Logo />
+          <SignOutButton />
+        </div>
+        <Separator />
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
