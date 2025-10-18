@@ -9,26 +9,38 @@ datasource db {
 }
 
 model User {
-  id                 String             @id @default(uuid())
-  name               String
-  username           String             @unique
-  email              String             @unique
-  birthdate          DateTime
-  ageGroup           AgeGroup?
-  role               UserRole
-  createdAt          DateTime           @default(now())
-  xp                 Int                @default(0)
-  currentArchetypeId String?
-  cart               ShoppingCart?      @relation("ShoppingCartToUser")
-  orders             Order[]
-  wishlist           Wishlist?
-  address            Address[]
-  currentArchetype   Archetype?         @relation(fields: [currentArchetypeId], references: [id])
-  articles           Article[]
-  articleViews       ArticleView[]
-  ActivityProgress   ActivityProgress[]
-  avatarId           String?
-  avatar             Avatar?            @relation("UserAvatar", fields: [avatarId], references: [id])
+  id                          String             @id @default(uuid())
+  name                        String
+  username                    String             @unique
+  email                       String             @unique
+  birthdate                   DateTime
+  ageGroup                    AgeGroup?
+  role                        UserRole
+  createdAt                   DateTime           @default(now())
+  xp                          Int                @default(0)
+  currentArchetypeId          String?
+  cart                        ShoppingCart?      @relation("ShoppingCartToUser")
+  orders                      Order[]
+  wishlist                    Wishlist?
+  address                     Address[]
+  currentArchetype            Archetype?         @relation(fields: [currentArchetypeId], references: [id])
+  articles                    Article[]
+  articleViews                ArticleView[]
+  activityProgress            ActivityProgress[]
+  avatarId                    String?
+  avatar                      Avatar?            @relation("UserAvatar", fields: [avatarId], references: [id])
+  responsibleLinksResponsible ResponsibleLink[]  @relation("ResponsibleLinksResponsible")
+  responsibleLinksApprentice  ResponsibleLink[]  @relation("ResponsibleLinksApprentice")
+}
+
+model ResponsibleLink {
+  id            String                @id @default(uuid())
+  responsibleId String
+  learnerId     String
+  status        ResponsibleLinkStatus @default(PENDING)
+  createdAt     DateTime              @default(now())
+  responsible   User                  @relation("ResponsibleLinksResponsible", fields: [responsibleId], references: [id])
+  learner       User                  @relation("ResponsibleLinksApprentice", fields: [learnerId], references: [id])
 }
 
 model Avatar {
@@ -240,4 +252,10 @@ enum ProgressStatus {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+}
+
+enum ResponsibleLinkStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
