@@ -182,6 +182,7 @@ export function ModuleForm({ module, archetypes }: ModuleFormProps) {
       pixelIslandImage: undefined,
       pixelBackgroundImageUrl: module?.pixelBackgroundImageUrl ?? undefined,
       pixelIslandImageUrl: module?.pixelIslandImageUrl ?? undefined,
+      iconUrl: module?.iconUrl ?? undefined,
     },
   });
 
