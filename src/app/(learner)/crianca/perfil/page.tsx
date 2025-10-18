@@ -8,13 +8,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChildDeleteAccount } from "../_components/child-delete-account";
+import { getResponsibleByLearnerId } from "@/utils/responsible-link";
+import { ChildResponsibleLinkCard } from "../_components/child-responsible-link-card";
 
 export default async function ProfilePage() {
   const user = await getUserSession();
   if (!user) return redirect("/entrar");
 
   const xpTotal = user.xp;
-  const { streak } = await calculateStreak({ userId: user.id });
+  const [{ streak }, responsibleLinks] = await Promise.all([
+    calculateStreak({ userId: user.id }),
+    getResponsibleByLearnerId(user.id),
+  ]);
+
+  const acceptedResponsibleLinks = responsibleLinks.filter(
+    ({ status }) => status === "ACCEPTED",
+  );
+  const pendingResponsibleLinks = responsibleLinks.filter(
+    ({ status }) => status === "PENDING",
+  );
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col rounded-tl-3xl rounded-bl-3xl outline">
@@ -33,10 +45,12 @@ export default async function ProfilePage() {
                 </AspectRatio>
               </Card>
               <div className="font-monocraft text-center sm:text-left">
-                <p className="text-2xl">{user.name}</p>
+                <p className="text-2xl font-bold">{user.name}</p>
                 <span className="text-white/50">@{user.username}</span>
-                <p>{user.email}</p>
-                <p>{formatDate(new Date(user.birthdate))}</p>
+                <p className="text-sm">{user.email}</p>
+                <p className="text-sm">
+                  {formatDate(new Date(user.birthdate))}
+                </p>
               </div>
             </div>
 
@@ -95,6 +109,44 @@ export default async function ProfilePage() {
             </div>
           </div>
         </Card>
+
+        <section className="col-span-full space-y-2">
+          <h1 className="font-upheaval text-2xl sm:text-4xl">Responsáveis</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {acceptedResponsibleLinks.length > 0 ? (
+              acceptedResponsibleLinks.map((responsibleLink) => (
+                <ChildResponsibleLinkCard
+                  key={responsibleLink.id}
+                  responsibleLink={responsibleLink}
+                />
+              ))
+            ) : (
+              <p className="font-monocraft text-sm text-white/50">
+                Nenhum encontrado.
+              </p>
+            )}
+          </div>
+        </section>
+
+        <section className="col-span-full space-y-2">
+          <h1 className="font-upheaval text-2xl sm:text-4xl">Solicitações</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {pendingResponsibleLinks.length > 0 ? (
+              pendingResponsibleLinks.map((responsibleLink) => (
+                <ChildResponsibleLinkCard
+                  key={responsibleLink.id}
+                  responsibleLink={responsibleLink}
+                />
+              ))
+            ) : (
+              <p className="font-monocraft text-sm text-white/50">
+                Nenhuma encontrada.
+              </p>
+            )}
+          </div>
+        </section>
       </div>
     </section>
   );

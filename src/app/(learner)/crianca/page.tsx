@@ -1,23 +1,33 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getUserSession } from "@/lib/auth";
+import { getResponsibleByLearnerId } from "@/utils/responsible-link";
 import { calculateStreak } from "@/utils/streak";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChildRanking } from "./_components/child-ranking";
 import { ChildSignOutButton } from "./_components/child-sign-out-button";
-import { Button } from "@/components/ui/button";
+import { ResponsibleLinkNotifier } from "@/components/responsible-link-notifier";
 
 export default async function Dashboard() {
   const user = await getUserSession();
   if (!user) return redirect("/entrar");
 
   const xpTotal = user.xp;
-  const { streak } = await calculateStreak({ userId: user.id });
+  const [{ streak }, responsibleLinks] = await Promise.all([
+    calculateStreak({ userId: user.id }),
+    getResponsibleByLearnerId(user.id),
+  ]);
 
   return (
     <section className="bg-primary-800 outline-primary-400/40 ml-20 flex min-h-screen w-full flex-col gap-4 rounded-tl-3xl rounded-bl-3xl p-4 outline sm:gap-6 sm:p-6 lg:flex-row lg:gap-0 lg:p-0">
+      <ResponsibleLinkNotifier
+        responsibleLinks={responsibleLinks}
+        redirectTo="/crianca/perfil"
+      />
+
       <div className="col-span-2 flex h-screen flex-1/2 auto-rows-min flex-col gap-4 sm:gap-6 lg:max-w-2xl lg:p-6">
         <Link href="/crianca/missoes" className="h-fit sm:col-span-2">
           <div className="bg-primary-600 group border-primary-500/40 relative overflow-hidden rounded-xl border">
@@ -50,7 +60,6 @@ export default async function Dashboard() {
 
         <ChildRanking userId={user.id} />
       </div>
-
       <div className="bg-primary-900 outline-primary-700 flex min-w-fit flex-col gap-12 rounded-3xl rounded-bl-3xl p-4 outline sm:p-6 lg:flex-1 lg:rounded-tr-none lg:rounded-br-none">
         <div className="flex items-center justify-between gap-4">
           <div className="mx-auto flex flex-col items-center gap-4 text-center sm:mx-0 sm:flex-row sm:gap-6 sm:text-left">
@@ -120,8 +129,8 @@ export default async function Dashboard() {
             Loja
           </h2>
 
-          <div className="flex w-full flex-col items-center justify-center gap-4">
-            <div className="size-20 sm:size-40">
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="size-20 sm:size-30">
               <AspectRatio ratio={1}>
                 <Image
                   src="/images/pixel-gift.png"

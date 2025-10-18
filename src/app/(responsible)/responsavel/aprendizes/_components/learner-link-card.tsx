@@ -17,6 +17,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { responsibleLinkStatus } from "@/utils/enums";
 import { formatDate } from "@/utils/format-date";
+import { deleteResponsibleLinkById } from "@/utils/responsible-link";
 import { ResponsibleLink, User } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -24,7 +25,6 @@ import { Loader2Icon, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { deleteResponsibleLinkById } from "../actions";
 
 type LearnerLinkCardProps = {
   responsibleLink: ResponsibleLink & { learner: User };

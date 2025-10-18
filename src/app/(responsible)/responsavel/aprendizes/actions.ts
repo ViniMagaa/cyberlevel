@@ -61,16 +61,3 @@ export async function getLearnersByResponsibleId(
 
   return learners;
 }
-
-export async function deleteResponsibleLinkById(id: string) {
-  try {
-    await db.responsibleLink.delete({
-      where: { id },
-    });
-    revalidatePath("/");
-  } catch (error) {
-    const message = formatPrismaError(error);
-    console.error("Erro ao deletar link aprendiz - responsável:", message);
-    throw new Error(`Erro ao deletar link aprendiz - responsável: ${message}`);
-  }
-}
