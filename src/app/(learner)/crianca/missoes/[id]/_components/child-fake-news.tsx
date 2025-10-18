@@ -8,6 +8,7 @@ import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TFakeNewsContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
+import { format } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,12 +42,12 @@ export function ChildFakeNews({
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-fake-news-background.png"
         alt="Fake News"
         fill
-        className="no-blur fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur fixed -z-10 object-cover brightness-90"
       />
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-15 sm:gap-20 md:flex-row md:justify-center">
         {(!started || completed) && (
@@ -80,8 +81,8 @@ export function ChildFakeNews({
 
         {started && !completed && (
           <div className="flex flex-col gap-4">
-            <div className="flex w-full max-w-2xl flex-col gap-2 border-6 border-black bg-neutral-200 p-4 text-black shadow-2xl">
-              <div className="font-monocraft border-2 border-black bg-neutral-300 px-2 py-1 overflow-ellipsis">
+            <div className="flex w-full max-w-2xl flex-col gap-2 border-black bg-neutral-200 p-4 text-black shadow-2xl">
+              <div className="font-monocraft line-clamp-1 border border-black bg-neutral-300 px-2 py-1 break-all overflow-ellipsis">
                 {fakeNews.source}
               </div>
               {fakeNews.imageUrl && (
@@ -94,11 +95,24 @@ export function ChildFakeNews({
                   />
                 </AspectRatio>
               )}
-              <h1 className="font-upheaval text-4xl">{fakeNews.title}</h1>
+              <h1 className="font-upheaval text-2xl sm:text-4xl">
+                {fakeNews.title}
+              </h1>
               <Separator className="h-2 bg-black" />
               {fakeNews.subtitle && (
                 <h2 className="font-monocraft text-xl">{fakeNews.subtitle}</h2>
               )}
+              <div className="font-monocraft text-neutral-600">
+                <p className="text-sm font-semibold">
+                  {fakeNews.author ? fakeNews.author : "Sem autor"}
+                </p>
+                <p className="text-sm font-semibold">
+                  {fakeNews.publicationDate
+                    ? "Data de publicação: " +
+                      format(fakeNews.publicationDate, "dd/MM/yyyy")
+                    : "Sem data de publicação"}
+                </p>
+              </div>
               <div className="flex flex-col gap-6">
                 <Paragraphs text={fakeNews.text} className="text-neutral-700" />
 
@@ -114,7 +128,7 @@ export function ChildFakeNews({
                   </p>
                 )}
 
-                <div className="flex gap-4 *:flex-1">
+                <div className="flex flex-col gap-4 *:flex-1 sm:flex-row">
                   <button
                     disabled={!!isCorrect}
                     onClick={() => setIsFakeSelected(false)}
@@ -171,11 +185,15 @@ export function ChildFakeNews({
         )}
 
         {completed && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-6xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
-              Você identificou a notícia e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
+              Você completou a atividade e ganhou{" "}
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

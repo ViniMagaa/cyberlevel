@@ -59,12 +59,12 @@ export function ChildFakeChat({
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-fake-chat-background.png"
         alt="Fake Chat"
         fill
-        className="no-blur fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur -z-10 object-cover brightness-90"
       />
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-10 sm:gap-20 md:flex-row md:justify-center">
         <Image
@@ -121,18 +121,15 @@ export function ChildFakeChat({
 
               <div className="space-y-4">
                 <p className="font-monocraft text-center">
-                  Escolha sua resposta
+                  Escolha a melhor opção
                 </p>
 
-                <div className="flex flex-wrap gap-3 *:flex-1">
+                <div className="flex flex-col gap-3 *:flex-1">
                   {currentMessage.options.map((opt, i) => (
                     <Button
                       key={i}
                       onClick={() => handleAnswer(i)}
-                      disabled={
-                        selected !== null &&
-                        currentMessage.options[selected]?.isSafe
-                      }
+                      disabled={selected !== null}
                       className={cn(
                         "text-md h-auto max-h-none whitespace-break-spaces",
                         selected === i
@@ -186,11 +183,15 @@ export function ChildFakeChat({
         )}
 
         {completed && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-4xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
-              Você concluiu a simulação e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
+              Você completou a atividade e ganhou{" "}
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

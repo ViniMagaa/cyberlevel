@@ -41,31 +41,29 @@ export async function ChildRanking({ userId }: ChildRankingProps) {
             )}
 
             <div className="flex flex-1 items-center justify-between gap-1 p-2">
-              <div className="flex items-center gap-2">
-                <Card className="bg-primary-500 border-primary-400 w-12 overflow-hidden rounded-sm p-0">
-                  <AspectRatio ratio={1}>
-                    <Image
-                      src={
-                        user.avatar?.imageUrl ?? "/images/profile-picture.png"
-                      }
-                      alt={user.name}
-                      fill
-                      className="no-blur object-contain"
-                    />
-                  </AspectRatio>
-                </Card>
+              <Card className="bg-primary-500 border-primary-400 w-12 overflow-hidden rounded-sm p-0">
+                <AspectRatio ratio={1}>
+                  <Image
+                    src={user.avatar?.imageUrl ?? "/images/profile-picture.png"}
+                    alt={user.name}
+                    fill
+                    className="no-blur object-contain"
+                  />
+                </AspectRatio>
+              </Card>
+              <div className="flex flex-1 flex-col justify-between sm:flex-row">
                 {user.id === userId ? (
                   <p className="font-monocraft text-xl font-semibold">Você</p>
                 ) : (
                   <div>
                     <p className="font-monocraft">{user.name}</p>
-                    <p className="font-monocraft text-sm text-white/50">
+                    <p className="font-monocraft text-sm text-white/50 max-sm:hidden">
                       @{user.username}
                     </p>
                   </div>
                 )}
+                <p className="font-upheaval text-2xl">{user.xp} XP</p>
               </div>
-              <p className="font-upheaval text-2xl">{user.xp} XP</p>
             </div>
           </div>
         ))}

@@ -150,12 +150,12 @@ export function ChildMatchPairs({
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-match-pairs-background.png"
         alt="Match Pairs"
         fill
-        className="fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur fixed -z-10 object-cover brightness-90"
       />
 
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-8 sm:gap-12 md:flex-row md:justify-center">
@@ -188,6 +188,9 @@ export function ChildMatchPairs({
 
         {started && !completed && (
           <div className="flex w-full max-w-4xl flex-col items-center gap-12">
+            <p className="font-upheaval text-center text-3xl md:text-6xl">
+              {matchPairs.title}
+            </p>
             <div className="font-monocraft flex flex-col items-center gap-6 text-lg md:flex-row">
               <p>
                 Tempo restante: <strong>{timeLeft}s</strong>
@@ -197,7 +200,7 @@ export function ChildMatchPairs({
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-8">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
               {cards.map((card) => {
                 const isFlipped = flipped.includes(card.id) || card.matched;
 
@@ -251,11 +254,15 @@ export function ChildMatchPairs({
         )}
 
         {completed && (
-          <div className="flex flex-col items-center text-center">
-            <h2 className="font-upheaval text-6xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
               Você completou a atividade e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

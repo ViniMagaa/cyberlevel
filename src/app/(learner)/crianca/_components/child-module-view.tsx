@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { getEnabledActivityId } from "@/utils/activity";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { ChildActivityIsland } from "./child-activity-island";
-import { getEnabledActivityId } from "@/utils/activity";
 
 type ChildModuleViewProps = {
   modules: Prisma.ModuleGetPayload<{
@@ -16,6 +18,7 @@ type ChildModuleViewProps = {
 
 export function ChildModuleView({ modules }: ChildModuleViewProps) {
   const [moduleIndex, setModuleIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   function prevModule() {
     setModuleIndex((prev) => prev - 1);
@@ -35,22 +38,33 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
   return modules.length > 0 ? (
     <div className="outline-primary-400/40 relative ml-20 h-screen w-full overflow-hidden rounded-tl-3xl rounded-bl-3xl outline">
       <Image
-        src={selectedModule.pixelBackgroundImageUrl!}
+        src={selectedModule.pixelBackgroundImageUrl || ""}
         alt={selectedModule.title}
         fill
         className="no-blur fixed object-cover blur-xs brightness-50"
       />
 
-      <div className="fixed top-4 left-28 z-10">
+      <div className="absolute top-6 left-6 z-30 text-shadow-lg">
         <h1 className="font-upheaval text-4xl">{selectedModule.title}</h1>
         <p className="text-muted-foreground font-monocraft text-sm">
           {selectedModule.description}
         </p>
       </div>
 
-      <ScrollArea className="max-sm:h-screen">
+      <ScrollArea className={cn(isMobile && "h-screen")}>
         <div
-          className={`flex h-[calc(${selectedModule.activities.length.toString()}*15rem+17rem)] flex-col items-center gap-20 pt-60 pb-30 sm:h-screen sm:w-[calc(${selectedModule.activities.length.toString()}*15rem+17rem)] sm:flex-row sm:py-0 sm:pl-20`}
+          className={cn(
+            "flex items-center gap-20",
+            isMobile ? "flex-col pt-60 pb-30" : "flex-row py-0 pl-20",
+          )}
+          style={{
+            height: isMobile
+              ? `calc(${selectedModule.activities.length} * 15rem + 20rem)`
+              : "100vh",
+            width: isMobile
+              ? "100%"
+              : `calc(${selectedModule.activities.length} * 15rem + 30rem)`,
+          }}
         >
           {moduleIndex > 0 && (
             <Button
@@ -62,6 +76,7 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
               Anterior
             </Button>
           )}
+
           {selectedModule.activities.map((activity, index) => {
             const userProgress = activity.activityProgress[0];
             return (
@@ -75,6 +90,7 @@ export function ChildModuleView({ modules }: ChildModuleViewProps) {
               />
             );
           })}
+
           {moduleIndex < modules.length - 1 && (
             <Button
               variant="pixel"

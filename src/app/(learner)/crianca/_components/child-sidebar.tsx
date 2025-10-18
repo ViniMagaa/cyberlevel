@@ -41,7 +41,7 @@ export function ChildSidebar() {
       <div
         className={cn(
           "fixed inset-0 -z-10 bg-black/60 opacity-0 transition",
-          isMenuActive && "z-10 opacity-100",
+          isMenuActive && "z-40 opacity-100",
         )}
         onClick={handleToggleMenu}
       />

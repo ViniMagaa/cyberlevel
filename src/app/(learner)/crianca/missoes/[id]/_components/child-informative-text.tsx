@@ -32,12 +32,12 @@ export function ChildInformativeText({
     useActivity(userId, activity.id);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-informative-text-background.png"
         alt="Texto informativo"
         fill
-        className="no-blur fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur fixed -z-10 object-cover brightness-90"
       />
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-10 sm:gap-20 md:flex-row md:justify-center">
         {(!started || completed) && (
@@ -46,7 +46,7 @@ export function ChildInformativeText({
             alt="Livro"
             width={300}
             height={400}
-            className="no-blur"
+            className="no-blur max-sm:w-40"
           />
         )}
 
@@ -85,41 +85,43 @@ export function ChildInformativeText({
             <Card>
               <CardContent className="space-y-4 p-4">
                 <ScrollArea className="h-[60vh]">
-                  {informativeText.imageUrl && (
-                    <AspectRatio ratio={16 / 9}>
-                      <Image
-                        src={informativeText.imageUrl}
-                        alt={informativeText.title}
-                        fill
-                        className="rounded-md object-cover"
-                      />
-                    </AspectRatio>
-                  )}
-                  <div className="prose prose-neutral dark:prose-invert max-w-none">
-                    <Markdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        a: (props) => (
-                          <a
-                            {...props}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          />
-                        ),
-                      }}
-                    >
-                      {informativeText.content}
-                    </Markdown>
-                  </div>
-                  <div className="mt-6 flex justify-end">
-                    <Button
-                      className="font-monocraft"
-                      onClick={complete}
-                      disabled={isPending}
-                    >
-                      Concluir leitura
-                      {isPending && <Loader2Icon className="animate-spin" />}
-                    </Button>
+                  <div className="flex min-h-[60vh] flex-col justify-between gap-2">
+                    {informativeText.imageUrl && (
+                      <AspectRatio ratio={16 / 9}>
+                        <Image
+                          src={informativeText.imageUrl}
+                          alt={informativeText.title}
+                          fill
+                          className="rounded-md object-cover"
+                        />
+                      </AspectRatio>
+                    )}
+                    <div className="prose prose-neutral dark:prose-invert max-w-none">
+                      <Markdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a: (props) => (
+                            <a
+                              {...props}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            />
+                          ),
+                        }}
+                      >
+                        {informativeText.content}
+                      </Markdown>
+                    </div>
+                    <div className="flex justify-end">
+                      <Button
+                        className="font-monocraft"
+                        onClick={complete}
+                        disabled={isPending}
+                      >
+                        Concluir leitura
+                        {isPending && <Loader2Icon className="animate-spin" />}
+                      </Button>
+                    </div>
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -128,11 +130,15 @@ export function ChildInformativeText({
         )}
 
         {completed && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-4xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
-              Você concluiu a leitura e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
+              Você completou a atividade e ganhou{" "}
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

@@ -3,6 +3,7 @@
 import { RuleMessage } from "@/components/rule-message";
 import { Button } from "@/components/ui/button";
 import { useActivity } from "@/hooks/use-activity";
+import { cn } from "@/lib/utils";
 import { TThemedPasswordContent } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
@@ -67,12 +68,12 @@ export function ChildThemedPassword({
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-themed-password-background.png"
         alt="Themed Password"
         fill
-        className="no-blur fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur fixed -z-10 object-cover brightness-90"
       />
 
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-15 sm:gap-20 md:flex-row md:justify-center">
@@ -117,52 +118,56 @@ export function ChildThemedPassword({
               <input
                 type="text"
                 value={password}
+                onKeyDown={(e) => e.key === "Enter" && handleCheck()}
                 onChange={(e) => setPassword(e.target.value)}
                 className="font-monocraft absolute inset-0 h-full w-full bg-transparent px-6 text-xl text-black outline-none"
               />
             </div>
 
-            <div className="flex flex-col gap-4">
-              {themedPassword.rules
-                .slice(0, currentRuleIndex + 1)
-                .map((rule, index) => {
-                  const passed = validateRule(rule);
+            <div className="flex flex-col-reverse gap-4">
+              {themedPassword.rules.map((rule, index) => {
+                const passed = validateRule(rule);
 
-                  return (
-                    <div
-                      key={index}
-                      className="font-monocraft relative flex h-[80px] flex-col gap-2 py-1 text-base text-black"
-                    >
+                return (
+                  <div
+                    key={index}
+                    className={cn(
+                      "font-monocraft relative flex h-[80px] translate-y-2 flex-col gap-2 py-1 text-base text-black opacity-0 transition-all duration-500",
+                      currentRuleIndex >= index &&
+                        "static translate-0 opacity-100",
+                      index > currentRuleIndex && "absolute",
+                    )}
+                  >
+                    <Image
+                      src={
+                        passed
+                          ? "/images/pixel-themed-password-right-card.png"
+                          : "/images/pixel-themed-password-wrong-card.png"
+                      }
+                      alt="Regra"
+                      fill
+                      className="pointer-events-none -z-10 select-none"
+                    />
+                    <div className="flex items-center gap-2 px-4">
                       <Image
                         src={
                           passed
-                            ? "/images/pixel-themed-password-right-card.png"
-                            : "/images/pixel-themed-password-wrong-card.png"
+                            ? "/images/pixel-check-icon.png"
+                            : "/images/pixel-x-icon.png"
                         }
                         alt="Regra"
-                        fill
-                        className="pointer-events-none -z-10 select-none"
+                        width={18}
+                        height={18}
+                        className="pointer-events-none select-none"
                       />
-                      <div className="flex items-center gap-2 px-4">
-                        <Image
-                          src={
-                            passed
-                              ? "/images/pixel-check-icon.png"
-                              : "/images/pixel-x-icon.png"
-                          }
-                          alt="Regra"
-                          width={18}
-                          height={18}
-                          className="pointer-events-none select-none"
-                        />
-                        <strong>Regra {index + 1}</strong>
-                      </div>
-                      <p className="flex flex-1 items-center px-4 text-sm leading-none">
-                        <RuleMessage rule={rule} onlyText />
-                      </p>
+                      <strong>Regra {index + 1}</strong>
                     </div>
-                  );
-                })}
+                    <p className="flex flex-1 items-center px-4 text-sm leading-none">
+                      <RuleMessage rule={rule} onlyText />
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
             <Button
@@ -176,11 +181,15 @@ export function ChildThemedPassword({
         )}
 
         {completed && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-6xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
-              Você criou sua senha e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
+              Você completou a atividade e ganhou{" "}
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

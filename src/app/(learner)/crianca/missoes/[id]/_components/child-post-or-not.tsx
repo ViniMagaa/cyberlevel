@@ -48,12 +48,12 @@ export function ChildPostOrNot({
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="h-full w-full">
       <Image
         src="/images/pixel-post-or-not-background.png"
         alt="Postar ou Não Postar"
         fill
-        className="no-blur fixed top-0 left-0 -z-10 object-cover brightness-90"
+        className="no-blur fixed -z-10 object-cover brightness-90"
       />
       <div className="flex h-full w-full flex-col items-center gap-10 px-4 py-10 sm:gap-20 md:flex-row md:justify-center">
         {(!started || completed) && (
@@ -180,11 +180,15 @@ export function ChildPostOrNot({
         )}
 
         {completed && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <h2 className="font-upheaval text-4xl md:text-6xl">Parabéns!</h2>
-            <p className="font-monocraft text-xl leading-none">
-              Você concluiu a atividade e ganhou{" "}
-              <span className="font-upheaval text-4xl">{xpEarned} XP</span>
+          <div className="flex max-w-70 flex-col items-center justify-center text-center sm:max-w-md">
+            <h2 className="font-upheaval text-3xl sm:text-5xl md:text-6xl">
+              Parabéns!
+            </h2>
+            <p className="font-monocraft text-sm sm:text-xl sm:leading-none">
+              Você completou a atividade e ganhou{" "}
+              <span className="font-upheaval text-xl sm:text-4xl">
+                {xpEarned} XP
+              </span>
             </p>
             <Link href="/crianca/missoes">
               <Button className="font-monocraft mt-4">Voltar às missões</Button>

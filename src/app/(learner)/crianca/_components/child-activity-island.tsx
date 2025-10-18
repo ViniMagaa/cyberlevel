@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { activityType } from "@/utils/enums";
 import { Activity, ActivityProgress } from "@prisma/client";
@@ -27,13 +28,15 @@ export function ChildActivityIsland({
   islandImageUrl,
   index,
 }: ChildActivityIslandProps) {
+  const isMobile = useIsMobile();
   const status = userProgress?.status ?? "NOT_STARTED";
 
   return (
     <div
       className={cn(
-        "group shrink-0 scale-75 sm:scale-100",
-        index % 2 === 0 ? "sm:mt-16" : "sm:-mt-16",
+        "group shrink-0 scale-75",
+        !isMobile && "scale-100",
+        !isMobile && (index % 2 === 0 ? "mt-16" : "-mt-16"),
       )}
     >
       <DropdownMenu>
@@ -47,7 +50,14 @@ export function ChildActivityIsland({
               alt="Próxima atividade"
               width={100}
               height={50}
-              className="no-blur absolute bottom-4/5 left-1/2 -translate-x-4/10 scale-75 transition-transform group-hover:-translate-y-6 sm:bottom-25 sm:scale-100 sm:group-hover:-translate-y-8"
+              className={cn(
+                "no-blur animate-float-diagonal absolute bottom-4/5 left-1/2 -translate-x-4/10 scale-75 transition-transform group-hover:-translate-y-6",
+                !isMobile && "bottom-25 scale-100 group-hover:-translate-y-8",
+              )}
+              style={{
+                animationDelay: `${index * 300}ms`,
+                animationDuration: `${3000 + index * 500}ms`,
+              }}
             />
           )}
           <Image
@@ -62,7 +72,7 @@ export function ChildActivityIsland({
             className={cn(
               "no-blur animate-float-diagonal brightness-80 drop-shadow-xl/25 transition select-none",
               (!!userProgress || enabled) &&
-                "animate-none group-hover:scale-105 group-hover:brightness-100",
+                "group-hover:scale-105 group-hover:brightness-100",
             )}
             style={{
               animationDelay: `${index * 300}ms`,
@@ -105,3 +115,5 @@ export function ChildActivityIsland({
     </div>
   );
 }
+
+ChildActivityIsland.displayName = "ChildActivityIsland";
