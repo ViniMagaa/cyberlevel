@@ -10,7 +10,7 @@ type RankingListProps = {
   users: (Pick<User, "id" | "name" | "username" | "xp"> & {
     currentArchetype?: Archetype | null;
     avatar: Avatar | null;
-    ActivityProgress?: ActivityProgress[] | null;
+    activityProgress?: ActivityProgress[] | null;
   })[];
   userId: string;
   showArchetypeName?: boolean;
@@ -68,9 +68,9 @@ export function RankingList({
                       </p>
                     </div>
                   )}
-                  {user.ActivityProgress && (
+                  {user.activityProgress && (
                     <StreakBadge
-                      activityProgresses={user.ActivityProgress}
+                      activityProgresses={user.activityProgress}
                       small
                     />
                   )}

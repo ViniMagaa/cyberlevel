@@ -2,6 +2,7 @@ import {
   ActivityType,
   AgeGroup,
   ProgressStatus,
+  ResponsibleLinkStatus,
   UserRole,
 } from "@prisma/client";
 import { ThemedPasswordRules, TThemedPasswordRules } from "./activity-types";
@@ -42,4 +43,10 @@ export const progressStatus: Record<ProgressStatus, string> = {
   [ProgressStatus.COMPLETED]: "Concluído",
   [ProgressStatus.IN_PROGRESS]: "Iniciado",
   [ProgressStatus.NOT_STARTED]: "Não iniciado",
+};
+
+export const responsibleLinkStatus: Record<ResponsibleLinkStatus, string> = {
+  [ResponsibleLinkStatus.ACCEPTED]: "Aceito",
+  [ResponsibleLinkStatus.PENDING]: "Pendente",
+  [ResponsibleLinkStatus.REJECTED]: "Recusado",
 };

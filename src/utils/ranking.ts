@@ -16,7 +16,7 @@ export async function getRanking(ageGroup?: AgeGroup) {
       xp: true,
       avatar: true,
       currentArchetype: true,
-      ActivityProgress: {
+      activityProgress: {
         where: {
           status: "COMPLETED",
         },
@@ -37,7 +37,7 @@ export async function getRankingByArchetype() {
         orderBy: { xp: "desc" },
         include: {
           avatar: true,
-          ActivityProgress: {
+          activityProgress: {
             where: {
               status: "COMPLETED",
             },

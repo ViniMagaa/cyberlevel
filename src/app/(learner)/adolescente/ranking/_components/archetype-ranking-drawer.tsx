@@ -16,7 +16,7 @@ import { RankingList } from "./ranking-list";
 
 type ArchetypeRankingDrawerProps = {
   archetype: Prisma.ArchetypeGetPayload<{
-    include: { users: { include: { avatar: true; ActivityProgress: true } } };
+    include: { users: { include: { avatar: true; activityProgress: true } } };
   }>;
   userId: string;
 };
