@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { TeenHeader } from "./_components/teen-header";
+import { ResponsibleLinkNotifier } from "@/components/responsible-link-notifier";
+import { getResponsibleByLearnerId } from "@/utils/responsible-link";
 
 export default async function Dashboard() {
   const user = await getUserSession();
@@ -14,21 +16,29 @@ export default async function Dashboard() {
   const archetype = user?.currentArchetype;
   if (!archetype) return redirect("/adolescente/arquetipos");
 
-  const modules = await db.module.findMany({
-    where: { archetypeId: archetype.id },
-    include: {
-      activities: {
-        orderBy: { order: "asc" },
-        include: {
-          activityProgress: { where: { userId: user.id } },
+  const [modules, responsibleLinks] = await Promise.all([
+    db.module.findMany({
+      where: { archetypeId: archetype.id },
+      include: {
+        activities: {
+          orderBy: { order: "asc" },
+          include: {
+            activityProgress: { where: { userId: user.id } },
+          },
         },
       },
-    },
-    orderBy: { order: "asc" },
-  });
+      orderBy: { order: "asc" },
+    }),
+    getResponsibleByLearnerId(user.id),
+  ]);
 
   return (
     <div className="min-h-screen w-full">
+      <ResponsibleLinkNotifier
+        responsibleLinks={responsibleLinks}
+        redirectTo="/adolescente/responsaveis"
+      />
+
       <TeenHeader user={user} archetype={archetype} />
 
       <section className="border-t- relative z-20 flex h-full w-full flex-col items-center gap-20 overflow-hidden border-t px-8 py-20">

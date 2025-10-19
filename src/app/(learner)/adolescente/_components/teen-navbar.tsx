@@ -7,11 +7,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, User, Users2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -102,6 +103,13 @@ export function TeenNavbar({ userAvatarUrl }: TeenNavbarProps) {
                   Perfil
                 </DropdownMenuItem>
               </Link>
+              <Link href="/adolescente/responsaveis">
+                <DropdownMenuItem>
+                  <Users2 />
+                  Responsáveis
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
               <SignOutButton>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                   <LogOut /> Sair
