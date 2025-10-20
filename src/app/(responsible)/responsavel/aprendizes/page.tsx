@@ -3,7 +3,7 @@ import { getUserSession } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LearnerLinkCard } from "./_components/learner-link-card";
-import { getLearnersByResponsibleId } from "./actions";
+import { getLearnersByResponsibleId } from "@/utils/responsible-link";
 
 export default async function LearnersPage() {
   const user = await getUserSession();

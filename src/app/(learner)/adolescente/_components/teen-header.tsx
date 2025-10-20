@@ -1,10 +1,10 @@
+import { StreakBadge } from "@/components/streak-badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Archetype, Prisma } from "@prisma/client";
 import { ArrowRightLeft, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { StreakBadge } from "./streak-badge";
 
 type TeenHeaderProps = {
   user: Prisma.UserGetPayload<{ include: { avatar: true } }>;

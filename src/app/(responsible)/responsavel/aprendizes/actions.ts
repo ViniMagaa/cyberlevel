@@ -2,7 +2,6 @@
 
 import { formatPrismaError } from "@/lib/format-prisma-error";
 import { db } from "@/lib/prisma";
-import { ResponsibleLinkStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function createResponsibleLink({
@@ -43,21 +42,4 @@ export async function createResponsibleLink({
     console.error("Erro ao criar link aprendiz - responsável:", message);
     throw new Error(`Erro ao criar link aprendiz - responsável: ${message}`);
   }
-}
-
-export async function getLearnersByResponsibleId(
-  responsibleId: string,
-  status?: ResponsibleLinkStatus,
-) {
-  const learners = await db.responsibleLink.findMany({
-    where: {
-      responsibleId,
-      status,
-    },
-    include: {
-      learner: true,
-    },
-  });
-
-  return learners;
 }

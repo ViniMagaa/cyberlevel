@@ -2,8 +2,25 @@
 
 import { formatPrismaError } from "@/lib/format-prisma-error";
 import { db } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, ResponsibleLinkStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+
+export async function getLearnersByResponsibleId(
+  responsibleId: string,
+  status?: ResponsibleLinkStatus,
+) {
+  const learners = await db.responsibleLink.findMany({
+    where: {
+      responsibleId,
+      status,
+    },
+    include: {
+      learner: { include: { avatar: true } },
+    },
+  });
+
+  return learners;
+}
 
 export async function getResponsibleByLearnerId(learnerId: string) {
   const responsibleLinks = await db.responsibleLink.findMany({

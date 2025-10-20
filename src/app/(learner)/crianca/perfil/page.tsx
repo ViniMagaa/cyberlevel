@@ -115,7 +115,7 @@ export default async function ProfilePage() {
         <section className="col-span-full space-y-2">
           <h1 className="font-upheaval text-2xl sm:text-4xl">Responsáveis</h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
             {acceptedResponsibleLinks.length > 0 ? (
               acceptedResponsibleLinks.map((responsibleLink) => (
                 <ChildResponsibleLinkCard
@@ -134,7 +134,7 @@ export default async function ProfilePage() {
         <section className="col-span-full space-y-2">
           <h1 className="font-upheaval text-2xl sm:text-4xl">Solicitações</h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
             {pendingResponsibleLinks.length > 0 ? (
               pendingResponsibleLinks.map((responsibleLink) => (
                 <ChildResponsibleLinkCard

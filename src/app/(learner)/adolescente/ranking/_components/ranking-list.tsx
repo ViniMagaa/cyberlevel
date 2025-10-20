@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { ActivityProgress, Archetype, Avatar, User } from "@prisma/client";
 import Image from "next/image";
-import { StreakBadge } from "../../_components/streak-badge";
+import { StreakBadge } from "../../../../../components/streak-badge";
 
 type RankingListProps = {
   users: (Pick<User, "id" | "name" | "username" | "xp"> & {
