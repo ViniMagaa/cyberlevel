@@ -26,7 +26,7 @@ export default async function LearnersPage() {
         </Link>
       </div>
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {learners.length > 0 ? (
           learners.map((responsibleLink) => (
             <LearnerLinkCard
@@ -44,7 +44,7 @@ export default async function LearnersPage() {
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Solicitações</h2>
 
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {notAcceptedLearners.length > 0 ? (
             notAcceptedLearners.map((responsibleLink) => (
               <LearnerLinkCard

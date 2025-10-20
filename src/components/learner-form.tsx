@@ -3,7 +3,7 @@
 import { createResponsibleLink } from "@/app/(responsible)/responsavel/aprendizes/actions";
 import { formatDate } from "@/utils/format-date";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@prisma/client";
+import { Avatar, User } from "@prisma/client";
 import { ArrowLeft, Loader2Icon, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,11 +12,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { AspectRatio } from "./ui/aspect-ratio";
+import Image from "next/image";
 
 export const learnerForm = z.object({
   field: z.string().min(1, "Informe o campo"),
@@ -24,16 +26,18 @@ export const learnerForm = z.object({
 
 export type LearnerFormSchema = z.infer<typeof learnerForm>;
 
+type Learner = User & { avatar: Avatar | null };
+
 type LearnerFormProps = {
   responsibleId: string;
-  learners: User[];
+  learners: Learner[];
 };
 
 export function LearnerForm({ responsibleId, learners }: LearnerFormProps) {
   const [isPendingSearch, startSearchTransition] = useTransition();
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState<"email" | "username">("email");
-  const [learner, setLearner] = useState<User | null | undefined>(undefined);
+  const [learner, setLearner] = useState<Learner | null | undefined>(undefined);
 
   const router = useRouter();
 
@@ -145,16 +149,34 @@ export function LearnerForm({ responsibleId, learners }: LearnerFormProps) {
         </RadioGroup>
 
         {learner && (
-          <Card>
-            <CardContent>
-              <CardTitle className="text-xl font-bold">
-                {learner.name}
-              </CardTitle>
-              <p>{learner.email}</p>
-              <p className="text-white/50">@{learner.username}</p>
-              <p className="text-sm text-white/50">
-                Entrou em {formatDate(learner.createdAt)}
-              </p>
+          <Card className="flex-row flex-wrap gap-2 p-2">
+            <CardHeader className="h-25 w-25 overflow-hidden rounded-md bg-neutral-950 p-0">
+              <AspectRatio ratio={1}>
+                <Image
+                  src={
+                    learner.avatar?.imageUrl ?? "/images/profile-picture.png"
+                  }
+                  alt={learner.name}
+                  fill
+                  className="no-blur size-full object-contain"
+                />
+              </AspectRatio>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2 p-0">
+              <div>
+                <CardTitle className="line-clamp-1 text-xl font-bold break-all overflow-ellipsis">
+                  {learner.name}
+                </CardTitle>
+                <p className="line-clamp-1 text-sm break-all overflow-ellipsis text-white/50">
+                  {learner.email}
+                </p>
+                <p className="line-clamp-1 text-sm break-all overflow-ellipsis text-white/50">
+                  @{learner.username}
+                </p>
+                <p className="text-sm text-white/50">
+                  Entrou em {formatDate(learner.createdAt)}
+                </p>
+              </div>
             </CardContent>
           </Card>
         )}

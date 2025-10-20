@@ -8,9 +8,8 @@ export default async function AddLearnerPage() {
   if (!user) return redirect("/entrar");
 
   const learners = await db.user.findMany({
-    where: {
-      role: "LEARNER",
-    },
+    where: { role: "LEARNER" },
+    include: { avatar: true },
   });
 
   return (
