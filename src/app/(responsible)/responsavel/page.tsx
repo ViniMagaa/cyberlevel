@@ -23,40 +23,82 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LastArticles } from "./artigos/_components/last-articles";
+import { getLearnersByResponsibleId } from "@/utils/responsible-link";
 
 export default async function Dashboard() {
   const user = await getUserSession();
   if (!user) return redirect("/entrar");
 
-  const products = await getActiveProducts();
+  const [products, learners] = await Promise.all([
+    getActiveProducts(),
+    getLearnersByResponsibleId(user.id, "ACCEPTED"),
+  ]);
 
   return (
-    <div className="flex w-full flex-col gap-4 p-6 sm:grid sm:min-h-screen sm:grid-cols-12">
-      <Card className="sm:col-span-6 lg:col-span-5">
+    <div className="flex w-full flex-col gap-4 p-6 md:grid md:min-h-screen md:grid-cols-12">
+      <Card className="md:col-span-6 lg:col-span-5">
         <CardHeader className="flex flex-wrap items-center">
-          <h1 className="text-2xl font-bold sm:text-xl md:text-3xl">
+          <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
             Olá, {user.name}!
           </h1>
         </CardHeader>
       </Card>
 
-      <div className="sm:col-span-6 sm:row-span-5 lg:col-span-7">
+      <div className="md:col-span-6 md:row-span-5 lg:col-span-7">
         <Card className="h-full">
-          <CardContent className="flex gap-4">
-            <h2 className="text-2xl">Estatísticas</h2>
+          <CardContent className="flex flex-col gap-4">
+            <h2 className="text-2xl">Aprendizes</h2>
+
+            {learners.length > 0 ? (
+              <>
+                <div className="flex gap-2 *:flex-1">
+                  {learners.map(({ id, learner }) => (
+                    <Card
+                      key={id}
+                      className="w-20 overflow-hidden bg-neutral-950 p-0"
+                    >
+                      <AspectRatio ratio={1}>
+                        <Image
+                          src={
+                            learner.avatar?.imageUrl ??
+                            "/images/profile-picture.png"
+                          }
+                          alt={learner.name}
+                          fill
+                          className="no-blur size-full object-contain"
+                        />
+                      </AspectRatio>
+                    </Card>
+                  ))}
+                </div>
+
+                <Button className="w-full" asChild>
+                  <Link href="/responsavel/estatisticas">Estatísticas</Link>
+                </Button>
+              </>
+            ) : (
+              <div>
+                <p className="text-muted-foreground text-sm">
+                  Nenhum aprendiz encontrado.
+                </p>
+                <Link href="/responsavel/aprendizes">
+                  <Button className="mx-auto">Adicionar aprendiz</Button>
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      <Card className="pb-0 sm:col-span-6 sm:row-span-11 lg:col-span-5">
-        <ScrollArea className="h-[90svh)] sm:h-[calc(100svh-175px)]">
+      <Card className="pb-0 md:col-span-6 md:row-span-11 lg:col-span-5">
+        <ScrollArea className="h-[90svh)] md:h-[calc(100svh-175px)]">
           <CardContent className="pb-4">
             <LastArticles userId={user.id} />
           </CardContent>
         </ScrollArea>
       </Card>
 
-      <div className="sm:col-span-6 sm:row-span-7 lg:col-span-7">
+      <div className="md:col-span-6 md:row-span-7 lg:col-span-7">
         <Card className="h-full">
           <CardContent className="flex h-full flex-col justify-between gap-4">
             <h2 className="text-2xl">Produtos da loja</h2>
