@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
-import "./globals.css";
+import Preloader from "@/components/preloader";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from "next";
+import { Nunito_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -39,8 +40,8 @@ export default function RootLayout({
             crawlSpeed={300} // velocidade da animação
             shadow="none" // remove sombra
           />
-          {children}
-          {/* <Preloader>{children}</Preloader> */}
+          {/* {children} */}
+          <Preloader>{children}</Preloader>
           <Toaster position="top-center" />
         </ThemeProvider>
       </body>

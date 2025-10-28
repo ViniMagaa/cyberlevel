@@ -8,7 +8,7 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handleLoad = () => {
-      setTimeout(() => setLoading(false), 800);
+      setTimeout(() => setLoading(false), 100);
     };
     if (document.readyState === "complete") {
       handleLoad();
