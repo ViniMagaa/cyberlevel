@@ -16,9 +16,18 @@ import {
 } from "@/components/ui/scroll-based-velocity";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { FileChartPie, LockKeyhole, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  FileChartPie,
+  LockKeyhole,
+  Trophy,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const WHY_CYBERLEVEL_ITEMS = [
   {
@@ -77,8 +86,358 @@ const IMAGES_ROW_TEEN = [
   "/images/teen/themed-password.png",
 ];
 
+const MOBILE_SCREENS = [
+  {
+    component: (
+      <div className="flex h-full w-full overflow-hidden">
+        <div className="absolute top-3/7 left-1/2 -translate-1/2 space-y-4 text-center">
+          <BlurFade delay={0.25}>
+            <h1 className="font-mars text-2xl font-bold select-none">
+              CyberLevel
+            </h1>
+          </BlurFade>
+
+          <BlurFade delay={0.5}>
+            <p className="text-muted-foreground mx-auto max-w-150 text-center text-xs font-extralight tracking-wider select-none md:text-xl">
+              A plataforma que transforma segurança digital em uma jornada
+              divertida de aprendizado.
+            </p>
+          </BlurFade>
+        </div>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <div className="max-w-xs px-4">
+        <BlurFade className="flex flex-col gap-8">
+          <NeonGradientCard
+            borderRadius={100}
+            borderSize={1}
+            neonColors={{
+              firstColor: "#2db78022",
+              secondColor: "#2db780",
+            }}
+            className="m-auto flex w-min scale-80 items-center justify-center"
+          >
+            {WHY_CYBERLEVEL_ITEMS[0].icon}
+          </NeonGradientCard>
+          <div className="space-y-2 text-center">
+            <h3 className="text-xl font-semibold">
+              {WHY_CYBERLEVEL_ITEMS[0].title}
+            </h3>
+            <p className="text-muted-foreground max-w-sm text-center font-light">
+              {WHY_CYBERLEVEL_ITEMS[0].desc}
+            </p>
+          </div>
+        </BlurFade>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <div className="max-w-xs px-4">
+        <BlurFade className="flex flex-col gap-8">
+          <NeonGradientCard
+            borderRadius={100}
+            borderSize={1}
+            neonColors={{
+              firstColor: "#2db78022",
+              secondColor: "#2db780",
+            }}
+            className="m-auto flex w-min scale-80 items-center justify-center"
+          >
+            {WHY_CYBERLEVEL_ITEMS[1].icon}
+          </NeonGradientCard>
+          <div className="space-y-2 text-center">
+            <h3 className="text-xl font-semibold">
+              {WHY_CYBERLEVEL_ITEMS[1].title}
+            </h3>
+            <p className="text-muted-foreground max-w-sm text-center font-light">
+              {WHY_CYBERLEVEL_ITEMS[1].desc}
+            </p>
+          </div>
+        </BlurFade>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <div className="max-w-xs px-4">
+        <BlurFade className="flex flex-col gap-8">
+          <NeonGradientCard
+            borderRadius={100}
+            borderSize={1}
+            neonColors={{
+              firstColor: "#2db78022",
+              secondColor: "#2db780",
+            }}
+            className="m-auto flex w-min scale-80 items-center justify-center"
+          >
+            {WHY_CYBERLEVEL_ITEMS[2].icon}
+          </NeonGradientCard>
+          <div className="space-y-2 text-center">
+            <h3 className="text-xl font-semibold">
+              {WHY_CYBERLEVEL_ITEMS[2].title}
+            </h3>
+            <p className="text-muted-foreground max-w-sm text-center font-light">
+              {WHY_CYBERLEVEL_ITEMS[2].desc}
+            </p>
+          </div>
+        </BlurFade>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <section className="h-full overflow-hidden">
+        <div className="relative mx-auto flex h-full max-w-6xl flex-col items-center justify-between py-12 pb-32">
+          <div className="z-10 max-w-lg space-y-5 px-4 text-center backdrop-blur-2xl">
+            <BlurFade>
+              <h2 className="text-3xl font-bold">Design inteligente</h2>
+            </BlurFade>
+            <BlurFade delay={0.25}>
+              <p className="text-muted-foreground font-light">
+                Cada idade tem um olhar e nossa plataforma entende isso. O
+                CyberLevel{" "}
+                <span className="font-semibold text-white">
+                  muda de visual conforme o público
+                </span>
+                , garantindo engajamento e identificação.
+              </p>
+            </BlurFade>
+          </div>
+          <div className="relative -mr-[200px] sm:-mr-[500px] lg:mt-88 lg:mr-0">
+            <CardSwap
+              cardDistance={60}
+              verticalDistance={100}
+              delay={5000}
+              pauseOnHover={false}
+              skewAmount={2}
+              width={600}
+              height={400}
+            >
+              {CARDS.map((card) => (
+                <Card
+                  key={card.image}
+                  className="absolute top-0 left-1/2 overflow-hidden"
+                  style={{ borderColor: "#ffffff33" }}
+                >
+                  <CardHeader className="gap-0 p-4">
+                    <CardTitle className="text-xl font-bold">
+                      {card.title}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm">
+                      {card.description}
+                    </p>
+                  </CardHeader>
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    width={1920}
+                    height={1080}
+                    className="h-full w-full"
+                  />
+                </Card>
+              ))}
+            </CardSwap>
+          </div>
+        </div>
+      </section>
+    ),
+  },
+  {
+    component: (
+      <div className="flex w-screen flex-col items-center gap-8">
+        <div className="space-y-5 px-4 text-center">
+          <BlurFade>
+            <span className="text-md text-muted-foreground">
+              Se divirta jogando
+            </span>
+            <h2 className="text-2xl font-bold">
+              Aprender com o CyberLevel é divertido{" "}
+            </h2>
+          </BlurFade>
+          <BlurFade delay={0.25}>
+            <p className="text-md text-muted-foreground max-w-2xl font-light">
+              Com{" "}
+              <span className="font-semibold text-white">
+                missões curtas e jogos imersivos
+              </span>
+              , os aprendizes do mundo digital descobrem como se proteger e
+              navegar com sabedoria pela internet.
+            </p>
+          </BlurFade>
+        </div>
+
+        <ScrollVelocityContainer className="-z-20 w-screen">
+          <ScrollVelocityRow baseVelocity={2} direction={1} className="py-4">
+            {IMAGES_ROW_CHILD.map((src, idx) => (
+              <Image
+                key={idx}
+                src={src}
+                alt="Atividade da criança"
+                width={480}
+                height={320}
+                loading="lazy"
+                decoding="async"
+                className="mx-1 inline-block h-20 w-30 rounded-lg border object-cover"
+              />
+            ))}
+          </ScrollVelocityRow>
+          <ScrollVelocityRow baseVelocity={2} direction={-1} className="py-4">
+            {IMAGES_ROW_TEEN.map((src, idx) => (
+              <Image
+                key={idx}
+                src={src}
+                alt="Atividade do adolescente"
+                width={240}
+                height={160}
+                loading="lazy"
+                decoding="async"
+                className="mx-1 inline-block h-20 w-30 rounded-lg border object-cover"
+              />
+            ))}
+          </ScrollVelocityRow>
+        </ScrollVelocityContainer>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <div className="absolute top-1/2 left-1/2 flex w-screen -translate-1/2 flex-col items-center gap-4 px-4">
+        <BlurFade>
+          <h2 className="text-center text-2xl font-bold">
+            CyberLevel fora das telas
+          </h2>
+        </BlurFade>
+        <BlurFade delay={0.25}>
+          <p className="text-muted-foreground text-center text-sm font-light">
+            A{" "}
+            <strong className="font-bold text-white">loja do CyberLevel</strong>{" "}
+            oferece diversas opções com{" "}
+            <strong className="font-bold text-white">desafios lúdicos</strong>{" "}
+            que incentivam a criatividade, interação, diversão e vínculo com a
+            família.
+          </p>
+        </BlurFade>
+      </div>
+    ),
+  },
+  {
+    component: (
+      <div className="py-8">
+        <section className="relative flex h-full flex-col items-center justify-between gap-4 overflow-hidden border-b px-4">
+          <div className="pointer-events-none absolute inset-0 bottom-0 z-10 w-screen bg-gradient-to-t from-black to-[10%]" />
+
+          <div className="space-y-5 text-center">
+            <div>
+              <BlurFade>
+                <span className="text-md text-muted-foreground">
+                  Metodologia eficaz
+                </span>
+              </BlurFade>
+              <BlurFade>
+                <h2 className="text-2xl font-bold">Motivação que não acaba</h2>
+              </BlurFade>
+            </div>
+            <BlurFade delay={0.25}>
+              <p className="text-md text-muted-foreground max-w-2xl text-sm font-light">
+                O aprendizado sobre o mundo digital se torna uma aventura:
+                personalize seu avatar, encare desafios e avance entre heróis e
+                vilões online.{" "}
+                <span className="font-semibold text-white">
+                  Aprender nunca foi tão emocionante!
+                </span>
+              </p>
+            </BlurFade>
+          </div>
+
+          <Image
+            alt="CyberLevel"
+            src="/images/cyber-vision-avatar.png"
+            width={200}
+            height={200}
+            className="select-none"
+          />
+        </section>
+      </div>
+    ),
+  },
+];
+
 export default function Home() {
   const isMobile = useIsMobile();
+  const [step, setStep] = useState(0);
+  const router = useRouter();
+
+  if (isMobile) {
+    const current = MOBILE_SCREENS[step];
+    const isLast = step === MOBILE_SCREENS.length - 1;
+
+    return (
+      <div className="relative flex h-screen w-screen flex-col items-center justify-between">
+        <div className="fixed inset-0 -z-50 bg-gradient-to-br from-neutral-900 to-black" />
+
+        <header className="py-6">
+          <Logo onlyLogo />
+        </header>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="grid h-full w-screen place-items-center"
+          >
+            {current.component}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex w-full flex-wrap items-center gap-4 px-4 pb-8">
+          {step !== 0 ? (
+            <Button
+              size="icon"
+              variant="outline"
+              className="w-[50px] py-6 text-lg font-medium"
+              onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          ) : (
+            <Link
+              href="/entrar"
+              className="absolute bottom-24 left-1/2 w-full -translate-x-1/2 px-4"
+            >
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full py-6 text-lg"
+              >
+                Já possuo uma conta
+              </Button>
+            </Link>
+          )}
+          <Button
+            size="lg"
+            className="flex-1 py-6 text-lg font-medium"
+            onClick={() =>
+              !isLast
+                ? setStep((prev) =>
+                    Math.min(prev + 1, MOBILE_SCREENS.length - 1),
+                  )
+                : router.push("/cadastrar")
+            }
+          >
+            Próximo
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden">
@@ -88,7 +447,6 @@ export default function Home() {
         quantity={1000}
         ease={80}
         color="#ffffff"
-        refresh
       />
       <header className="relative h-screen">
         <div className="flex items-center justify-between border-b-[1px] border-neutral-700 px-5 py-5 md:px-10">
