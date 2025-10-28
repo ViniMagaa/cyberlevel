@@ -1,9 +1,10 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Gamepad2, UserRoundSearch } from "lucide-react";
 import Link from "next/link";
 import { MagicCard } from "./magicui/magic-card";
 import { Particles } from "./magicui/particles";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardTitle } from "./ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
+import { BlurFade } from "./ui/blur-fade";
 
 export function ChooseYourJourney() {
   return (
@@ -27,74 +28,79 @@ export function ChooseYourJourney() {
         refresh
       />
       <div className="m-auto w-full max-w-4xl space-y-12 px-4 py-12">
-        <h2 className="text-center text-3xl font-extrabold md:text-5xl lg:text-6xl">
-          Escolha sua jornada
-        </h2>
+        <BlurFade>
+          <h2 className="text-center text-3xl font-extrabold md:text-5xl lg:text-6xl">
+            Escolha sua jornada
+          </h2>
+        </BlurFade>
         <div className="flex w-full flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-          <Card className="m-1 h-full w-full max-w-[350px] border-none p-0 shadow-none">
-            <MagicCard
-              gradientColor="#2db780"
-              gradientFrom="#2db780"
-              gradientTo="#1a8f6b"
-              className="p-4"
-              gradientOpacity={0.25}
-            >
-              <CardContent className="flex flex-col justify-center gap-4 p-4 text-center">
-                <CardTitle className="text-2xl font-bold uppercase">
-                  Sou um responsável
-                </CardTitle>
-                <p className="text-lg font-light text-neutral-300">
-                  Use ferramentas simples, relatórios claros e dicas práticas
-                  para proteger seu filho online. Com o{" "}
-                  <strong className="font-bold text-white">CyberLevel</strong>,
-                  você entende, acompanha e cuida, sem complicação.
-                </p>
-                <Button
-                  className="hover ml-auto text-lg"
-                  size="lg"
-                  variant="outline"
-                  asChild
-                >
+          <BlurFade>
+            <Card className="m-1 h-full w-full max-w-[350px] border-none p-0 shadow-none">
+              <MagicCard
+                gradientColor="#2db780"
+                gradientFrom="#2db780"
+                gradientTo="#1a8f6b"
+                className="p-4"
+                gradientOpacity={0.25}
+              >
+                <CardContent className="flex flex-col justify-center gap-4 p-4 text-center">
+                  <UserRoundSearch size={100} className="mx-auto" />
+                  <div>
+                    <CardTitle className="text-2xl font-bold uppercase">
+                      Sou um responsável
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground text-sm font-light">
+                      Acompanhe e proteja seu filho no mundo digital com
+                      relatórios simples e dicas práticas.
+                    </CardDescription>
+                  </div>
                   <Link href="/cadastrar/responsavel">
-                    Prosseguir <ArrowRight />
+                    <Button
+                      className="mx-auto text-lg transition-all hover:gap-4"
+                      size="lg"
+                      variant="outline"
+                    >
+                      Prosseguir <ArrowRight />
+                    </Button>
                   </Link>
-                </Button>
-              </CardContent>
-            </MagicCard>
-          </Card>
+                </CardContent>
+              </MagicCard>
+            </Card>
+          </BlurFade>
 
-          <Card className="m-1 h-full w-full max-w-[350px] border-none p-0 shadow-none">
-            <MagicCard
-              gradientColor="#2db780"
-              gradientFrom="#2db780"
-              gradientTo="#1a8f6b"
-              className="p-4"
-              gradientOpacity={0.25}
-            >
-              <CardContent className="flex flex-col justify-center gap-4 p-4 text-center">
-                <CardTitle className="text-2xl font-bold uppercase">
-                  Sou um aprendiz
-                </CardTitle>
-                <p className="text-lg font-light text-neutral-300">
-                  Descubra como se proteger online com jogos, desafios e dicas
-                  fáceis de entender. Com o{" "}
-                  <strong className="font-bold text-white">CyberLevel</strong>,
-                  aprender sobre segurança digital é divertido, rápido e sem
-                  complicação.
-                </p>
-                <Button
-                  className="ml-auto text-lg"
-                  size="lg"
-                  variant="outline"
-                  asChild
-                >
+          <BlurFade>
+            <Card className="m-1 h-full w-full max-w-[350px] border-none p-0 shadow-none">
+              <MagicCard
+                gradientColor="#2db780"
+                gradientFrom="#2db780"
+                gradientTo="#1a8f6b"
+                className="p-4"
+                gradientOpacity={0.25}
+              >
+                <CardContent className="flex flex-col justify-center gap-4 p-4 text-center">
+                  <Gamepad2 size={100} className="mx-auto" />
+                  <div>
+                    <CardTitle className="text-2xl font-bold uppercase">
+                      Sou um aprendiz
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground text-sm font-light">
+                      Aprenda sobre segurança digital com jogos, desafios e
+                      histórias incríveis.
+                    </CardDescription>
+                  </div>
                   <Link href="/cadastrar/aprendiz">
-                    Prosseguir <ArrowRight />
+                    <Button
+                      className="mx-auto text-lg transition-all hover:gap-4"
+                      size="lg"
+                      variant="outline"
+                    >
+                      Prosseguir <ArrowRight />
+                    </Button>
                   </Link>
-                </Button>
-              </CardContent>
-            </MagicCard>
-          </Card>
+                </CardContent>
+              </MagicCard>
+            </Card>
+          </BlurFade>
         </div>
       </div>
     </section>
