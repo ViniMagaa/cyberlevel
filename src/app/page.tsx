@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/scroll-based-velocity";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -23,11 +24,9 @@ import {
   LockKeyhole,
   Trophy,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const WHY_CYBERLEVEL_ITEMS = [
   {
@@ -249,6 +248,9 @@ const MOBILE_SCREENS = [
   {
     component: (
       <div className="flex w-screen flex-col items-center gap-8">
+        <div className="pointer-events-none fixed -inset-y-[100vh] left-0 -z-10 w-1/4 bg-gradient-to-r from-black" />
+        <div className="pointer-events-none fixed -inset-y-[100vh] right-0 -z-10 w-1/4 bg-gradient-to-l from-black" />
+
         <div className="space-y-5 px-4 text-center">
           <BlurFade>
             <span className="text-md text-muted-foreground">
@@ -305,7 +307,7 @@ const MOBILE_SCREENS = [
   },
   {
     component: (
-      <div className="absolute top-1/2 left-1/2 flex w-screen -translate-1/2 flex-col items-center gap-4 px-4">
+      <div className="absolute flex h-screen w-screen flex-col items-center justify-center gap-4 px-4">
         <BlurFade>
           <h2 className="text-center text-2xl font-bold">
             CyberLevel fora das telas
@@ -321,47 +323,45 @@ const MOBILE_SCREENS = [
             família.
           </p>
         </BlurFade>
+        <RetroGrid angle={75} cellSize={40} className="-z-10" />
       </div>
     ),
   },
   {
     component: (
-      <div className="py-8">
-        <section className="relative flex h-full flex-col items-center justify-between gap-4 overflow-hidden border-b px-4">
-          <div className="pointer-events-none absolute inset-0 bottom-0 z-10 w-screen bg-gradient-to-t from-black to-[10%]" />
-
-          <div className="space-y-5 text-center">
-            <div>
-              <BlurFade>
-                <span className="text-md text-muted-foreground">
-                  Metodologia eficaz
-                </span>
-              </BlurFade>
-              <BlurFade>
-                <h2 className="text-2xl font-bold">Motivação que não acaba</h2>
-              </BlurFade>
-            </div>
-            <BlurFade delay={0.25}>
-              <p className="text-md text-muted-foreground max-w-2xl text-sm font-light">
-                O aprendizado sobre o mundo digital se torna uma aventura:
-                personalize seu avatar, encare desafios e avance entre heróis e
-                vilões online.{" "}
-                <span className="font-semibold text-white">
-                  Aprender nunca foi tão emocionante!
-                </span>
-              </p>
+      <section className="fixed flex h-screen flex-col items-center justify-between overflow-hidden px-4 pt-36">
+        <div className="space-y-5 text-center">
+          <div>
+            <BlurFade>
+              <span className="text-md text-muted-foreground">
+                Metodologia eficaz
+              </span>
+            </BlurFade>
+            <BlurFade>
+              <h2 className="text-2xl font-bold">Motivação que não acaba</h2>
             </BlurFade>
           </div>
+          <BlurFade delay={0.25}>
+            <p className="text-md text-muted-foreground max-w-2xl text-sm font-light">
+              O aprendizado sobre o mundo digital se torna uma aventura:
+              personalize seu avatar, encare desafios e avance entre heróis e
+              vilões online.{" "}
+              <span className="font-semibold text-white">
+                Aprender nunca foi tão emocionante!
+              </span>
+            </p>
+          </BlurFade>
+        </div>
 
-          <Image
-            alt="CyberLevel"
-            src="/images/cyber-vision-avatar.png"
-            width={200}
-            height={200}
-            className="select-none"
-          />
-        </section>
-      </div>
+        <Image
+          alt="CyberLevel"
+          src="/images/cyber-vision-avatar.png"
+          width={400}
+          height={400}
+          className="select-none"
+        />
+        <div className="pointer-events-none absolute inset-0 bottom-0 z-10 w-screen bg-gradient-to-t from-black to-[10%]" />
+      </section>
     ),
   },
 ];
@@ -369,14 +369,13 @@ const MOBILE_SCREENS = [
 export default function Home() {
   const isMobile = useIsMobile();
   const [step, setStep] = useState(0);
-  const router = useRouter();
 
   if (isMobile) {
     const current = MOBILE_SCREENS[step];
     const isLast = step === MOBILE_SCREENS.length - 1;
 
     return (
-      <div className="relative flex h-screen w-screen flex-col items-center justify-between">
+      <div className="relative flex h-screen w-screen flex-col items-center justify-between overflow-hidden">
         <div className="fixed inset-0 -z-50 bg-gradient-to-br from-neutral-900 to-black" />
 
         <header className="py-6">
@@ -390,7 +389,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="grid h-full w-screen place-items-center"
+            className="-z-10 grid h-full w-screen place-items-center"
           >
             {current.component}
           </motion.div>
@@ -420,20 +419,34 @@ export default function Home() {
               </Button>
             </Link>
           )}
-          <Button
-            size="lg"
-            className="flex-1 py-6 text-lg font-medium"
-            onClick={() =>
-              !isLast
-                ? setStep((prev) =>
-                    Math.min(prev + 1, MOBILE_SCREENS.length - 1),
-                  )
-                : router.push("/cadastrar")
-            }
-          >
-            Próximo
-            <ArrowRight className="h-5 w-5" />
-          </Button>
+          {isLast ? (
+            <Button
+              size="lg"
+              className="flex-1 py-6 text-lg font-medium"
+              onClick={() =>
+                !isLast &&
+                setStep((prev) => Math.min(prev + 1, MOBILE_SCREENS.length - 1))
+              }
+              asChild
+            >
+              <Link href="/cadastrar">
+                {step === 0 ? "Iniciar" : "Próximo"}
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              className="flex-1 py-6 text-lg font-medium"
+              onClick={() =>
+                !isLast &&
+                setStep((prev) => Math.min(prev + 1, MOBILE_SCREENS.length - 1))
+              }
+            >
+              {step === 0 ? "Iniciar" : "Próximo"}
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
     );
