@@ -55,13 +55,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
           variant="secondary"
           className={cn(
             !articleView && "bg-primary-600 hover:bg-primary-700!",
-            "absolute right-6 bottom-6 z-60 font-bold text-white",
+            "absolute right-6 bottom-6 z-20 font-bold text-white",
           )}
           asChild
         >
           <Link href={`/responsavel/artigos/${article.id}`}>Ler artigo</Link>
         </Button>
-        <div className="absolute z-50 h-full w-full bg-linear-to-t from-neutral-950 from-10% to-transparent" />
+        <div className="absolute z-10 h-full w-full bg-linear-to-t from-neutral-950 from-10% to-transparent" />
         <CardContent className="max-h-80 w-full space-y-2">
           <div>
             <p className="text-muted-foreground">

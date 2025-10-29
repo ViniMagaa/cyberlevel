@@ -17,75 +17,63 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { Logo } from "./logo";
 import { SignOutButton } from "./sign-out-button";
 import { Separator } from "./ui/separator";
 
+const items = [
+  {
+    title: "Início",
+    url: "/responsavel",
+    icon: Home,
+  },
+  {
+    title: "Artigos",
+    url: "/responsavel/artigos",
+    icon: FileText,
+  },
+  {
+    title: "Aprendizes",
+    url: "/responsavel/aprendizes",
+    icon: Users,
+  },
+  {
+    title: "Estatísticas",
+    url: "/responsavel/estatisticas",
+    icon: ChartNoAxesCombined,
+  },
+  {
+    title: "Loja",
+    url: "/responsavel/loja",
+    icon: Store,
+  },
+];
+
 export function ResponsibleSidebar() {
   return (
-    <Sidebar>
-      <SidebarContent className="gap-0">
+    <Sidebar className="z-40">
+      <SidebarContent className="gap-0 text-xl sm:text-base">
         <div className="flex items-center justify-between p-4">
           <Logo path="/responsavel" />
           <SignOutButton />
         </div>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-base">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {/* Início */}
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/responsavel">
-                    <Home />
-                    <span>Início</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              {/* Artigos */}
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/responsavel/artigos">
-                    <FileText />
-                    <span>Artigos</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              {/* Estatísticas */}
-              <SidebarMenuSubItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/responsavel/aprendizes">
-                    <Users />
-                    <span>Aprendizes</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuSubItem>
-
-              {/* Estatísticas */}
-              <SidebarMenuSubItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/responsavel/estatisticas">
-                    <ChartNoAxesCombined />
-                    <span>Estatísticas</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuSubItem>
-
-              {/* Loja */}
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/responsavel/loja">
-                    <Store />
-                    <span>Loja</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton className="gap-3 px-3 py-5" asChild>
+                    <Link href={item.url}>
+                      <item.icon className="size-5!" />
+                      <span className="text-lg">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -94,10 +82,10 @@ export function ResponsibleSidebar() {
         <SidebarMenu>
           {/* Configurações */}
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton className="gap-3 px-3 py-5" asChild>
               <Link href="/responsavel/configuracoes">
-                <Settings />
-                <span>Configurações</span>
+                <Settings className="size-5!" />
+                <span className="text-lg">Configurações</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
