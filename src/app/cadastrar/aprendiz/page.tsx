@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/back-button";
 import Prism from "@/components/prism";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -7,6 +8,8 @@ import Link from "next/link";
 export default function RegisterPage() {
   return (
     <div className="grid min-h-screen w-screen select-none md:grid-cols-2">
+      <BackButton size="icon" className="fixed top-4 left-4 z-10" />
+
       <section className="relative h-[50vh] overflow-hidden md:h-screen">
         <Image
           alt="CyberLevel"

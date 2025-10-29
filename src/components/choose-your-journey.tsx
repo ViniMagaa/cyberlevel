@@ -8,6 +8,7 @@ import { Particles } from "./magicui/particles";
 import { BlurFade } from "./ui/blur-fade";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
+import { BackButton } from "./back-button";
 
 export function ChooseYourJourney() {
   const isMobile = useIsMobile();
@@ -17,6 +18,8 @@ export function ChooseYourJourney() {
       id="start"
       className="border-t- relative grid min-h-lvh w-full place-items-center overflow-hidden border-t"
     >
+      {isMobile && <BackButton size="icon" className="fixed top-4 left-4" />}
+
       <div className="bg-primary-500 absolute top-0 -z-10 h-[1px] w-full overflow-hidden" />
       <div
         className="pointer-events-none absolute inset-0 -z-20 animate-[pulse_5s_ease-in-out_infinite] rounded-[inherit] opacity-20"

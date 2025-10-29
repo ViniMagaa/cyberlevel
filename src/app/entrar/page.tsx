@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { handleAuthError } from "@/lib/handle-auth-error";
+import { BackButton } from "@/components/back-button";
 
 const loginSchema = z.object({
   email: z
@@ -76,6 +77,8 @@ export default function LoginPage() {
       />
       <div className="pointer-events-none absolute inset-y-0 left-0 -z-10 h-lvh w-1/3 bg-gradient-to-r from-black" />
       <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-lvh w-1/3 bg-gradient-to-l from-black" />
+
+      <BackButton size="icon" className="fixed top-4 left-4" />
 
       <div className="absolute top-1/2 left-1/2 w-full max-w-sm -translate-1/2 p-4">
         <Card className="h-full w-full max-w-[350px] border-none p-0 shadow-none">

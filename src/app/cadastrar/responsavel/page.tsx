@@ -39,6 +39,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { BackButton } from "@/components/back-button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const registerSchema = z
   .object({
@@ -77,6 +79,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const isMobile = useIsMobile();
 
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -137,8 +140,10 @@ export default function RegisterPage() {
       <div className="pointer-events-none absolute inset-y-0 left-0 -z-10 min-h-screen w-1/3 bg-gradient-to-r from-black" />
       <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 min-h-screen w-1/3 bg-gradient-to-l from-black" />
 
+      <BackButton size="icon" className="fixed top-4 left-4" />
+
       <div className="grid min-h-screen w-full place-items-center p-4">
-        <Card className="m-4 mx-auto h-full w-full max-w-2xl">
+        <Card className="m-4 mx-auto w-full max-w-2xl">
           <CardHeader className="mb-4">
             <CardTitle className="text-4xl font-extrabold sm:text-5xl">
               Cadastre-se como responsável
@@ -147,7 +152,7 @@ export default function RegisterPage() {
               Preencha os campos abaixo para criar sua conta
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex sm:grow">
+          <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -280,20 +285,25 @@ export default function RegisterPage() {
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <div className="grid gap-1">
+                        <div className="grid">
                           <FormLabel>Aceito os termos e condições</FormLabel>
-                          <p className="text-muted-foreground text-sm">
-                            Ao clicar, você concorda com os{" "}
-                            <Link href="/termos" target="_blank">
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="p-0"
-                              >
-                                termos e condições do CyberLevel
-                              </Button>
-                            </Link>
-                          </p>
+                          <Link
+                            href="/termos"
+                            target={isMobile ? "_self" : "_blank"}
+                          >
+                            <Button
+                              type="button"
+                              variant="link"
+                              className="text-muted-foreground p-0 text-left text-xs whitespace-break-spaces"
+                            >
+                              <span>
+                                Ao clicar, você concorda com os{" "}
+                                <span className="text-white">
+                                  termos e condições do CyberLevel
+                                </span>
+                              </span>
+                            </Button>
+                          </Link>
                           <FormMessage />
                         </div>
                       </FormItem>

@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/back-button";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -52,7 +53,9 @@ Se tiver dúvidas, entre em contato com nossa equipe de suporte.
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="prose prose-neutral dark:prose-invert mx-auto max-w-5xl px-4 py-12">
+    <div className="prose prose-neutral dark:prose-invert mx-auto max-w-5xl px-4 py-16">
+      <BackButton className="absolute top-4 left-1 sm:hidden" />
+
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{

@@ -21,6 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@prisma/client";
@@ -79,6 +80,7 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
   const [isPending, startTransition] = useTransition();
   const [step, setStep] = useState(0);
   const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   const teenAvatars = avatars.filter((a) => a.ageGroup === "TEEN");
 
@@ -467,7 +469,10 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                     </FormControl>
                     <div className="grid gap-1">
                       <FormLabel>Aceito os termos e condições</FormLabel>
-                      <Link href="/termos" target="_blank">
+                      <Link
+                        href="/termos"
+                        target={isMobile ? "_self" : "_blank"}
+                      >
                         <Button
                           type="button"
                           variant="link"

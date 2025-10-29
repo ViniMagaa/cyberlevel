@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@prisma/client";
 import { isPast, isValid, subYears } from "date-fns";
@@ -71,6 +72,7 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
   const [isPending, startTransition] = useTransition();
   const [step, setStep] = useState(0);
   const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   const childAvatars = avatars.filter((a) => a.ageGroup === "CHILD");
 
@@ -448,7 +450,7 @@ export default function ChildRegisterForm({ avatars }: ChildRegisterFormProps) {
                   </FormControl>
                   <div className="grid gap-1">
                     <FormLabel>Aceito os termos e condições</FormLabel>
-                    <Link href="/termos" target="_blank">
+                    <Link href="/termos" target={isMobile ? "_self" : "_blank"}>
                       <Button
                         type="button"
                         variant="link"
