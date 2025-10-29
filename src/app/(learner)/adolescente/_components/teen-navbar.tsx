@@ -54,7 +54,7 @@ export function TeenNavbar({ userAvatarUrl }: TeenNavbarProps) {
       />
 
       <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-md px-6 py-4">
-        <Logo />
+        <Logo path="/adolescente" />
         <menu className="flex items-center gap-2 sm:gap-4">
           <div
             className={cn(
@@ -63,7 +63,7 @@ export function TeenNavbar({ userAvatarUrl }: TeenNavbarProps) {
             )}
           >
             <div className="grid grid-cols-3 place-items-start items-center sm:hidden">
-              <Logo onlyLogo />
+              <Logo onlyLogo path="/adolescente" />
               <p className="place-self-center text-2xl font-extrabold">Menu</p>
               <Button
                 variant="outline"
