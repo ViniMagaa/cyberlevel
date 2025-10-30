@@ -1,8 +1,8 @@
 "use client";
 
-import { userRoles } from "@/utils/enums";
+import { ageGroup, userRoles } from "@/utils/enums";
 import { formatDate } from "@/utils/format-date";
-import { Prisma, UserRole } from "@prisma/client";
+import { AgeGroup, Prisma, UserRole } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { UsersTableActions } from "./_components/users-table-actions";
 
@@ -12,6 +12,7 @@ type User = Prisma.UserGetPayload<{
     name: true;
     email: true;
     role: true;
+    ageGroup: true;
     createdAt: true;
     birthdate: true;
   };
@@ -34,6 +35,16 @@ export const columns: ColumnDef<User>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return userRoles[row.original.role as unknown as UserRole];
+    },
+  },
+  {
+    accessorKey: "ageGroup",
+    header: "Faixa etária",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return row.original.ageGroup
+        ? ageGroup[row.original.ageGroup as unknown as AgeGroup].slice(0, -1)
+        : "";
     },
   },
   {

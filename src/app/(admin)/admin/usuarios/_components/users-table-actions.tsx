@@ -56,7 +56,14 @@ export function UsersTableActions({ user }: UsersTableActionProps) {
   function handleDelete() {
     startTransition(async () => {
       try {
-        await deleteUser(user.id);
+        const result = await deleteUser(user.id);
+
+        if (!result.success) {
+          console.log(result.error);
+          toast.error("Erro ao excluir usuário");
+          return;
+        }
+
         toast.success("Usuário excluído");
       } catch (error) {
         console.error(error);

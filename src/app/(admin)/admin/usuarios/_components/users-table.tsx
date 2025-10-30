@@ -20,6 +20,7 @@ type UsersTableProps = {
       name: true;
       email: true;
       role: true;
+      ageGroup: true;
       createdAt: true;
       birthdate: true;
     };
