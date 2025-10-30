@@ -1,9 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, isPast, isValid, subYears } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { ArrowRight, CalendarIcon, Loader2Icon } from "lucide-react";
+import { isPast, subYears } from "date-fns";
+import {
+  ArrowRight,
+  AtSign,
+  Calendar,
+  Loader2Icon,
+  Lock,
+  LockOpen,
+  Mail,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -12,11 +20,10 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import signUp from "@/app/api/sign-up";
+import { BackButton } from "@/components/back-button";
 import Silk from "@/components/silk";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -34,13 +41,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { BackButton } from "@/components/back-button";
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { parseBirthdate } from "@/utils/format-date";
+import { PatternFormat } from "react-number-format";
 
 const registerSchema = z
   .object({
@@ -54,12 +61,14 @@ const registerSchema = z
         'Use letras, números, "_" ou "." sem iniciar ou terminar com ponto e sem pontos duplos',
       ),
     birthdate: z
-      .date("Data de nascimento inválida")
-      .refine(
-        (date) =>
-          isValid(date) && isPast(date) && date < subYears(new Date(), 3),
-        "Data de nascimento inválida ou muito recente",
-      ),
+      .string()
+      .min(10, "Data de nascimento obrigatória")
+      .refine((date) => {
+        const parsed = parseBirthdate(date);
+        return (
+          parsed !== null && isPast(parsed) && parsed < subYears(new Date(), 3)
+        );
+      }, "Data de nascimento inválida ou muito recente"),
     email: z.email("E-mail inválido").min(1, "O e-mail é obrigatório"),
     password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
     confirmPassword: z
@@ -86,6 +95,7 @@ export default function RegisterPage() {
     defaultValues: {
       name: "",
       username: "",
+      birthdate: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -93,21 +103,27 @@ export default function RegisterPage() {
     },
   });
 
-  const onSubmit = ({
+  function onSubmit({
     name,
     username,
     email,
     password,
     birthdate,
-  }: RegisterForm) => {
+  }: RegisterForm) {
     startTransition(async () => {
       try {
+        const parsedDate = parseBirthdate(birthdate);
+        if (!parsedDate) {
+          toast.error("Data de nascimento inválida");
+          return;
+        }
+
         const result = await signUp({
           name,
           username,
           email,
           password,
-          birthdate,
+          birthdate: parsedDate,
           role: "RESPONSIBLE",
         });
 
@@ -123,7 +139,7 @@ export default function RegisterPage() {
         toast.error("Erro ao cadastrar usuário");
       }
     });
-  };
+  }
 
   return (
     <div className="relative overflow-hidden">
@@ -164,9 +180,14 @@ export default function RegisterPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Input placeholder="Nome" {...field} />
-                        </FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <User />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <InputGroupInput placeholder="Nome" {...field} />
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -177,9 +198,17 @@ export default function RegisterPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Input placeholder="Nome de usuário" {...field} />
-                        </FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <AtSign />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <InputGroupInput
+                              placeholder="Nome de usuário"
+                              {...field}
+                            />
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -190,9 +219,14 @@ export default function RegisterPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Input placeholder="E-mail" {...field} />
-                        </FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Mail />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <InputGroupInput placeholder="E-mail" {...field} />
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -203,38 +237,20 @@ export default function RegisterPage() {
                     name="birthdate"
                     render={({ field }) => (
                       <FormItem>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "!rounded-md pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground",
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP", { locale: ptBR })
-                                ) : (
-                                  <span>Data de nascimento</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() ||
-                                date < new Date("1900-01-01")
-                              }
-                              captionLayout="dropdown"
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Calendar />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <PatternFormat
+                              format="##/##/####"
+                              mask="_"
+                              placeholder="Data de nascimento"
+                              customInput={InputGroupInput}
+                              {...field}
                             />
-                          </PopoverContent>
-                        </Popover>
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -245,13 +261,18 @@ export default function RegisterPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Senha"
-                            {...field}
-                          />
-                        </FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <LockOpen />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <InputGroupInput
+                              type="password"
+                              placeholder="Senha"
+                              {...field}
+                            />
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -262,13 +283,18 @@ export default function RegisterPage() {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Confirme sua senha"
-                            {...field}
-                          />
-                        </FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Lock />
+                          </InputGroupAddon>
+                          <FormControl>
+                            <InputGroupInput
+                              type="password"
+                              placeholder="Confirme sua senha"
+                              {...field}
+                            />
+                          </FormControl>
+                        </InputGroup>
                         <FormMessage />
                       </FormItem>
                     )}

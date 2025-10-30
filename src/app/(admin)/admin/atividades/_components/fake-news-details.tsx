@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { TFakeNewsContent } from "@/utils/activity-types";
-import { format } from "date-fns";
 import { BadgeCheckIcon, BadgeX, Globe } from "lucide-react";
 import Image from "next/image";
 
@@ -52,10 +51,7 @@ export function FakeNewsDetails({ fakeNews }: FakeNewsDetailsProps) {
               {fakeNews.author ? fakeNews.author : "Sem autor"}
             </p>
             <p className="text-sm">
-              Data de publicação:{" "}
-              {fakeNews.publicationDate
-                ? format(fakeNews.publicationDate, "dd/MM/yyyy")
-                : "Sem data"}
+              Data de publicação: {fakeNews.publicationDate || "Sem data"}
             </p>
           </div>
           <Paragraphs text={fakeNews.text} />

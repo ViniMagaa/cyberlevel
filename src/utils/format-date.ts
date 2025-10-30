@@ -1,3 +1,5 @@
+import { isValid, parse } from "date-fns";
+
 export function formatDate(
   date: Date,
   locale: string = "pt-BR",
@@ -9,4 +11,9 @@ export function formatDate(
     year: "numeric",
     timeZone,
   }).format(date);
+}
+
+export function parseBirthdate(value: string) {
+  const parsed = parse(value, "dd/MM/yyyy", new Date());
+  return isValid(parsed) ? parsed : null;
 }

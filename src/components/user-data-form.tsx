@@ -1,6 +1,5 @@
 import { updateUserData } from "@/app/api/user-settings";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { CardDescription } from "@/components/ui/card";
 import {
   Dialog,
@@ -16,23 +15,25 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { formatDate, parseBirthdate } from "@/utils/format-date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
-import { format, isPast, isValid, subYears } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Loader2Icon, Pencil } from "lucide-react";
+import { isPast, subYears } from "date-fns";
+import {
+  AtSign,
+  Calendar,
+  Loader2Icon,
+  Mail,
+  Pencil,
+  User as UserIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 
 const userDataFormSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -45,11 +46,14 @@ const userDataFormSchema = z.object({
       'Use letras, números, "_" ou "." sem iniciar ou terminar com ponto e sem pontos duplos',
     ),
   birthdate: z
-    .date("Data de nascimento inválida")
-    .refine(
-      (date) => isValid(date) && isPast(date) && date < subYears(new Date(), 3),
-      "Data de nascimento inválida ou muito recente",
-    ),
+    .string()
+    .min(10, "Data de nascimento obrigatória")
+    .refine((date) => {
+      const parsed = parseBirthdate(date);
+      return (
+        parsed !== null && isPast(parsed) && parsed < subYears(new Date(), 3)
+      );
+    }, "Data de nascimento inválida ou muito recente"),
   email: z.email("E-mail inválido").min(1, "O e-mail é obrigatório"),
 });
 
@@ -70,24 +74,39 @@ export default function UserDataForm({ user }: UserDataFormProps) {
       name: user.name,
       username: user.username,
       email: user.email,
-      birthdate: user.birthdate,
+      birthdate: formatDate(new Date(user.birthdate)),
     },
     resetOptions: { keepDefaultValues: true },
   });
 
-  function onSubmit(data: TUserDataForm) {
+  function onSubmit({ name, username, email, birthdate }: TUserDataForm) {
     startTransition(async () => {
-      const { success, error } = await updateUserData(user.id, data);
+      try {
+        const parsedDate = parseBirthdate(birthdate);
+        if (!parsedDate) {
+          toast.error("Data de nascimento inválida");
+          return;
+        }
+        const { success, error } = await updateUserData(user.id, {
+          name,
+          username,
+          email,
+          birthdate: parsedDate,
+        });
 
-      if (success) {
-        toast.success("Dados atualizados");
-        router.refresh();
-        setIsOpen(false);
-        return;
-      }
+        if (success) {
+          toast.success("Dados atualizados");
+          router.refresh();
+          setIsOpen(false);
+          return;
+        }
 
-      if (error) {
-        toast.error(error);
+        if (error) {
+          toast.error(error);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Erro ao atualizar dados");
       }
     });
   }
@@ -125,9 +144,14 @@ export default function UserDataForm({ user }: UserDataFormProps) {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Input placeholder="Nome" {...field} />
-                      </FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <UserIcon />
+                        </InputGroupAddon>
+                        <FormControl>
+                          <InputGroupInput placeholder="Nome" {...field} />
+                        </FormControl>
+                      </InputGroup>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -138,9 +162,17 @@ export default function UserDataForm({ user }: UserDataFormProps) {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Input placeholder="Nome de usuário" {...field} />
-                      </FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <AtSign />
+                        </InputGroupAddon>
+                        <FormControl>
+                          <InputGroupInput
+                            placeholder="Nome de usuário"
+                            {...field}
+                          />
+                        </FormControl>
+                      </InputGroup>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -151,9 +183,14 @@ export default function UserDataForm({ user }: UserDataFormProps) {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Input placeholder="E-mail" {...field} />
-                      </FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <Mail />
+                        </InputGroupAddon>
+                        <FormControl>
+                          <InputGroupInput placeholder="E-mail" {...field} />
+                        </FormControl>
+                      </InputGroup>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -164,37 +201,20 @@ export default function UserDataForm({ user }: UserDataFormProps) {
                   name="birthdate"
                   render={({ field }) => (
                     <FormItem>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "!rounded-md pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP", { locale: ptBR })
-                              ) : (
-                                <span>Data de nascimento</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            captionLayout="dropdown"
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <Calendar />
+                        </InputGroupAddon>
+                        <FormControl>
+                          <PatternFormat
+                            format="##/##/####"
+                            mask="_"
+                            placeholder="Data de nascimento"
+                            customInput={InputGroupInput}
+                            {...field}
                           />
-                        </PopoverContent>
-                      </Popover>
+                        </FormControl>
+                      </InputGroup>
                       <FormMessage />
                     </FormItem>
                   )}

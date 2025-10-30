@@ -4,7 +4,6 @@ import signUp from "@/app/api/sign-up";
 import Beams from "@/components/beams";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,24 +14,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { parseBirthdate } from "@/utils/format-date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@prisma/client";
-import { format, isPast, isValid, subYears } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { ArrowLeft, ArrowRight, CalendarIcon, Loader2Icon } from "lucide-react";
+import { isPast, subYears } from "date-fns";
+import {
+  ArrowLeft,
+  ArrowRight,
+  AtSign,
+  Calendar,
+  Loader2Icon,
+  Lock,
+  LockOpen,
+  Mail,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -48,12 +56,14 @@ const teenRegisterSchema = z
       .string()
       .min(6, "A confirmação de senha deve ter no mínimo 6 caracteres"),
     birthdate: z
-      .date("Data de nascimento inválida")
-      .refine(
-        (date) =>
-          isValid(date) && isPast(date) && date < subYears(new Date(), 3),
-        "Data de nascimento inválida ou muito recente",
-      ),
+      .string()
+      .min(10, "Data de nascimento obrigatória")
+      .refine((date) => {
+        const parsed = parseBirthdate(date);
+        return (
+          parsed !== null && isPast(parsed) && parsed < subYears(new Date(), 3)
+        );
+      }, "Data de nascimento inválida ou muito recente"),
     avatarId: z.string().min(1, "Selecione um avatar"),
     name: z.string().min(1, "O nome é obrigatório"),
     username: z
@@ -90,6 +100,7 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
       email: "",
       password: "",
       confirmPassword: "",
+      birthdate: "",
       avatarId: avatars[0].id ?? undefined,
       name: "",
       username: "",
@@ -153,18 +164,31 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
     });
   }
 
-  function onSubmit(data: TeenRegisterForm) {
+  function onSubmit({
+    name,
+    username,
+    email,
+    password,
+    birthdate,
+    avatarId,
+  }: TeenRegisterForm) {
     startTransition(async () => {
       try {
+        const parsedDate = parseBirthdate(birthdate);
+        if (!parsedDate) {
+          toast.error("Data de nascimento inválida");
+          return;
+        }
+
         const result = await signUp({
-          name: data.name,
-          username: data.username,
-          email: data.email,
-          password: data.password,
-          birthdate: data.birthdate,
+          name,
+          username,
+          email,
+          password,
+          birthdate: parsedDate,
           role: "LEARNER",
           ageGroup: "TEEN",
-          avatar: { connect: { id: data.avatarId } },
+          avatar: { connect: { id: avatarId } },
         });
 
         if (!result.success) {
@@ -172,7 +196,7 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
           return;
         }
 
-        toast.success(`Bem-vindo, ${data.name}!`);
+        toast.success(`Bem-vindo, ${name}!`);
         router.push("/adolescente");
       } catch (error) {
         console.log(error);
@@ -235,9 +259,14 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input placeholder="E-mail" {...field} />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Mail />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput placeholder="E-mail" {...field} />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -248,9 +277,18 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input type="password" placeholder="Senha" {...field} />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <LockOpen />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          type="password"
+                          placeholder="Senha"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -261,13 +299,18 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirme a senha"
-                        {...field}
-                      />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          type="password"
+                          placeholder="Confirme sua senha"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -304,38 +347,20 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="birthdate"
                 render={({ field }) => (
                   <FormItem>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            type="button"
-                            variant={"outline"}
-                            className={cn(
-                              "!rounded-md pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP", { locale: ptBR })
-                            ) : (
-                              <span>Data de nascimento</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          captionLayout="dropdown"
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Calendar />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <PatternFormat
+                          format="##/##/####"
+                          mask="_"
+                          placeholder="Data de nascimento"
+                          customInput={InputGroupInput}
+                          {...field}
                         />
-                      </PopoverContent>
-                    </Popover>
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -435,9 +460,14 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input placeholder="Nome" {...field} />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <User />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput placeholder="Nome" {...field} />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -448,9 +478,17 @@ export function TeenRegisterForm({ avatars }: TeenRegisterFormProps) {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input placeholder="Nome de usuário" {...field} />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <AtSign />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          placeholder="Nome de usuário"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}

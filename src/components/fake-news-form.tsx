@@ -1,20 +1,18 @@
 import { uploadActivityImage } from "@/app/(admin)/admin/atividades/actions";
-import { cn } from "@/lib/utils";
 import { activitySchemas } from "@/utils/activity-schemas";
 import { TFakeNewsContent } from "@/utils/activity-types";
+import { parseBirthdate } from "@/utils/format-date";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { Calendar, Loader2Icon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { PatternFormat } from "react-number-format";
 import z from "zod";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Button } from "./ui/button";
-import { Calendar } from "./ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import {
   Select,
   SelectContent,
@@ -43,9 +41,10 @@ export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
       title: fakeNews?.title ?? "",
       subtitle: fakeNews?.subtitle ?? "",
       author: fakeNews?.author ?? "",
-      publicationDate: fakeNews?.publicationDate
-        ? new Date(fakeNews.publicationDate)
-        : undefined,
+      publicationDate:
+        fakeNews?.publicationDate && parseBirthdate(fakeNews?.publicationDate)
+          ? fakeNews.publicationDate
+          : undefined,
       text: fakeNews?.text ?? "",
       image: undefined,
       source: fakeNews?.source ?? "",
@@ -137,34 +136,20 @@ export function FakeNewsForm({ fakeNews, onSubmit }: FakeNewsFormProps) {
           name="publicationDate"
           render={({ field }) => (
             <FormItem>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: ptBR })
-                      ) : (
-                        <span>Data de publicação (opcional)</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    captionLayout="dropdown"
+              <InputGroup>
+                <InputGroupAddon>
+                  <Calendar />
+                </InputGroupAddon>
+                <FormControl>
+                  <PatternFormat
+                    format="##/##/####"
+                    mask="_"
+                    placeholder="Data de publicação"
+                    customInput={InputGroupInput}
+                    {...field}
                   />
-                </PopoverContent>
-              </Popover>
+                </FormControl>
+              </InputGroup>
               <FormMessage />
             </FormItem>
           )}

@@ -15,15 +15,15 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
-import { Key, Loader2Icon } from "lucide-react";
+import { Key, KeyIcon, Loader2Icon, Lock, LockOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 
 const changePasswordFormSchema = z
   .object({
@@ -114,13 +114,18 @@ export default function ChangePasswordForm({ user }: ChangePasswordFormProps) {
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Senha atual"
-                        {...field}
-                      />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <KeyIcon />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          type="password"
+                          placeholder="Senha atual"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -131,13 +136,18 @@ export default function ChangePasswordForm({ user }: ChangePasswordFormProps) {
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Nova senha"
-                        {...field}
-                      />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <LockOpen />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          type="password"
+                          placeholder="Nova senha"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -148,13 +158,18 @@ export default function ChangePasswordForm({ user }: ChangePasswordFormProps) {
                 name="confirmNewPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirme sua nova senha"
-                        {...field}
-                      />
-                    </FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock />
+                      </InputGroupAddon>
+                      <FormControl>
+                        <InputGroupInput
+                          type="password"
+                          placeholder="Confirme sua nova senha"
+                          {...field}
+                        />
+                      </FormControl>
+                    </InputGroup>
                     <FormMessage />
                   </FormItem>
                 )}

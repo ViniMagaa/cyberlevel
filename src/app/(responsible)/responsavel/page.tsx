@@ -77,12 +77,12 @@ export default async function Dashboard() {
                 </Button>
               </>
             ) : (
-              <div>
+              <div className="flex flex-1 flex-col items-center justify-center gap-4">
                 <p className="text-muted-foreground text-sm">
                   Nenhum aprendiz encontrado.
                 </p>
                 <Link href="/responsavel/aprendizes">
-                  <Button className="mx-auto">Adicionar aprendiz</Button>
+                  <Button>Adicionar aprendiz</Button>
                 </Link>
               </div>
             )}

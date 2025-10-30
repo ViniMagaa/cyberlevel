@@ -1,6 +1,7 @@
 import { ActivityType } from "@prisma/client";
 import { z } from "zod";
 import { ThemedPasswordRules, TThemedPasswordRules } from "./activity-types";
+import { parseBirthdate } from "./format-date";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -10,7 +11,11 @@ export const activitySchemas = {
     title: z.string().min(1, "Título é obrigatório"),
     subtitle: z.string().optional(),
     author: z.string().optional(),
-    publicationDate: z.date("Data de publicação inválida").optional(),
+    publicationDate: z.string().refine((date) => {
+      if (!date) return true;
+      const parsed = parseBirthdate(date);
+      return parsed !== null;
+    }, "Data de publicação inválida"),
     text: z.string().min(1, "Texto é obrigatório"),
     image: z
       .instanceof(File)

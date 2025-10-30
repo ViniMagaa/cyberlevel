@@ -8,7 +8,6 @@ import { useActivity } from "@/hooks/use-activity";
 import { cn } from "@/lib/utils";
 import { TFakeNewsContent } from "@/utils/activity-types";
 import { Prisma } from "@prisma/client";
-import { format } from "date-fns";
 import { Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -108,8 +107,7 @@ export function ChildFakeNews({
                 </p>
                 <p className="text-sm font-semibold">
                   {fakeNews.publicationDate
-                    ? "Data de publicação: " +
-                      format(fakeNews.publicationDate, "dd/MM/yyyy")
+                    ? "Data de publicação: " + fakeNews.publicationDate
                     : "Sem data de publicação"}
                 </p>
               </div>
