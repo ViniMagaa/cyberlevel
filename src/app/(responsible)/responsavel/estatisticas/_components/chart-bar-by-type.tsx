@@ -12,7 +12,6 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { activityType } from "@/utils/enums";
 import type { ActivityProgress, ActivityType } from "@prisma/client";
@@ -64,10 +63,26 @@ export function ChartBarByType({ data }: ChartBarByTypeProps) {
           <ChartContainer config={chartConfig}>
             <BarChart data={chartData} margin={{ top: 24 }}>
               <CartesianGrid vertical={false} />
-              <XAxis dataKey="type" tickLine={false} axisLine={false} />
+              <XAxis
+                dataKey="type"
+                className="max-sm:hidden"
+                tickLine={false}
+                axisLine={false}
+              />
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent hideLabel />}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null;
+                  const item = payload[0];
+                  return (
+                    <div className="bg-background space-x-4 rounded-md border px-2 py-1 text-sm shadow">
+                      <span className="text-muted-foreground">
+                        {item?.payload?.type}
+                      </span>
+                      <b>{item?.value}</b>
+                    </div>
+                  );
+                }}
               />
               <Bar dataKey="amount" radius={6} fill="var(--color-primary-700)">
                 <LabelList

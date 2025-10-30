@@ -15,7 +15,7 @@ import {
   TThemedPasswordContent,
 } from "@/utils/activity-types";
 import { activityType } from "@/utils/enums";
-import { Activity } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Eye } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -29,7 +29,13 @@ import {
 import { Separator } from "./ui/separator";
 
 type ActivityDialogDetailsProps = {
-  activity: Activity;
+  activity: Prisma.ActivityGetPayload<{
+    select: {
+      type: true;
+      title: true;
+      content: true;
+    };
+  }>;
 };
 
 export function ActivityDialogDetails({

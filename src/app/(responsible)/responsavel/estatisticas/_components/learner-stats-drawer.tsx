@@ -177,7 +177,7 @@ export default async function LearnerStatsDrawer({
               <ChartBarByType data={lastActivitiesProgress} />
             </div>
 
-            <div className="w-[clamp(0px,calc(100vw-2rem),80rem] space-y-2 overflow-x-auto">
+            <div className="w-[calc(100vw-2rem)] max-w-[80rem] space-y-2 overflow-x-auto">
               <h2 className="font-bold">Últimas atividades</h2>
 
               <DataTable

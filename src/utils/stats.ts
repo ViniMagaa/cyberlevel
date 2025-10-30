@@ -20,6 +20,7 @@ export async function getLearnerStats(learnerId: string) {
           select: {
             title: true,
             type: true,
+            content: true,
             module: { include: { archetype: true } },
           },
         },

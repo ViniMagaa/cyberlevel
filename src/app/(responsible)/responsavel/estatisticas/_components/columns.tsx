@@ -1,5 +1,6 @@
 "use client";
 
+import { ActivityDialogDetails } from "@/components/activity-dialog-details";
 import { activityType } from "@/utils/enums";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,6 +13,7 @@ type StatsColumns = Prisma.ActivityProgressGetPayload<{
       select: {
         type: true;
         title: true;
+        content: true;
         module: {
           include: {
             archetype: true;
@@ -23,6 +25,13 @@ type StatsColumns = Prisma.ActivityProgressGetPayload<{
 }>;
 
 export const columns: ColumnDef<StatsColumns>[] = [
+  {
+    id: "action",
+    header: "",
+    cell: ({ row }) => {
+      return <ActivityDialogDetails activity={row.original.activity} />;
+    },
+  },
   {
     accessorKey: "activity.title",
     header: "Atividade",
