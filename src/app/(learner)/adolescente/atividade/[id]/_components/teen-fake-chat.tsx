@@ -160,7 +160,7 @@ export function TeenFakeChat({
                 Qual a melhor resposta?
               </p>
 
-              <div className="flex flex-col flex-wrap gap-3 *:flex-1 sm:flex-row">
+              <div className="flex flex-col gap-3 *:flex-1">
                 {currentMessage.options.map((opt, i) => (
                   <Button
                     key={i}

@@ -105,7 +105,7 @@ export function TeenFakeNews({
           <div className="flex w-full flex-col gap-2 rounded-xl bg-neutral-200 p-4 text-black shadow-2xl">
             <div className="flex items-center gap-2">
               <Globe />
-              <div className="flex h-9 w-full items-center rounded-md border border-neutral-400 bg-neutral-300 px-3 py-1 text-base md:text-sm">
+              <div className="line-clamp-1 w-full rounded-md border border-neutral-400 bg-neutral-300 px-2 py-1 text-base break-all overflow-ellipsis">
                 {fakeNews.source}
               </div>
             </div>

@@ -6,6 +6,7 @@ import {
   ProgressResponse,
   startActivity,
 } from "@/lib/actions/activity";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -19,6 +20,8 @@ export function useActivity(userId: string, activityId: string) {
     startedAt: null,
     completedAt: null,
   });
+
+  const route = useRouter();
 
   // Busca progresso inicial
   useEffect(() => {
@@ -55,6 +58,7 @@ export function useActivity(userId: string, activityId: string) {
         completedAt: new Date(),
         attempts: prev.attempts + 1,
       }));
+      route.refresh();
     });
   }
 

@@ -228,12 +228,12 @@ export function TeenMatchPairs({
       )}
 
       {started && !completed && (
-        <div className="flex w-full max-w-3xl flex-col items-center gap-8">
+        <div className="flex w-full max-w-3xl flex-col items-center gap-8 px-4 text-center">
           <h1 className="text-5xl font-black uppercase md:text-8xl">
             {activityType[activity.type]}
           </h1>
 
-          <div className="flex w-full items-center justify-between gap-4 text-lg">
+          <div className="flex w-full flex-wrap items-center justify-center gap-4 text-lg sm:justify-between">
             <span
               style={{
                 backgroundColor: primaryColor + "55",
@@ -254,7 +254,7 @@ export function TeenMatchPairs({
             </span>
           </div>
 
-          <div className="grid w-full grid-cols-2 gap-6">
+          <div className="grid w-full gap-6 sm:grid-cols-2">
             {/* Coluna esquerda */}
             <div className="grid gap-6">
               {leftCards.map((card) => (

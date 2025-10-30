@@ -48,9 +48,13 @@ export function ChildThemedPassword({
       case "SPECIAL_CHAR":
         return /[^A-Za-z0-9]/.test(password);
       case "INCLUDE_WORD":
-        return password.includes(rule.value || "");
+        return password
+          .toLocaleUpperCase()
+          .includes(rule.value?.toLocaleUpperCase() || "");
       case "EXCLUDE_WORD":
-        return !password.includes(rule.value || "");
+        return !password
+          .toLocaleUpperCase()
+          .includes(rule.value?.toLocaleUpperCase() || "");
       default:
         return false;
     }
