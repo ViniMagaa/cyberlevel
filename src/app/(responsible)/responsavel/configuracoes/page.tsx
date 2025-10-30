@@ -21,7 +21,7 @@ export default async function Settings() {
             </div>
             <Separator />
             <div className="text-md flex justify-between sm:text-xl">
-              <strong>Nome de usuário</strong> <span>{user.username}</span>
+              <strong>Nome de usuário</strong> <span>@{user.username}</span>
             </div>
             <Separator />
             <div className="text-md flex justify-between sm:text-xl">

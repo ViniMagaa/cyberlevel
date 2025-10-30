@@ -71,9 +71,10 @@ const teenRegisterSchema = z
       .min(1, "O nome de usuário é obrigatório")
       .max(30, "O nome de usuário deve ter no máximo 30 caracteres")
       .regex(
-        /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/,
-        'Use letras, números, "_" ou "." sem iniciar ou terminar com ponto e sem pontos duplos',
+        /^(?!.*\.\.)(?!.*\.$)[a-z0-9][a-z0-9_.]{0,29}$/,
+        'Use apenas letras minúsculas, números, "_" ou ".", sem iniciar ou terminar com ponto e sem pontos duplos',
       ),
+
     termsAndConditions: z
       .boolean()
       .refine((value) => value, "Você deve aceitar os termos e condições"),

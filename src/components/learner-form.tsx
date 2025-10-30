@@ -54,8 +54,8 @@ export function LearnerForm({ responsibleId, learners }: LearnerFormProps) {
     startSearchTransition(() => {
       const learner = learners.find(({ email, username }) =>
         search === "email"
-          ? email === watch("field")
-          : username === watch("field"),
+          ? email.toLocaleLowerCase() === watch("field").toLocaleLowerCase()
+          : username.toLocaleLowerCase() === watch("field").toLocaleLowerCase(),
       );
 
       if (!learner) {
