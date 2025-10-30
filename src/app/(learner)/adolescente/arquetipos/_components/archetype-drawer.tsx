@@ -147,7 +147,7 @@ export function ArchetypeDrawer({
                     className="flex flex-1 p-4 sm:p-8"
                     gradientOpacity={0.25}
                   >
-                    <div className="flex h-full items-center gap-8">
+                    <div className="flex h-full flex-col items-center gap-8 text-center sm:flex-row sm:text-left">
                       {module.iconUrl && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img

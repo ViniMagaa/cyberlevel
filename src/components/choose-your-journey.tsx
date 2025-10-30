@@ -3,14 +3,20 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowRight, Gamepad2, UserRoundSearch } from "lucide-react";
 import Link from "next/link";
+import { BackButton } from "./back-button";
 import { MagicCard } from "./magicui/magic-card";
 import { Particles } from "./magicui/particles";
 import { BlurFade } from "./ui/blur-fade";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
-import { BackButton } from "./back-button";
 
-export function ChooseYourJourney() {
+type ChooseYourJourneyProps = {
+  showBackButton?: boolean;
+};
+
+export function ChooseYourJourney({
+  showBackButton = false,
+}: ChooseYourJourneyProps) {
   const isMobile = useIsMobile();
 
   return (
@@ -18,7 +24,9 @@ export function ChooseYourJourney() {
       id="start"
       className="border-t- relative grid min-h-lvh w-full place-items-center overflow-hidden border-t"
     >
-      {isMobile && <BackButton size="icon" className="fixed top-4 left-4" />}
+      {showBackButton && (
+        <BackButton size="icon" className="fixed top-4 left-4" />
+      )}
 
       <div className="bg-primary-500 absolute top-0 -z-10 h-[1px] w-full overflow-hidden" />
       <div

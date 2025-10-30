@@ -106,7 +106,7 @@ export function ProductCard({
           {formatCurrency(Number(product.price))}
         </p>
       </CardContent>
-      <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute top-4 right-4 z-10 flex gap-2 transition-opacity group-hover:opacity-100 sm:opacity-0">
         {isInWishlist ? (
           <Button
             variant="default"

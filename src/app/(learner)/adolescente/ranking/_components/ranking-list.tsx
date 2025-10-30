@@ -1,6 +1,6 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { ActivityProgress, Archetype, Avatar, User } from "@prisma/client";
 import Image from "next/image";
@@ -24,6 +24,8 @@ export function RankingList({
   return (
     <Card className="mx-auto w-full max-w-xl gap-0 overflow-hidden p-0">
       <ScrollArea className="h-96">
+        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="vertical" />
         {users.map((user, index) => (
           <div
             key={user.id}
@@ -43,7 +45,7 @@ export function RankingList({
               {index + 1}º
             </p>
 
-            <div className="flex flex-1 items-center justify-between gap-4 p-2">
+            <div className="flex flex-1 items-center justify-between gap-8 p-2">
               <div className="flex flex-1 items-center gap-2">
                 <Card className="w-12 overflow-hidden rounded-sm p-0">
                   <AspectRatio ratio={1}>
@@ -57,13 +59,15 @@ export function RankingList({
                     />
                   </AspectRatio>
                 </Card>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-left">
                   {user.id === userId ? (
                     <p className="text-xl font-bold">Você</p>
                   ) : (
                     <div>
-                      <p className="font-semibold">{user.name}</p>
-                      <p className="text-sm font-thin text-white/50">
+                      <p className="line-clamp-1 font-semibold overflow-ellipsis">
+                        {user.name}
+                      </p>
+                      <p className="text-muted-foreground line-clamp-1 text-sm font-thin overflow-ellipsis">
                         @{user.username}
                       </p>
                     </div>
